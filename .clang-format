@@ -1,0 +1,35 @@
+# Run manually to reformat a file:
+# clang-format -i --style=file <file>
+Language: Cpp
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 0
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Empty
+SpacesBeforeTrailingComments: 1
+AlignTrailingComments: true
+SpaceBeforeParens: ControlStatements
+IndentCaseLabels: true
+PointerAlignment: Left
+AccessModifierOffset: 0
+UseTab: Never
+SortIncludes: true
+IncludeCategories:
+  - Regex: '^"{{fileBasenameNoExtension}}\.(h|hpp)"'
+    Priority: 1
+    SortPriority: 0
+  - Regex: '^<.*\.h>' # C 头文件
+    Priority: 2
+    SortPriority: 0
+  - Regex: "^<.*>" # C++ 标准库头文件
+    Priority: 2
+    SortPriority: 1
+  - Regex: '^".*\.h"' # 项目头文件
+    Priority: 3
+    SortPriority: 0
+  - Regex: '^".*"' # 其他项目文件
+    Priority: 4
+    SortPriority: 0
+NamespaceIndentation: Inner
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1

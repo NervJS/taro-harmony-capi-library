@@ -1,0 +1,15 @@
+# CMake
+/*build*
+/cmake-build-debug*/
+/cmake-build-release/
+/CMakeSettings.json
+
+node_modules
+
+*-lock.json
+*.log
+
+.cxx
+.idea
+.DS_Store
+.vscode

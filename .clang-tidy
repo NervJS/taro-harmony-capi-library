@@ -1,0 +1,9 @@
+---
+Checks: '>
+clang-diagnostic-*,
+-misc-unused-parameters,
+-modernize-use-auto'
+FormatStyle: llvm
+HeaderFilterRegex: '.*'
+InheritParentConfig: true
+...

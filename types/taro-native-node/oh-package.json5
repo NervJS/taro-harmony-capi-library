@@ -1,0 +1,6 @@
+{
+  "name": "libTaroHarmonyLibrary.so",
+  "types": "./index.d.ts",
+  "version": "0.0",
+  "description": "Please describe the basic information."
+}
