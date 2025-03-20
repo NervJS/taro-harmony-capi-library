@@ -38,7 +38,7 @@ struct ErrorImageInfo {
 using ImageRequestCallback = std::function<void(const std::variant<ResultImageInfo, ErrorImageInfo>)>;
 
 void loadImage(const LoadRequestOptions &options, ImageRequestCallback &&onCallback) noexcept;
-std::variant<ResultImageInfo, ErrorImageInfo> loadLocalImage(const LoadRequestOptions &options, char *path, size_t length);
+static std::variant<ResultImageInfo, ErrorImageInfo> loadLocalImage(const LoadRequestOptions &options, char *path, size_t length);
 }
 
 #endif //IMAGELOADER_H

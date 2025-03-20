@@ -178,6 +178,8 @@ namespace TaroDOM {
         bool isInline_;
         bool should_position_ = true;
 
+        void HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo> &result, const std::string url);
+
         static int32_t uid_flag_;
         static std::unordered_map<int32_t, std::weak_ptr<TaroRenderNode>> custom_layout_render_nodes_;
     };

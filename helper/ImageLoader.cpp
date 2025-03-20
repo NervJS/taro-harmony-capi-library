@@ -13,16 +13,6 @@
 #include "helper/TaroLog.h"
 
 namespace TaroHelper {
-class ImagePictureNative {
-    public:
-        Image_ErrorCode errorCode = IMAGE_SUCCESS;
-        OH_DecodingOptionsForPicture *options = nullptr;
-        OH_PictureNative *picture = nullptr;
-        OH_ImageSourceNative *source = nullptr;
-        ImagePictureNative() {}
-        ~ImagePictureNative() {}
-};
-
 void loadImage(const LoadRequestOptions &options, ImageRequestCallback &&onCallback) noexcept {
     if (options.url.empty()) {
         ErrorImageInfo errorInfo = {.url = options.url};
@@ -60,50 +50,60 @@ void loadImage(const LoadRequestOptions &options, ImageRequestCallback &&onCallb
     }
 }
 
-std::variant<ResultImageInfo, ErrorImageInfo> loadLocalImage(const LoadRequestOptions &options, char *path, size_t length) {
+static std::variant<ResultImageInfo, ErrorImageInfo> loadLocalImage(const LoadRequestOptions &options, char *path, size_t length) {
     ResultImageInfo result = {.url = options.url};
     OH_ImageSourceNative * imageSrc = nullptr;
-    Image_ErrorCode errorCode = OH_ImageSourceNative_CreateFromUri(path, length, &imageSrc);
+    Image_ErrorCode errorCode;
+    errorCode = OH_ImageSourceNative_CreateFromUri(path, length, &imageSrc);
     if (errorCode != IMAGE_SUCCESS) {
-        TARO_LOG_ERROR("TaroFileDownloader", "loadImage: OH_ImageSourceNative_CreateFromUri failed.", errorCode);
+        TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_ImageSourceNative_CreateFromUri failed.", errorCode);
         return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
     }
     OH_PixelmapNative *pixelmapNative = nullptr;
-    OH_DecodingOptions *decodingOptions = nullptr;
-    Image_ErrorCode imageErr = OH_ImageSourceNative_CreatePixelmap(imageSrc, decodingOptions, &pixelmapNative);
-    if (imageErr != IMAGE_SUCCESS) {
-        TARO_LOG_ERROR("TaroFileDownloader", "loadImage: OH_ImageSourceNative_CreatePixelmap failed.", imageErr);
-        return ErrorImageInfo{.url = options.url, .errorCode = imageErr};
-
+    OH_DecodingOptions *ops = nullptr;
+    errorCode = OH_ImageSourceNative_CreatePixelmap(imageSrc, ops, &pixelmapNative);
+    if (errorCode != IMAGE_SUCCESS) {
+        TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_ImageSourceNative_CreatePixelmap failed.", errorCode);
+        return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
+    }
+    errorCode = OH_ImageSourceNative_Release(imageSrc);
+    if (errorCode != IMAGE_SUCCESS) {
+        TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_PixelmapImageInfo_Create failed.", errorCode);
+        return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
     }
     OH_Pixelmap_ImageInfo *pixelmapImageInfo = nullptr;
-    Image_ErrorCode pixelmapImageInfoCreateRes = OH_PixelmapImageInfo_Create(&pixelmapImageInfo);
-    if (pixelmapImageInfoCreateRes != IMAGE_SUCCESS) {
-        TARO_LOG_ERROR("TaroFileDownloader", "loadImage: OH_PixelmapImageInfo_Create failed.", pixelmapImageInfoCreateRes);
-        return ErrorImageInfo{.url = options.url, .errorCode = pixelmapImageInfoCreateRes};
+    errorCode = OH_PixelmapImageInfo_Create(&pixelmapImageInfo);
+    if (errorCode != IMAGE_SUCCESS) {
+        TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_PixelmapImageInfo_Create failed.", errorCode);
+        return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
     }
-    Image_ErrorCode getImageInfoRes = OH_PixelmapNative_GetImageInfo(pixelmapNative, pixelmapImageInfo);
-    if (getImageInfoRes != IMAGE_SUCCESS) {
-        TARO_LOG_ERROR("TaroFileDownloader", "loadImage: OH_PixelmapNative_GetImageInfo failed.", getImageInfoRes);
-        return ErrorImageInfo{.url = options.url, .errorCode = getImageInfoRes};
+    errorCode = OH_PixelmapNative_GetImageInfo(pixelmapNative, pixelmapImageInfo);
+    if (errorCode != IMAGE_SUCCESS) {
+        TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_PixelmapNative_GetImageInfo failed.", errorCode);
+        return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
     }
     Image_ErrorCode getWidthRes = OH_PixelmapImageInfo_GetWidth(pixelmapImageInfo, &result.width);
+    Image_ErrorCode getHeightRes = OH_PixelmapImageInfo_GetHeight(pixelmapImageInfo, &result.height);
+    errorCode = OH_PixelmapImageInfo_Release(pixelmapImageInfo);
     if (getWidthRes != IMAGE_SUCCESS) {
-        TARO_LOG_ERROR("TaroFileDownloader", "loadImage: OH_PixelmapImageInfo_GetWidth failed.", getWidthRes);
+        TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_PixelmapImageInfo_GetWidth failed.", getWidthRes);
         return ErrorImageInfo{.url = options.url, .errorCode = getWidthRes};
     }
-    Image_ErrorCode getHeightRes = OH_PixelmapImageInfo_GetHeight(pixelmapImageInfo, &result.height);
     if (getWidthRes != IMAGE_SUCCESS) {
-        TARO_LOG_ERROR("TaroFileDownloader", "loadImage: OH_PixelmapImageInfo_GetHeight failed.", getHeightRes);
+        TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_PixelmapImageInfo_GetHeight failed.", getHeightRes);
         return ErrorImageInfo{.url = options.url, .errorCode = getHeightRes};
     }
-
+    if (errorCode != IMAGE_SUCCESS) {
+        TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_PixelmapImageInfo_Release failed.", errorCode);
+        return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
+    }
+    
     result.result_DrawableDescriptor = OH_ArkUI_DrawableDescriptor_CreateFromPixelMap(pixelmapNative);
     if(!options.keepPixelMap) {
-        Image_ErrorCode releasePixel = OH_PixelmapNative_Release(pixelmapNative);
-        if (releasePixel != IMAGE_SUCCESS) {
-            TARO_LOG_ERROR("TaroFileDownloader", "loadImage: OH_PixelmapImageInfo_GetHeight failed.", releasePixel);
-            return ErrorImageInfo{.url = options.url, .errorCode = releasePixel};
+        errorCode = OH_PixelmapNative_Release(pixelmapNative);
+        if (errorCode != IMAGE_SUCCESS) {
+            TARO_LOG_ERROR("TaroImageLoader", "loadImage: OH_PixelmapImageInfo_GetHeight failed.", errorCode);
+            return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
         }
     }
     return result;
