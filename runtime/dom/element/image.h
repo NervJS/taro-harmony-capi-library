@@ -12,6 +12,7 @@
 #include <arkui/native_node.h>
 
 #include "runtime/dom/element/element.h"
+#include "helper/ImageLoader.h"
 
 namespace TaroRuntime {
 namespace TaroDOM {

@@ -11,6 +11,7 @@
 #include "runtime/cssom/stylesheet/css_property.h"
 #include "runtime/dom/ark_nodes/text_styled.h"
 #include "runtime/dom/element/image.h"
+#include "helper/ImageLoader.h"
 
 namespace TaroRuntime {
 namespace TaroDOM {
@@ -41,6 +42,8 @@ namespace TaroDOM {
     };
 
     class TaroTextNode : public TaroRenderNode {
+        using ImageCallbackInfo = std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>;
+        using ProcessImagesCallback = std::function<void(const std::shared_ptr<std::vector<ImageCallbackInfo>> &)>;
         using srcType = std::variant<std::string, ArkUI_DrawableDescriptor *>;
 
         public:
@@ -105,6 +108,7 @@ namespace TaroDOM {
         float m_MeasuredTextWidth = 0;
         float m_MeasuredTextHeight = 0;
         bool m_HasExactlyImage = true;
+        void ProcessImageResults(std::vector<std::shared_ptr<ImageInfo>> &images, ProcessImagesCallback &&onAllImagesLoaded);
         void SetTextMeasureFunc();
         void PaintImages();
         void SetSize();

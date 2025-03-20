@@ -592,6 +592,25 @@ namespace TaroDOM {
                 OH_PixelmapImageInfo_GetWidth(imageInfo, &sourceWidth);
                 OH_PixelmapImageInfo_GetHeight(imageInfo, &sourceHeight);
                 DrawImageFromPixel(imageData, pixelmapNative, sourceWidth, sourceHeight);
+            } else {
+                TaroHelper::LoadRequestOptions opts = {.url = imageData.url.c_str()};
+                if (imageData.dWidth != -1) {
+                    opts.width = imageData.dWidth;
+                }
+                if (imageData.dHeight != -1) {
+                    opts.height = imageData.dHeight;
+                }
+                opts.keepPixelMap = true;
+                TaroHelper::loadImage(
+                    opts,
+                    [this, imageData](const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo> &result) {
+                        auto res = std::get_if<TaroHelper::ResultImageInfo>(&result);
+                        if (res) {
+                            OH_PixelmapNativeHandle pixelmap = OH_ArkUI_DrawableDescriptor_GetStaticPixelMap(res->result_DrawableDescriptor);
+                            DrawImageFromPixel(imageData, pixelmap, res->width, res->height);
+                            Draw();
+                        }
+                    });
             }
         } else {
             // 从napi的imagePixelmap获取
@@ -834,6 +853,7 @@ namespace TaroDOM {
         if (err != Image_ErrorCode::IMAGE_SUCCESS || pixelmap == nullptr) {
             return;
         }
+        OH_PixelmapInitializationOptions_Release(opts);
 
         // 对图片进行裁剪
         Image_Region region;

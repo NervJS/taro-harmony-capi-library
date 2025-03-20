@@ -151,6 +151,19 @@ namespace TaroDOM {
                     if (auto src_string = std::get_if<std::string>(&attributes_->src.value())) {
                         // 获取图片解码的宽高尺寸信息，有缓存的情况下防止二次布局
                         std::weak_ptr<TaroImageNode> weak_render_image = render_image;
+
+                        if(src_string->find("gif") == std::string::npos) {
+                            TaroHelper::loadImage({.url = *src_string}, [weak_render_image](const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo> result) mutable {
+                                auto res = std::get_if<TaroHelper::ResultImageInfo>(&result);
+                                auto render_image = weak_render_image.lock();
+                                if (res && render_image) {
+                                    render_image->image_raw_width = res->width;
+                                    render_image->image_raw_height = res->height;
+                                    render_image->repairSizeIfNeed();
+                                }
+                            });
+                        }
+
                     }
                 }
             } else {

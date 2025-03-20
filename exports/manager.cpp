@@ -17,6 +17,7 @@
 
 #include "arkjs/ArkJS.h"
 #include "helper/FileManager.h"
+#include "helper/ImageLoader.h"
 #include "helper/SwitchManager.h"
 #include "helper/TaroAllocationMetrics.h"
 #include "helper/TaroLog.h"
@@ -699,6 +700,25 @@ napi_value Manager::LoadImage(napi_env env, napi_callback_info info) {
     if (valuetype == napi_function) {
         napi_create_reference(env, errorCallback, 1, &error_call_ref);
     }
+    TaroHelper::loadImage(
+        {.url = src.c_str(), .keepPixelMap = true},
+        [src, env, success_callback_ref, error_call_ref](const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result) {
+            ArkJS arkJs(env);
+            auto res = std::get_if<TaroHelper::ResultImageInfo>(&result);
+            if (res) {
+                OH_PixelmapNativeHandle pixelmap = OH_ArkUI_DrawableDescriptor_GetStaticPixelMap(res->result_DrawableDescriptor);
+                TaroRuntime::TaroDOM::TaroTmpResource::GetInstance()->tmp_pixels_manager_[src.c_str()] = pixelmap;
+                std::vector<napi_value> args(2);
+                args[0] = arkJs.createDouble(TaroRuntime::px2Vp(res->width));
+                args[1] = arkJs.createDouble(TaroRuntime::px2Vp(res->height));
+                arkJs.call(arkJs.getReferenceValue(success_callback_ref), args);
+            } else {
+                std::vector<napi_value> args;
+                arkJs.call(arkJs.getReferenceValue(error_call_ref), args);
+            }
+            arkJs.deleteReference(success_callback_ref);
+            arkJs.deleteReference(error_call_ref);
+        });
 
     return nullptr;
 }

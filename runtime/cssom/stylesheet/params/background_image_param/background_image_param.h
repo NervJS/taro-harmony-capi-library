@@ -12,6 +12,7 @@
 #include <napi/native_api.h>
 
 #include "helper/Optional.h"
+#include "helper/ImageLoader.h"
 
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 enum BgImageType {
@@ -23,7 +24,7 @@ enum BgImageType {
 struct BackgroundImageItem {
     BgImageType type;
 
-    std::variant<std::string> src;
+    std::variant<TaroHelper::ResultImageInfo, std::string> src;
     static const BackgroundImageItem emptyImg;
 
     // 渐变共同参数
@@ -49,6 +50,11 @@ inline bool operator==(const BackgroundImageItem &lhs, const BackgroundImageItem
                 return *srclSrc == *srcrSrc;
             }
 
+            auto infolSrc = std::get_if<TaroHelper::ResultImageInfo>(&lhs.src);
+            auto inforSrc = std::get_if<TaroHelper::ResultImageInfo>(&rhs.src);
+            if (infolSrc && inforSrc) {
+                return (*infolSrc).url == (*inforSrc).url;
+            }
             return false;
         }
         case LINEARGRADIENT:
