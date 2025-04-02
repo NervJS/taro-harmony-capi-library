@@ -1,0 +1,24 @@
+name: C/C++ format CI
+
+on:
+  push:
+    branches:
+      - 'chore/**'
+      - 'feat/**'
+      - 'fix/**'
+      - main
+  pull_request:
+    branches:
+      - 'chore/**'
+      - 'feat/**'
+      - 'fix/**'
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run clang-format style check for C/C++/Protobuf programs.
+      uses: jidicula/clang-format-action@v4.15.0
