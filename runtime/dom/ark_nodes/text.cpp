@@ -11,6 +11,7 @@
 #include <native_drawing/drawing_text_typography.h>
 
 #include "helper/string.h"
+#include "helper/ImageLoader.h"
 #include "runtime/NativeNodeApi.h"
 #include "runtime/TaroYogaApi.h"
 #include "runtime/cssom/CSSStyleSheet.h"
@@ -169,6 +170,21 @@ namespace TaroDOM {
         return m_IsNeedUpdate;
     }
 
+    void TaroTextNode::ProcessImageResults(std::vector<std::shared_ptr<ImageInfo>>& images, ProcessImagesCallback&& onAllImagesLoaded) {
+        auto results = std::make_shared<std::vector<ImageCallbackInfo>>();
+        auto loadCounter = std::make_shared<int>(0);
+        results->reserve(images.size());
+        for (const auto& image : images) {
+            TaroHelper::loadImage({.url = image->src}, [image, results, loadCounter, imagesSize = images.size(), onAllImagesLoaded](const ImageCallbackInfo& result) mutable {
+                results->push_back(result);
+                ++(*loadCounter);
+                if (*loadCounter == imagesSize) {
+                    onAllImagesLoaded(results);
+                }
+            });
+        }
+    }
+
     void TaroTextNode::SetTextMeasureFunc() {
         auto yogaInstance = TaroYogaApi::getInstance();
         if (!yogaInstance->hasMeasureFunc(ygNodeRef)) {
@@ -227,6 +243,51 @@ namespace TaroDOM {
                     }
                     textStyled_->InitTypography();
                     SetTextMeasureFunc();
+                } else {
+                    std::weak_ptr<TaroTextNode> weakSelf = std::dynamic_pointer_cast<TaroTextNode>(shared_from_this());
+                    ProcessImageResults(m_ImageInfos, [weakSelf](const std::shared_ptr<std::vector<ImageCallbackInfo>>& results) {
+                        auto this_ = weakSelf.lock();
+                        if (this_) {
+                            auto element = this_->element_ref_.lock();
+                            if (!element) return;
+                            auto dimensionContext = this_->GetDimensionContext();
+                            this_->m_ImagesLoaded = true;
+                            std::vector<std::shared_ptr<TaroNode>> vec;
+                            GetTextChildren(element, vec);
+                            this_->textStyled_->InitStyledString(this_->style_ref_, this_->textNodeStyle_, dimensionContext);
+                            for (const auto& result : *results) {
+                                if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
+                                    for (auto& imageInfo : this_->m_ImageInfos) {
+                                        if (imageInfo->src == info->url) {
+                                            imageInfo->oriWidth = info->width;
+                                            imageInfo->oriHeight = info->height;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            for (int32_t i = 0; i < vec.size(); i++) {
+                                auto item = std::dynamic_pointer_cast<TaroDOM::TaroElement>(vec[i]);
+                                item->PreBuild();
+                                if (item->isTextElement()) {
+                                    auto textContent = std::dynamic_pointer_cast<TaroText>(item)->GetTextContent();
+                                    this_->textStyled_->SetSingleTextStyle(this_->style_ref_, item->style_, textContent, dimensionContext);
+                                } else if (item->tag_name_ == TAG_NAME::IMAGE) {
+                                    auto it = std::find_if(this_->m_ImageInfos.begin(), this_->m_ImageInfos.end(), [i](const std::shared_ptr<ImageInfo>& info) {
+                                        return info->index == i;
+                                    });
+                                    if (it != this_->m_ImageInfos.end()) {
+                                        this_->textStyled_->SetSingleImageStyle(item->style_, *it, dimensionContext);
+                                    }
+                                }
+                            }
+                            this_->textStyled_->InitTypography();
+                            this_->SetIsNeedUpdate(true);
+                            this_->SetLayoutDirty(true);
+                            this_->SetDrawDirty(true);
+                            this_->SetTextMeasureFunc();
+                        }
+                    });
                 }
             }
         }
@@ -344,6 +405,25 @@ namespace TaroDOM {
                 auto src = imageInfo->src;
                 if (!src.empty()) {
                     std::weak_ptr<TaroTextNode> weakSelf = std::dynamic_pointer_cast<TaroTextNode>(shared_from_this());
+                    TaroHelper::loadImage({.url = src}, [src, weakSelf, i](const ImageCallbackInfo& result) mutable {
+                        auto renderText = weakSelf.lock();
+                        if (renderText) {
+                            const auto& imageNodes = renderText->m_ImageNodes;
+                            const auto& imageInfos = renderText->m_ImageInfos;
+                            if (i < imageNodes.size() && i < imageInfos.size()) {
+                                const auto& imageNode = imageNodes[i];
+                                const auto& imageInfo = imageInfos[i];
+                                if (imageInfo->src != src) return;
+                                ArkUI_AttributeItem srcItem;
+                                if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
+                                    srcItem = {.object = info->result_DrawableDescriptor};
+                                } else {
+                                    srcItem = {.string = src.c_str()};
+                                }
+                                NativeNodeApi::getInstance()->setAttribute(imageNode, NODE_IMAGE_SRC, &srcItem);
+                            }
+                        }
+                    });
                 }
             }
             OH_Drawing_TypographyDestroyTextBox(textBox);
