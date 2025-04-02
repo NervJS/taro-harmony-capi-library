@@ -25,8 +25,9 @@ struct BackgroundSizeParam {
     TaroHelper::Optional<Dimension> height;
 };
 
-inline bool operator==(const BackgroundSizeParam &lhs, const BackgroundSizeParam &rhs) {
-    if (lhs.type != rhs.type) return false;
+inline bool operator==(const BackgroundSizeParam& lhs, const BackgroundSizeParam& rhs) {
+    if (lhs.type != rhs.type)
+        return false;
     switch (lhs.type) {
         case IMAGESIZE:
             return lhs.imageSize == rhs.imageSize;
@@ -34,7 +35,7 @@ inline bool operator==(const BackgroundSizeParam &lhs, const BackgroundSizeParam
             return lhs.width == rhs.width && lhs.height == rhs.height;
     }
 }
-inline bool operator!=(const BackgroundSizeParam &lhs, const BackgroundSizeParam &rhs) {
+inline bool operator!=(const BackgroundSizeParam& lhs, const BackgroundSizeParam& rhs) {
     return !(lhs == rhs);
 }
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet

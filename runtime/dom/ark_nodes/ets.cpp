@@ -24,9 +24,9 @@ namespace TaroDOM {
         TIMER_FUNCTION();
         NapiHandleScopeWrapper wrapper(NativeNodeApi::env);
         ArkJS arkJs(NativeNodeApi::env);
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         std::shared_ptr<TaroDOM::TaroElement> sharedElement = element_ref_.lock();
-        const napi_value &builderCallback = nativeNodeApi->GetBuilderCallback(sharedElement->context_->page_path_);
+        const napi_value& builderCallback = nativeNodeApi->GetBuilderCallback(sharedElement->context_->page_path_);
 
         napi_value argv[1] = {sharedElement->GetNodeValue()};
         napi_value componentContent = nullptr;
@@ -50,7 +50,7 @@ namespace TaroDOM {
             // Note: 调用 ets 组件更新
             auto updateFunc = contextGetter.GetProperty("update");
             if (updateFunc.GetType() == napi_function) {
-                const napi_value &builderUpdate = updateFunc.GetNapiValue();
+                const napi_value& builderUpdate = updateFunc.GetNapiValue();
                 napi_value updateParam;
                 napi_create_object(NativeNodeApi::env, &updateParam);
                 std::shared_ptr<TaroDOM::TaroElement> sharedElement = element_ref_.lock();
@@ -77,7 +77,7 @@ namespace TaroDOM {
         if (builder_node_type != napi_undefined) {
             auto disposeFunc = contextGetter.GetProperty("dispose");
             if (disposeFunc.GetType() == napi_function) {
-                const napi_value &builderDispose = disposeFunc.GetNapiValue();
+                const napi_value& builderDispose = disposeFunc.GetNapiValue();
                 napi_value result;
                 napi_call_function(NativeNodeApi::env, componentContent, builderDispose, 0, {}, &result);
             }

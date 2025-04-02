@@ -33,7 +33,7 @@ namespace TaroDOM {
         void onReplaceChild(std::shared_ptr<TaroNode> newChild, std::shared_ptr<TaroNode> oldChild) override;
         void onInsertBefore(std::shared_ptr<TaroNode> child, std::shared_ptr<TaroNode> refChild) override;
         bool bindListenEvent(const std::string&) override;
-        int32_t GetCacheCount() override ;
+        int32_t GetCacheCount() override;
 
         private:
         void GetLowerThresholdCount(const napi_value& value);

@@ -211,9 +211,9 @@ namespace TaroAnimate {
             // 防止delay有值的时候，强制设置了第一帧
             auto delays = node->style_ref_->animationMulti.value().delays_;
             if (delays.size() >= idx + 1) {
-              if (delays[idx] > 0) {
-                  continue;
-              }
+                if (delays[idx] > 0) {
+                    continue;
+                }
             }
             if (old_style != nullptr && needDisplay(old_style->display) && old_style->animationMulti.has_value()) {
                 const auto& old_names = old_style->animationMulti.value().names_;

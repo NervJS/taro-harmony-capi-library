@@ -11,13 +11,13 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroEventAreaChange : public TaroEventBase {
             public:
-            TaroEventAreaChange(const std::string &js_event_type, ArkUI_NodeEvent *event);
+            TaroEventAreaChange(const std::string& js_event_type, ArkUI_NodeEvent* event);
 
             virtual ~TaroEventAreaChange() {}
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            virtual int serializeFun(napi_value &ret_obj) override;
+            virtual int serializeFun(napi_value& ret_obj) override;
 
             public:
             float old_width_ = 0;    // 表示过去目标元素的宽度，类型为number，单位vp

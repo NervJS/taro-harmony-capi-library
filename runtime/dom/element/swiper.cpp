@@ -19,7 +19,9 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     TaroSwiper::TaroSwiper(napi_value node)
-        : TaroElement(node), isIndicator_(false), attributes_(std::make_unique<TaroSwiperAttributes>()) {}
+        : TaroElement(node),
+          isIndicator_(false),
+          attributes_(std::make_unique<TaroSwiperAttributes>()) {}
 
     TaroSwiper::~TaroSwiper() {}
 

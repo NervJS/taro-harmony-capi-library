@@ -14,7 +14,8 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     TaroWaterFlow::TaroWaterFlow(napi_value node)
-        : TaroScrollerContainer(node), attributes_(std::make_unique<TaroWaterFlowAttributes>()) {
+        : TaroScrollerContainer(node),
+          attributes_(std::make_unique<TaroWaterFlowAttributes>()) {
         lazy_container = true;
     }
 
@@ -41,7 +42,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroWaterFlow::GetLowerThresholdCount(const napi_value &value) {
+    void TaroWaterFlow::GetLowerThresholdCount(const napi_value& value) {
         NapiGetter getter(value);
         auto attribute = getter.Int32();
         if (attribute.has_value()) {
@@ -49,7 +50,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroWaterFlow::GetUpperThresholdCount(const napi_value &value) {
+    void TaroWaterFlow::GetUpperThresholdCount(const napi_value& value) {
         NapiGetter getter(value);
         auto attribute = getter.Int32();
         if (attribute.has_value()) {
@@ -57,7 +58,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroWaterFlow::GetCacheCount(const napi_value &value) {
+    void TaroWaterFlow::GetCacheCount(const napi_value& value) {
         NapiGetter getter(value);
         auto attribute = getter.Int32();
         if (attribute.has_value()) {
@@ -127,12 +128,12 @@ namespace TaroDOM {
         SetScrollWithAnimation();
     }
 
-    bool TaroWaterFlow::bindListenEvent(const std::string &event_name) {
+    bool TaroWaterFlow::bindListenEvent(const std::string& event_name) {
         if (event_name == "scroll") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_DID_WATER_FLOW_ON_SCROLL, event_name,
-                                          [&](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
+                                          [&](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
                                               if (auto water_flow_event = std::dynamic_pointer_cast<TaroEvent::TaroEventDidWaterFlowScroll>(event)) {
-                                                  const ArkUI_AttributeItem *item = NativeNodeApi::getInstance()->getAttribute(
+                                                  const ArkUI_AttributeItem* item = NativeNodeApi::getInstance()->getAttribute(
                                                       GetHeadRenderNode()->GetArkUINodeHandle(), NODE_SCROLL_OFFSET);
                                                   scrollTop_ = item->value[1].f32;
                                                   NapiSetter::SetProperty(water_flow_event->detail(), "scrollTop", scrollTop_);
@@ -198,7 +199,7 @@ namespace TaroDOM {
 
     void TaroWaterFlow::handleOnScrollIndex() {
         std::weak_ptr<TaroNode> node_ref = shared_from_this();
-        auto scroll_fun = [node_ref](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
+        auto scroll_fun = [node_ref](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
             if (auto node = node_ref.lock()) {
                 auto water_flow = std::dynamic_pointer_cast<TaroWaterFlowNode>(node->GetHeadRenderNode());
                 if (water_flow == nullptr) {

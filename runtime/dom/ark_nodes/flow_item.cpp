@@ -18,7 +18,7 @@ namespace TaroDOM {
     TaroFlowItemNode::~TaroFlowItemNode() {}
 
     void TaroFlowItemNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_FLOW_ITEM));
     }
 

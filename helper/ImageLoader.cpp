@@ -3,6 +3,7 @@
  */
 
 #include "ImageLoader.h"
+
 #include <cstddef>
 
 #include "helper/FileDownloader.h"
@@ -10,7 +11,7 @@
 #include "helper/TaroLog.h"
 
 namespace TaroHelper {
-void loadImage(const LoadRequestOptions &options, ImageRequestCallback &&onCallback) noexcept {
+void loadImage(const LoadRequestOptions& options, ImageRequestCallback&& onCallback) noexcept {
     if (options.url.empty()) {
         ErrorImageInfo errorInfo = {.url = options.url};
         onCallback(errorInfo);
@@ -21,8 +22,8 @@ void loadImage(const LoadRequestOptions &options, ImageRequestCallback &&onCallb
     if (options.url.compare("http") && !fileManagerInstance->PathExists(fileName)) {
         auto downloader = FileDownloader::GetInstance();
         auto fileDownloaderParam = FileDownloaderParam{.headers = {{"Content-Type", "application/octet-stream"}}};
-        auto downloadCallback = [options, callback = std::move(onCallback), fileManagerInstance, fileName](const Rcp_Response* response, uint32_t errCode){
-            if(!response || errCode != 0) {
+        auto downloadCallback = [options, callback = std::move(onCallback), fileManagerInstance, fileName](const Rcp_Response* response, uint32_t errCode) {
+            if (!response || errCode != 0) {
                 ErrorImageInfo errorInfo = {.url = options.url, .errorCode = errCode};
                 callback(errorInfo);
                 return;
@@ -47,8 +48,8 @@ void loadImage(const LoadRequestOptions &options, ImageRequestCallback &&onCallb
     }
 }
 
-static Image_ErrorCode getImageInfo(OH_ImageSourceNative *imageSrc, ResultImageInfo &result) {
-    OH_ImageSource_Info *imageSourceInfo;
+static Image_ErrorCode getImageInfo(OH_ImageSourceNative* imageSrc, ResultImageInfo& result) {
+    OH_ImageSource_Info* imageSourceInfo;
     auto errorCode = OH_ImageSourceInfo_Create(&imageSourceInfo);
     if (errorCode != IMAGE_SUCCESS) {
         TARO_LOG_ERROR("TaroImageLoader", "OH_ImageSourceInfo_Create failed. errorCode: %{public}d", errorCode);
@@ -78,8 +79,8 @@ static Image_ErrorCode getImageInfo(OH_ImageSourceNative *imageSrc, ResultImageI
     return IMAGE_SUCCESS;
 }
 
-static Image_ErrorCode getPixelmapWithOneFrame(OH_ImageSourceNative *imageSrc, OH_PixelmapNative **pixelmapNative) {
-    OH_DecodingOptions *decodingOpts;
+static Image_ErrorCode getPixelmapWithOneFrame(OH_ImageSourceNative* imageSrc, OH_PixelmapNative** pixelmapNative) {
+    OH_DecodingOptions* decodingOpts;
     auto errorCode = OH_DecodingOptions_Create(&decodingOpts);
     if (errorCode != IMAGE_SUCCESS) {
         TARO_LOG_ERROR("TaroImageLoader", "OH_DecodingOptions_Create failed. errorCode: %{public}d", errorCode);
@@ -104,8 +105,8 @@ static Image_ErrorCode getPixelmapWithOneFrame(OH_ImageSourceNative *imageSrc, O
     return IMAGE_SUCCESS;
 }
 
-static Image_ErrorCode getPixelmapListWithMultiFrame(OH_ImageSourceNative *imageSrc, std::vector<OH_PixelmapNative*> &pixelmaps, uint32_t frameCount) {
-    OH_DecodingOptions *decodingOpts;
+static Image_ErrorCode getPixelmapListWithMultiFrame(OH_ImageSourceNative* imageSrc, std::vector<OH_PixelmapNative*>& pixelmaps, uint32_t frameCount) {
+    OH_DecodingOptions* decodingOpts;
     auto errorCode = OH_DecodingOptions_Create(&decodingOpts);
     if (errorCode != IMAGE_SUCCESS) {
         TARO_LOG_ERROR("TaroImageLoader", "OH_DecodingOptions_Create failed. errorCode: %{public}d", errorCode);
@@ -126,10 +127,9 @@ static Image_ErrorCode getPixelmapListWithMultiFrame(OH_ImageSourceNative *image
     return IMAGE_SUCCESS;
 }
 
-
-static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromUri(const LoadRequestOptions &options, char *path, size_t length) {
+static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromUri(const LoadRequestOptions& options, char* path, size_t length) {
     ResultImageInfo result = {.url = options.url};
-    OH_ImageSourceNative *imageSrc = nullptr;
+    OH_ImageSourceNative* imageSrc = nullptr;
     Image_ErrorCode errorCode;
     errorCode = OH_ImageSourceNative_CreateFromUri(path, length, &imageSrc);
     if (errorCode != IMAGE_SUCCESS) {
@@ -153,19 +153,19 @@ static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromUri(const Load
         TARO_LOG_ERROR("TaroImageLoader", "got 'frameCount == 0'. errorCode: %{public}d", IMAGE_UNKNOWN_ERROR);
         return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
     } else if (frameCount == 1) {
-        OH_PixelmapNative *pixelmapNative = nullptr;
+        OH_PixelmapNative* pixelmapNative = nullptr;
         errorCode = getPixelmapWithOneFrame(imageSrc, &pixelmapNative);
         if (errorCode != IMAGE_SUCCESS) {
             OH_ImageSourceNative_Release(imageSrc);
             return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
         }
         result.result_DrawableDescriptor = OH_ArkUI_DrawableDescriptor_CreateFromPixelMap(pixelmapNative);
-        if(!options.keepPixelMap) {
+        if (!options.keepPixelMap) {
             errorCode = OH_PixelmapNative_Release(pixelmapNative);
             if (errorCode != IMAGE_SUCCESS) {
                 TARO_LOG_ERROR("TaroImageLoader", "OH_PixelmapNative_Release failed. errorCode: %{public}d", errorCode);
+            }
         }
-    }
     } else {
         std::vector<OH_PixelmapNative*> pixelmaps(frameCount);
         errorCode = getPixelmapListWithMultiFrame(imageSrc, pixelmaps, frameCount);
@@ -174,7 +174,7 @@ static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromUri(const Load
             return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
         }
         result.result_DrawableDescriptor = OH_ArkUI_DrawableDescriptor_CreateFromAnimatedPixelMap(pixelmaps.data(), frameCount);
-        if(!options.keepPixelMap) {
+        if (!options.keepPixelMap) {
             for (int index = 0; index < frameCount; index++) {
                 errorCode = OH_PixelmapNative_Release(pixelmaps[index]);
                 if (errorCode != IMAGE_SUCCESS) {
@@ -191,4 +191,4 @@ static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromUri(const Load
     }
     return result;
 };
-}
+} // namespace TaroHelper

@@ -154,10 +154,10 @@ void TaroEventAdapter::dispatchEvent(ArkUI_NodeEvent* event) {
         }
 
         // 丑陋的延时释放，为了不在事件回调过程中发生可能的删除节点操作
-//         if (taro_node.use_count() == 1) {
-//             auto runner = Render::GetInstance()->GetTaskRunner();
-//             runner->runTask(TaroThread::TaskThread::MAIN, [taro_node] {});
-//         }
+        //         if (taro_node.use_count() == 1) {
+        //             auto runner = Render::GetInstance()->GetTaskRunner();
+        //             runner->runTask(TaroThread::TaskThread::MAIN, [taro_node] {});
+        //         }
     }
 }
 

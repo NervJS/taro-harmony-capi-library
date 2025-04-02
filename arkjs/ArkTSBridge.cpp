@@ -12,7 +12,8 @@ namespace Taro {
 std::shared_ptr<ArkTSBridge> ArkTSBridge::instance = nullptr;
 
 ArkTSBridge::ArkTSBridge(napi_env env, napi_ref napiBridgeRef)
-    : m_arkJs(ArkJS(env)), m_arkTSBridgeRef(napiBridgeRef) {
+    : m_arkJs(ArkJS(env)),
+      m_arkTSBridgeRef(napiBridgeRef) {
     LOG(INFO) << "ArkTSBridge::ArkTSBridge";
 }
 

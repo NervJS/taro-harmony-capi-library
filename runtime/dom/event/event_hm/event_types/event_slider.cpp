@@ -11,7 +11,7 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        int TaroSliderEventChange::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroSliderEventChange::parseHmEvent(ArkUI_NodeEvent* event) {
             auto component_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (component_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get component_event failed");
@@ -23,11 +23,11 @@ namespace TaroDOM {
             return 0;
         }
 
-        const float &TaroSliderEventChange::getValue() {
+        const float& TaroSliderEventChange::getValue() {
             return value_;
         }
 
-        int TaroSliderEventChange::serializeFun(napi_value &ret_obj) {
+        int TaroSliderEventChange::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
             // detail填充
             napi_value js_detail = detail();

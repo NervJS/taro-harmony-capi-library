@@ -20,7 +20,7 @@ class GestureEventBase : public TaroEvent {
 
     // 填充序列化napi
     virtual void serialize() = 0;
-    
+
     int serializeFun() override;
 
     void setEvent(ArkUI_GestureEvent* event) {

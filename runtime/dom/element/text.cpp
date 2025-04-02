@@ -9,9 +9,9 @@
 #include "runtime/dom/ark_nodes/stack.h"
 #include "runtime/dom/ark_nodes/text.h"
 #include "runtime/dom/document.h"
+#include "runtime/dom/element/page_container.h"
 #include "runtime/dom/event/event_hm/event_types/event_areachange.h"
 #include "runtime/dom/event/event_hm/event_types/event_click.h"
-#include "runtime/dom/element/page_container.h"
 
 namespace TaroRuntime {
 namespace TaroDOM {
@@ -20,7 +20,7 @@ namespace TaroDOM {
         tag_name_ = TAG_NAME::TEXT;
     }
 
-    void TaroText::SetStyleContent(const std::shared_ptr<TaroRenderNode> &renderNode, const StylesheetRef &styleRef, const bool isForceUpdate) {
+    void TaroText::SetStyleContent(const std::shared_ptr<TaroRenderNode>& renderNode, const StylesheetRef& styleRef, const bool isForceUpdate) {
         renderNode->SetStyle(styleRef);
         if (isForceUpdate) {
             auto textRenderNode = std::dynamic_pointer_cast<TaroTextNode>(renderNode);
@@ -46,10 +46,12 @@ namespace TaroDOM {
     void TaroText::SetAttributesToRenderNode() {
         TaroElement::SetAttributesToRenderNode();
         std::shared_ptr<TaroNode> parentNode = GetParentNode();
-        if (!parentNode) return;
+        if (!parentNode)
+            return;
         // 父节点是 Text，说明正在处理 Text 里的子节点
-        if (dynamic_cast<TaroText *>(parentNode.get())) {
-            if (!parentNode->HasRenderNode()) return;
+        if (dynamic_cast<TaroText*>(parentNode.get())) {
+            if (!parentNode->HasRenderNode())
+                return;
             for (auto child : parentNode->child_nodes_) {
                 auto item = std::dynamic_pointer_cast<TaroDOM::TaroElement>(child);
                 if (!item->is_init_) {
@@ -67,7 +69,8 @@ namespace TaroDOM {
                 SetStyleContent(parentRenderNode, std::dynamic_pointer_cast<TaroDOM::TaroElement>(parentNode)->style_, true);
             }
         } else {
-            if (!HasRenderNode()) return;
+            if (!HasRenderNode())
+                return;
             if (child_nodes_.size() > 0) {
                 for (auto child : child_nodes_) {
                     auto item = std::dynamic_pointer_cast<TaroDOM::TaroElement>(child);
@@ -96,7 +99,7 @@ namespace TaroDOM {
             return text_context_;
         } else if (node_type_ == NODE_TYPE::ELEMENT_NODE) {
             std::string textContent = text_context_;
-            for (auto &iter : child_nodes_) {
+            for (auto& iter : child_nodes_) {
                 if (auto text = std::dynamic_pointer_cast<TaroText>(iter)) {
                     textContent += text->GetTextContent();
                 }
@@ -107,7 +110,8 @@ namespace TaroDOM {
     }
 
     std::string TaroText::GetTextContent(napi_value value) {
-        if (!value) return "";
+        if (!value)
+            return "";
         NapiGetter getter(value);
         if (getter.Type() != napi_object) {
             getter = getter.GetValue();
@@ -164,7 +168,7 @@ namespace TaroDOM {
     void TaroText::Build() {
         if (!is_init_) {
             std::shared_ptr<TaroNode> parentNode = GetParentNode();
-            if (parentNode != nullptr && !dynamic_cast<TaroText *>(parentNode.get())) {
+            if (parentNode != nullptr && !dynamic_cast<TaroText*>(parentNode.get())) {
                 auto element = std::static_pointer_cast<TaroElement>(shared_from_this());
                 auto render_text = std::make_shared<TaroTextNode>(element);
                 render_text->Build();
@@ -239,7 +243,7 @@ namespace TaroDOM {
         renderNode->SetTextRenderNodeImageInfos(imageInfos);
     }
 
-    bool TaroText::Reusable(std::shared_ptr<TaroElement> &reuseElement) {
+    bool TaroText::Reusable(std::shared_ptr<TaroElement>& reuseElement) {
         if (!TaroElement::Reusable(reuseElement)) {
             return false;
         }
@@ -268,12 +272,12 @@ namespace TaroDOM {
         return true;
     }
 
-    void TaroText::Build(std::shared_ptr<TaroElement> &reuse_element) {
+    void TaroText::Build(std::shared_ptr<TaroElement>& reuse_element) {
         auto new_node = std::dynamic_pointer_cast<TaroTextNode>(GetHeadRenderNode());
         auto element = std::static_pointer_cast<TaroElement>(shared_from_this());
         auto ark_handle = reuse_element->GetNodeHandle();
         std::shared_ptr<TaroNode> parentNode = GetParentNode();
-        if (parentNode == nullptr || dynamic_cast<TaroText *>(parentNode.get())) {
+        if (parentNode == nullptr || dynamic_cast<TaroText*>(parentNode.get())) {
             return;
         }
         if (new_node == nullptr && ark_handle == nullptr) {
@@ -317,23 +321,25 @@ namespace TaroDOM {
         text_render->SetArkUINodeHandle(nullptr);
     }
 
-    bool TaroText::bindListenEvent(const std::string &event_name) {
+    bool TaroText::bindListenEvent(const std::string& event_name) {
         if (event_name == "click") {
             auto parentNode = GetParentNode();
-            if (parentNode != nullptr && dynamic_cast<TaroText *>(parentNode.get())) {
+            if (parentNode != nullptr && dynamic_cast<TaroText*>(parentNode.get())) {
                 auto innerTextRenderNode = std::dynamic_pointer_cast<TaroTextNode>(parentNode->GetHeadRenderNode());
                 auto innerTextNode = innerTextRenderNode->GetTextArkNode();
                 if (innerTextNode) {
                     auto nid = nid_;
-                    event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_CLICK, event_name, [innerTextRenderNode, nid](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
+                    event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_CLICK, event_name, [innerTextRenderNode, nid](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
                         auto clickEvent = std::static_pointer_cast<TaroEvent::TaroEventClick>(event);
-//                         auto compEvent = OH_ArkUI_NodeEvent_GetNodeComponentEvent(clickEvent->event_);
+                        //                         auto compEvent = OH_ArkUI_NodeEvent_GetNodeComponentEvent(clickEvent->event_);
                         auto clickX = clickEvent->x_;
                         auto clickY = clickEvent->y_;
                         if (innerTextRenderNode->GetIfInTextNodeArea(nid, clickX, clickY)) {
                             return 0;
                         }
-                        return -1; }, innerTextNode);
+                        return -1;
+                    },
+                                                  innerTextNode);
                     return true;
                 }
                 return false;
@@ -347,19 +353,19 @@ namespace TaroDOM {
 
     void TaroText::UpdateContent(const bool isNeedReset) {
         auto parentNode = GetParentNode();
-        if (!dynamic_cast<TaroText *>(parentNode.get())) {
+        if (!dynamic_cast<TaroText*>(parentNode.get())) {
             if (auto castText = dynamic_pointer_cast<TaroTextNode>(GetHeadRenderNode())) {
                 if (isNeedReset) {
                     auto innerTextNode = castText->GetTextArkNode();
                     if (innerTextNode) {
                         event_emitter_->clearNodeEvent(innerTextNode);
-                        for (auto &child : child_nodes_) {
+                        for (auto& child : child_nodes_) {
                             std::dynamic_pointer_cast<TaroElement>(child)->getEventEmitter()->clearNodeEvent(innerTextNode);
                         }
                     }
                     castText->Reset();
                     castText->Build();
-                    for (auto &child : child_nodes_) {
+                    for (auto& child : child_nodes_) {
                         std::dynamic_pointer_cast<TaroElement>(child)->updateListenEvent();
                     }
                 }

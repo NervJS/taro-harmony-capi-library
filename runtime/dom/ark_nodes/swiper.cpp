@@ -2,7 +2,6 @@
  * Copyright (c) 2018 O2Team. All Rights Reserved.
  */
 
-
 #include "swiper.h"
 
 #include <arkui/native_type.h>
@@ -30,7 +29,7 @@ namespace TaroDOM {
     TaroSwiperNode::~TaroSwiperNode() {}
 
     void TaroSwiperNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_SWIPER));
         ArkUI_NumberValue sizeValue[] = {};
         ArkUI_AttributeItem sizeItem = {sizeValue, 1};
@@ -105,12 +104,13 @@ namespace TaroDOM {
     };
 
     void TaroSwiperNode::SetIndex(int32_t index, bool disableAnimation) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
-    
-        const ArkUI_AttributeItem *_item = nativeNodeApi->getAttribute(GetArkUINodeHandle(), NODE_SWIPER_INDEX);
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
+
+        const ArkUI_AttributeItem* _item = nativeNodeApi->getAttribute(GetArkUINodeHandle(), NODE_SWIPER_INDEX);
         auto currentIndex = _item->value[0].i32;
-        if(currentIndex == index) return;
-     
+        if (currentIndex == index)
+            return;
+
         ArkUI_NumberValue arkUI_NumberValue[2] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 2};
         arkUI_NumberValue[0].i32 = index;
@@ -119,7 +119,7 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetDisableSwiper(bool disableSwiper) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue arkUI_NumberValue[] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
         arkUI_NumberValue[0].i32 = disableSwiper;
@@ -127,7 +127,7 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetLoop(bool loop) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue arkUI_NumberValue[] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
         arkUI_NumberValue[0].i32 = loop;
@@ -135,7 +135,7 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetDuration(float duration) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue arkUI_NumberValue[] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
         arkUI_NumberValue[0].f32 = duration;
@@ -143,7 +143,7 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetInterval(float interval) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue arkUI_NumberValue[] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
         arkUI_NumberValue[0].f32 = interval;
@@ -151,7 +151,7 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetVertical(bool isVertical) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue arkUI_NumberValue[] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
         int32_t vertical = isVertical ? 1 : 0;
@@ -160,7 +160,7 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetAutoPlay(bool autoPlay) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue arkUI_NumberValue[] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
         int32_t autoPlayValue = autoPlay ? 1 : 0;
@@ -169,7 +169,7 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetIndicator(bool showIndicator) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue arkUI_NumberValue[] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
         int32_t showIndicatorValue = showIndicator ? 1 : 0;
@@ -180,7 +180,7 @@ namespace TaroDOM {
     void TaroSwiperNode::SetIndicatorActiveColor(
         ArkUI_SwiperIndicatorType type, uint32_t indicatorColor,
         uint32_t indicatorActiveColor) {
-        ArkUI_SwiperIndicator *indicator =
+        ArkUI_SwiperIndicator* indicator =
             OH_ArkUI_SwiperIndicator_Create(type);
         if (indicator == nullptr) {
             TARO_LOG_ERROR("TaroSwiperNode", "Create swiper indicator failed");
@@ -189,7 +189,7 @@ namespace TaroDOM {
         OH_ArkUI_SwiperIndicator_SetColor(indicator, indicatorColor);
         OH_ArkUI_SwiperIndicator_SetSelectedColor(indicator,
                                                   indicatorActiveColor);
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[] = {};
         value[0].i32 = type;
         ArkUI_AttributeItem item = {value, 1, nullptr, indicator};
@@ -201,7 +201,7 @@ namespace TaroDOM {
         auto weakSelf = std::weak_ptr<TaroSwiperNode>(std::static_pointer_cast<TaroSwiperNode>(shared_from_this()));
         DirtyTaskPipeline::GetInstance()->RegistryAdapterAttach([weakSelf, nextMargin]() {
             if (auto self_ = weakSelf.lock()) {
-                NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+                NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
                 ArkUI_NumberValue arkUI_NumberValue[] = {};
                 ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
                 arkUI_NumberValue[0].f32 = nextMargin;
@@ -215,7 +215,7 @@ namespace TaroDOM {
         auto weakSelf = std::weak_ptr<TaroSwiperNode>(std::static_pointer_cast<TaroSwiperNode>(shared_from_this()));
         DirtyTaskPipeline::GetInstance()->RegistryAdapterAttach([weakSelf, prevMargin]() {
             if (auto self_ = weakSelf.lock()) {
-                NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+                NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
                 ArkUI_NumberValue arkUI_NumberValue[] = {};
                 ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
                 arkUI_NumberValue[0].f32 = prevMargin;
@@ -229,7 +229,7 @@ namespace TaroDOM {
         auto weakSelf = std::weak_ptr<TaroSwiperNode>(std::static_pointer_cast<TaroSwiperNode>(shared_from_this()));
         DirtyTaskPipeline::GetInstance()->RegistryAdapterAttach([weakSelf, displayCount]() {
             if (auto self_ = weakSelf.lock()) {
-                NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+                NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
                 ArkUI_NumberValue arkUI_NumberValue[] = {};
                 ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
                 arkUI_NumberValue[0].i32 = displayCount;

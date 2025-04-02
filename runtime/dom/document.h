@@ -52,7 +52,7 @@ namespace TaroDOM {
 
         void Build() override {};
 
-        std::shared_ptr<TaroElement> CreateElement(napi_value &node);
+        std::shared_ptr<TaroElement> CreateElement(napi_value& node);
 
         std::shared_ptr<TaroElement> GetElementById(int32_t id);
 

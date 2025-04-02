@@ -12,28 +12,28 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroElementChangedInSwiper : public TaroEventBase {
             public:
-            TaroElementChangedInSwiper(const std::string &js_event_type,
-                                       ArkUI_NodeEvent *event);
+            TaroElementChangedInSwiper(const std::string& js_event_type,
+                                       ArkUI_NodeEvent* event);
 
             virtual ~TaroElementChangedInSwiper();
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
             int32_t current_;
         };
 
         class TaroEventTransitionInSwiper final : public TaroEventBase {
             public:
-            TaroEventTransitionInSwiper(const std::string &js_event_type,
-                                        ArkUI_NodeEvent *event);
+            TaroEventTransitionInSwiper(const std::string& js_event_type,
+                                        ArkUI_NodeEvent* event);
 
             virtual ~TaroEventTransitionInSwiper() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
             float move_val_ = 0.0;
         };

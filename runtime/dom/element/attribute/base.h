@@ -23,7 +23,7 @@ namespace TaroDOM {
             std::shared_ptr<TaroRenderNode> render_node_;
 
             protected:
-            TaroNode *node_owner_;
+            TaroNode* node_owner_;
             napi_value attrs_ = nullptr;
 
             napi_value GetListenersNodeValue();

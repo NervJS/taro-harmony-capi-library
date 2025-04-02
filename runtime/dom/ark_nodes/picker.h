@@ -3,6 +3,7 @@
  */
 
 #include <cstdint>
+
 #include "runtime/cssom/CSSStyleSheet.h"
 
 namespace TaroRuntime {
@@ -32,16 +33,16 @@ namespace TaroDOM {
 
         void SetOKText(std::string okText);
         void SetCancelText(std::string cancelText);
-    
+
         protected:
         bool isPickerCreated = false;
-    
+
         private:
         ArkUI_NodeHandle CreateDialogContent();
         virtual ArkUI_NodeHandle CreatePickerContent() = 0;
         ArkUI_NodeHandle confirmHandle;
         ArkUI_NodeHandle cancelHandle;
-    
+
         protected:
         ArkUI_NativeDialogHandle dialogHandle;
         ArkUI_NodeHandle pickerHandle;
@@ -107,7 +108,7 @@ namespace TaroDOM {
         ArkUI_NodeHandle CreatePickerContent() override;
         void onConfirm() override;
         void onCancel() override;
-    
+
         void SetRegionData(std::string regionData, uint32_t province, uint32_t city, uint32_t region);
     };
 

@@ -144,7 +144,7 @@ namespace TaroCSSOM {
             FontWeight fontWeight;
             FontStyle fontStyle;
             Color color;
-            PointerEvents  pointerEvents;
+            PointerEvents pointerEvents;
             TextDecorationStyle textDecorationStyle;
             TextDecorationLine textDecorationLine;
             TextDecorationColor textDecorationColor;
@@ -202,12 +202,12 @@ namespace TaroCSSOM {
             Stylesheet();
 
             static std::shared_ptr<Stylesheet> assign(
-                const std::shared_ptr<Stylesheet> &s1,
-                const std::shared_ptr<Stylesheet> &s2);
+                const std::shared_ptr<Stylesheet>& s1,
+                const std::shared_ptr<Stylesheet>& s2);
 
             static bool compare(
-                const std::shared_ptr<Stylesheet> &s1,
-                const std::shared_ptr<Stylesheet> &s2);
+                const std::shared_ptr<Stylesheet>& s1,
+                const std::shared_ptr<Stylesheet>& s2);
             /**
              * 属性键值对解析
              * 注：方法内部做去除字符串两端空格的处理
@@ -221,8 +221,8 @@ namespace TaroCSSOM {
 
             private:
             template <typename T>
-            static void compareAttributes(const CSSProperty::Type &name, const T &attr1,
-                                          const T &attr2, std::vector<Change> &changes);
+            static void compareAttributes(const CSSProperty::Type& name, const T& attr1,
+                                          const T& attr2, std::vector<Change>& changes);
         };
 
     } // namespace TaroStylesheet

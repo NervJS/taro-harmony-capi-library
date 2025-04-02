@@ -5,7 +5,7 @@
 
 #include "js_executor.h"
 
-std::string JSExecutor::getSyntheticBundlePath(uint32_t bundleId, const std::string &bundlePath) {
+std::string JSExecutor::getSyntheticBundlePath(uint32_t bundleId, const std::string& bundlePath) {
     return folly::to<std::string>("seg-", bundleId, ".js");
 }
 

@@ -27,7 +27,8 @@ struct InstanceCallback {
 class TaroInstance : std::enable_shared_from_this<TaroInstance> {
     public:
     TaroInstance(int id, napi_env env, bool shouldEnableBackgroundExecutor)
-        : m_id(id), taskExecutor(std::make_shared<TaroThread::TaskExecutor>(env, shouldEnableBackgroundExecutor)) {};
+        : m_id(id),
+          taskExecutor(std::make_shared<TaroThread::TaskExecutor>(env, shouldEnableBackgroundExecutor)) {};
 
     ~TaroInstance() {};
 
@@ -44,9 +45,9 @@ class TaroInstance : std::enable_shared_from_this<TaroInstance> {
     std::shared_ptr<TaroThread::TaskExecutor> getTaskExecutor();
 
     void loadScript(
-        std::vector<uint8_t> &&bundle,
+        std::vector<uint8_t>&& bundle,
         std::string const sourceURL,
-        std::function<void(const std::string)> &&onFinish);
+        std::function<void(const std::string)>&& onFinish);
 
     void loadScriptFromString(std::unique_ptr<const JSBigString> string, std::string sourceURL, bool loadSynchronously);
 
@@ -58,7 +59,7 @@ class TaroInstance : std::enable_shared_from_this<TaroInstance> {
     std::shared_ptr<InstanceCallback> callback_;
     std::shared_ptr<NativeToJsBridge> nativeToJsBridge_;
     std::shared_ptr<ModuleRegistry> moduleRegistry_;
-    void callNativeModules(folly::dynamic &&calls, bool isEndOfBatch);
+    void callNativeModules(folly::dynamic&& calls, bool isEndOfBatch);
     void loadBundle(std::unique_ptr<const JSBigString> startupScript, std::string startupScriptSourceURL);
     void loadBundleSync(std::unique_ptr<const JSBigString> startupScript, std::string startupScriptSourceURL);
     std::mutex m_syncMutex;
@@ -72,13 +73,13 @@ class TaroInstance : std::enable_shared_from_this<TaroInstance> {
         bool m_shouldBuffer = true;
         std::list<std::function<void()>> m_workBuffer;
 
-        void scheduleAsync(std::function<void()> &&work);
+        void scheduleAsync(std::function<void()>&& work);
 
         public:
         void setNativeToJsBridgeAndFlushCalls(
             std::weak_ptr<NativeToJsBridge> nativeToJsBridge);
-        void invokeAsync(std::function<void()> &&work) override;
-        void invokeSync(std::function<void()> &&work) override;
+        void invokeAsync(std::function<void()>&& work) override;
+        void invokeSync(std::function<void()>&& work) override;
     };
     std::shared_ptr<JSCallInvoker> jsCallInvoker_ = std::make_shared<JSCallInvoker>();
 };

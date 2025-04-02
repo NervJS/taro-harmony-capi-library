@@ -20,8 +20,8 @@ namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 class BackgroundImage : public AttributeBase<BackgroundImageItem> {
     public:
     BackgroundImage() = default;
-    BackgroundImage(const napi_value &);
-    void setValueFromNapi(const napi_value &) override;
+    BackgroundImage(const napi_value&);
+    void setValueFromNapi(const napi_value&) override;
 
     void setValueFromStringView(std::string_view value) override;
 

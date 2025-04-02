@@ -11,7 +11,8 @@ namespace TaroRuntime {
 namespace TaroDOM {
 
     TaroFlowSection::TaroFlowSection(napi_value node)
-        : TaroElement(node), column_(1) {}
+        : TaroElement(node),
+          column_(1) {}
 
     TaroFlowSection::~TaroFlowSection() {}
 
@@ -167,8 +168,7 @@ namespace TaroDOM {
                 vp2Px(margin_.value().marginTop),
                 vp2Px(margin_.value().marginRight),
                 vp2Px(margin_.value().marginBottom),
-                vp2Px(margin_.value().marginLeft)
-            );
+                vp2Px(margin_.value().marginLeft));
         }
     }
 

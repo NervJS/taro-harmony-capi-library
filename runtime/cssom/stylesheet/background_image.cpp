@@ -17,11 +17,13 @@ static void fixStops(std::vector<float>& stops) {
     // 处理 stops 里面没有设置位置的地方
     // https://www.w3.org/TR/css-images-3/#color-stop-syntax
     int lastNumIndex = 0;
-    if (std::isnan(stops[0])) stops[0] = 0;
+    if (std::isnan(stops[0]))
+        stops[0] = 0;
     if (std::isnan(stops[stops.size() - 1]))
         stops[stops.size() - 1] = 1;
     for (int i = 1; i < stops.size(); i++) {
-        if (std::isnan(stops[i])) continue;
+        if (std::isnan(stops[i]))
+            continue;
 
         if (i - lastNumIndex > 1) {
             float step = (stops[i] - stops[lastNumIndex]) /
@@ -310,7 +312,8 @@ void BackgroundImage::setValueFromStringView(std::string_view value) {
     };
 
     auto value2params = splitParams(value);
-    if (!value2params.size()) return;
+    if (!value2params.size())
+        return;
     // 因为鸿蒙只支持一个backgroundImage参数，所以先处理第一项
     value = value2params[0];
     // 如果以 url 开头，就是图片
@@ -389,7 +392,6 @@ void BackgroundImage::setValueFromStringView(std::string_view value) {
 
                 // TODO 鸿蒙通过尺寸值来设置径向渐变的尺寸，但是这个位置不好拿元素的宽高，先写个壳，理论上百分比也得转成尺寸
                 if (xStr.size()) {
-
                     Dimension xLen = Dimension::FromString(xStr);
                     switch (xLen.Unit()) {
                         case DimensionUnit::PERCENT:

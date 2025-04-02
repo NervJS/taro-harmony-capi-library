@@ -14,5 +14,5 @@
 std::unique_ptr<facebook::jsi::Runtime> createQuickJSRuntime(std::unique_ptr<QuickJSRuntimeConfig> config,
                                                              std::shared_ptr<MessageQueueThread> jsQueue);
 
-std::unique_ptr<facebook::jsi::Runtime> createSharedQuickJSRuntime(const facebook::jsi::Runtime *sharedRuntime,
+std::unique_ptr<facebook::jsi::Runtime> createSharedQuickJSRuntime(const facebook::jsi::Runtime* sharedRuntime,
                                                                    std::unique_ptr<QuickJSRuntimeConfig> config);

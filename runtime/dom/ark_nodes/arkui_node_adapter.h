@@ -60,7 +60,7 @@ namespace TaroDOM {
         void recycleManager(std::shared_ptr<TaroElement>& taroElement, bool need_match_style);
 
         bool isInitializedElement(std::shared_ptr<TaroElement>& newElement);
-        void updateStyle(bool need_match_style, std::shared_ptr<TaroElement> &taroElement);
+        void updateStyle(bool need_match_style, std::shared_ptr<TaroElement>& taroElement);
 
         void checkParentDirty();
         void clearParentDirty();

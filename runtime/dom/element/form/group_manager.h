@@ -17,12 +17,12 @@ namespace TaroDOM {
     class FormGroup {
         public:
         FormGroup(std::string name);
-        void AppendChild(const std::shared_ptr<TaroNode> &node);
-        void DeleteChild(const std::shared_ptr<TaroNode> &node);
+        void AppendChild(const std::shared_ptr<TaroNode>& node);
+        void DeleteChild(const std::shared_ptr<TaroNode>& node);
         std::string GetName();
 
         private:
-        bool CheckChildExist(const std::shared_ptr<TaroNode> &node);
+        bool CheckChildExist(const std::shared_ptr<TaroNode>& node);
 
         private:
         std::string name_;
@@ -34,10 +34,10 @@ namespace TaroDOM {
         FormGroupManager();
         std::shared_ptr<FormGroup> CreateGroup(std::string name);
         void DelGroup(std::string name);
-        void AppendChildForGroup(std::string name, const std::shared_ptr<TaroNode> &node);
-        void AppendChildWithID(std::string id, const std::shared_ptr<TaroNode> &node);
-        void DelChildForGroup(std::string name, const std::shared_ptr<TaroNode> &node);
-        std::shared_ptr<TaroNode> GetNodeById(const std::string &id);
+        void AppendChildForGroup(std::string name, const std::shared_ptr<TaroNode>& node);
+        void AppendChildWithID(std::string id, const std::shared_ptr<TaroNode>& node);
+        void DelChildForGroup(std::string name, const std::shared_ptr<TaroNode>& node);
+        std::shared_ptr<TaroNode> GetNodeById(const std::string& id);
         void Clear();
 
         private:

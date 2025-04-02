@@ -19,11 +19,11 @@ namespace TaroAnimate {
             std::weak_ptr<TaroDOM::TaroRenderNode> node);
         ~TaroCSSTransition() = default;
 
-        int bindTransition(const TaroCSSOM::TaroStylesheet::TransitionParam &param);
+        int bindTransition(const TaroCSSOM::TaroStylesheet::TransitionParam& param);
 
         void clear(CSSProperty::Type prop_type);
 
-        void getRunningProp(std::vector<CSSProperty::Type> &props);
+        void getRunningProp(std::vector<CSSProperty::Type>& props);
 
         void cancelTransition(CSSProperty::Type);
 
@@ -33,9 +33,9 @@ namespace TaroAnimate {
         void clearAnimId(CSSProperty::Type prop_type, int32_t anim_id);
         void stopCallBack(int32_t anim_id);
         std::shared_ptr<TaroAnimation> createCurveAnimation(
-            CSSProperty::Type prop_type, const TaroAnimationPropValue &begin_value,
-            const TaroAnimationPropValue &end_value, std::shared_ptr<TaroCurve> curve,
-            const TaroAnimationPropSetFun &set_fun);
+            CSSProperty::Type prop_type, const TaroAnimationPropValue& begin_value,
+            const TaroAnimationPropValue& end_value, std::shared_ptr<TaroCurve> curve,
+            const TaroAnimationPropSetFun& set_fun);
 
         private:
         std::list<std::pair<CSSProperty::Type, std::shared_ptr<TaroAnimator>>> type_to_animator_;

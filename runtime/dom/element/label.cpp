@@ -27,7 +27,7 @@ namespace TaroDOM {
     }
 
     void TaroLabel::HandleEvents() {
-        auto onClick = [this](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
+        auto onClick = [this](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
             if (callback_) {
                 callback_(nullptr);
             }
@@ -81,7 +81,7 @@ namespace TaroDOM {
         }
     }
 
-    std::shared_ptr<TaroNode> TaroLabel::GetElementById(const std::string &id) {
+    std::shared_ptr<TaroNode> TaroLabel::GetElementById(const std::string& id) {
         if (context_) {
             if (context_->group_manger_) {
                 return context_->group_manger_->GetNodeById(id);
@@ -91,7 +91,7 @@ namespace TaroDOM {
     }
 
     std::shared_ptr<TaroNode> TaroLabel::GetFirstNode() {
-        for (auto &iter : child_nodes_) {
+        for (auto& iter : child_nodes_) {
             auto temp = std::static_pointer_cast<TaroElement>(iter);
             if (temp->tag_name_ == TAG_NAME::RADIO || temp->tag_name_ == TAG_NAME::CHECKBOX || temp->tag_name_ == TAG_NAME::BUTTON) {
                 return temp;

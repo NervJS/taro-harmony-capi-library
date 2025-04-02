@@ -11,7 +11,7 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        int TaroEventClick::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventClick::parseHmEvent(ArkUI_NodeEvent* event) {
             auto com_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (com_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get touch_action failed");
@@ -28,7 +28,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventClick::serializeFun(napi_value &ret_obj) {
+        int TaroEventClick::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
 
             // changedTouches填充

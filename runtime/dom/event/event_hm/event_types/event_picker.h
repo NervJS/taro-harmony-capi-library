@@ -9,13 +9,13 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroPickerChangeEvent : public TaroEventBase {
             public:
-            TaroPickerChangeEvent(const std::string &js_event_type, ArkUI_NodeEvent *event);
+            TaroPickerChangeEvent(const std::string& js_event_type, ArkUI_NodeEvent* event);
 
             virtual ~TaroPickerChangeEvent() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
             int parseEvent();
 

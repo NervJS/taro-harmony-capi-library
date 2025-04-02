@@ -17,8 +17,9 @@
 
 namespace TaroRuntime {
 namespace TaroDOM {
-    TaroNode::TaroNode(napi_value &node) {
-        if (node == nullptr) return;
+    TaroNode::TaroNode(napi_value& node) {
+        if (node == nullptr)
+            return;
 
         ref_ = ArkJS(NativeNodeApi::env).createReference(node);
         nid_ = GetNodeId();
@@ -37,7 +38,7 @@ namespace TaroDOM {
             ArkJS(NativeNodeApi::env).deleteReference(ref_);
         }
 
-        for (auto &child : child_nodes_) {
+        for (auto& child : child_nodes_) {
             TaroDocument::GetInstance()->DetachTaroNode(child);
         }
         child_nodes_.clear();
@@ -142,7 +143,8 @@ namespace TaroDOM {
     }
 
     void TaroNode::appendChild(std::shared_ptr<TaroNode> child) {
-        if (!child) return;
+        if (!child)
+            return;
 
         detachTaroNodeReference(child);
 
@@ -160,7 +162,8 @@ namespace TaroDOM {
     void TaroNode::detachTaroNodeReference(std::shared_ptr<TaroNode> child) {
         auto parent = child->GetParentNode();
 
-        if (parent == nullptr) return;
+        if (parent == nullptr)
+            return;
 
         /** begin: 将 child 的上下左右父子兄弟关系全部解绑 **/
         auto it = std::find(parent->child_nodes_.begin(), parent->child_nodes_.end(), child);
@@ -181,7 +184,8 @@ namespace TaroDOM {
         child->SetPreviousSibling(nullptr);
         /** end: 将 child 的上下左右父子兄弟关系全部解绑 **/
 
-        if (!child->is_init_) return;
+        if (!child->is_init_)
+            return;
 
         auto element = std::static_pointer_cast<TaroElement>(shared_from_this());
         auto header = child->GetHeadRenderNode();
@@ -228,7 +232,8 @@ namespace TaroDOM {
     }
 
     void TaroNode::removeChild(std::shared_ptr<TaroNode> child) {
-        if (!child) return;
+        if (!child)
+            return;
 
         detachTaroNodeReference(child);
         onRemoveChild(child, false);
@@ -236,7 +241,8 @@ namespace TaroDOM {
     }
 
     void TaroNode::replaceChild(std::shared_ptr<TaroNode> newChild, std::shared_ptr<TaroNode> oldChild) {
-        if (!newChild) return;
+        if (!newChild)
+            return;
 
         detachTaroNodeReference(newChild);
         TARO_LOG_DEBUG("TaroNode", "replaceChild pid: %{public}d, cid: %{public}d, odd-nid: %{public}d", nid_, newChild->nid_, oldChild->nid_);
@@ -263,7 +269,8 @@ namespace TaroDOM {
     }
 
     void TaroNode::insertChildAt(std::shared_ptr<TaroNode> child, uint32_t index) {
-        if (!child) return;
+        if (!child)
+            return;
 
         detachTaroNodeReference(child);
 
@@ -291,7 +298,8 @@ namespace TaroDOM {
     }
 
     void TaroNode::insertBefore(std::shared_ptr<TaroNode> child, std::shared_ptr<TaroNode> refChild) {
-        if (!child) return;
+        if (!child)
+            return;
 
         detachTaroNodeReference(child);
 
@@ -322,7 +330,7 @@ namespace TaroDOM {
                 }
                 current = current->GetParentNode();
             }
-        } catch (const std::exception &e) {
+        } catch (const std::exception& e) {
         }
     }
 
@@ -356,7 +364,8 @@ namespace TaroDOM {
                 child->onDeleteRenderNode(item);
             }
         }
-        if (!child->is_init_) return;
+        if (!child->is_init_)
+            return;
         if (GetHeadRenderNode() != GetFooterRenderNode()) {
             ProcessRenderNodeFromTaroNode(child, [](std::weak_ptr<TaroRenderNode> child) {
                 if (auto element = child.lock()) {

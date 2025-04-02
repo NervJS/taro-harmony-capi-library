@@ -36,7 +36,7 @@ namespace TaroDOM {
     }
 
     void TaroButtonNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_STACK));
     }
 } // namespace TaroDOM

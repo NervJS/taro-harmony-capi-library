@@ -8,5 +8,7 @@
 
 namespace TaroRuntime::TaroDOM::TaroEvent {
 EventGenerator::EventGenerator(EventGeneratorType gen_type, std::shared_ptr<TaroElement> node)
-    : gen_type_(gen_type), node_owner_(node), nid_(node->nid_) {}
+    : gen_type_(gen_type),
+      node_owner_(node),
+      nid_(node->nid_) {}
 } // namespace TaroRuntime::TaroDOM::TaroEvent

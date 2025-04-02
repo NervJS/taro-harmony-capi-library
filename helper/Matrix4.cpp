@@ -9,7 +9,7 @@ Matrix4::Matrix4() {
         data[i] = (i % 5 == 0) ? 1.0f : 0.0f; // 创建一个单位矩阵
     }
 }
-Matrix4::Matrix4(const Matrix4 &other) {
+Matrix4::Matrix4(const Matrix4& other) {
     data = other.data;
 }
 Matrix4::Matrix4(std::initializer_list<float> list) {
@@ -29,7 +29,7 @@ Matrix4 Matrix4::fromValues(float m00, float m01, float m02, float m03,
             m20, m21, m22, m23, m30, m31, m32, m33};
 }
 
-Matrix4 Matrix4::fromVector(const std::vector<float> &vec) {
+Matrix4 Matrix4::fromVector(const std::vector<float>& vec) {
     if (vec.size() == 6) {
         return fromValues(vec[0], vec[1], vec[2], vec[3], vec[4], vec[5]);
     } else if (vec.size() == 16) {
@@ -63,15 +63,15 @@ Matrix4 Matrix4::translation(float tx, float ty, float tz) {
     return result;
 }
 
-Matrix4 &Matrix4::translate(float x) {
+Matrix4& Matrix4::translate(float x) {
     return translate(x, 0, 0);
 }
 
-Matrix4 &Matrix4::translate(float x, float y) {
+Matrix4& Matrix4::translate(float x, float y) {
     return translate(x, y, 0);
 }
 
-Matrix4 &Matrix4::translate(float x, float y, float z) {
+Matrix4& Matrix4::translate(float x, float y, float z) {
     *this = *this * translation(x, y, z);
     return *this;
 }
@@ -88,15 +88,15 @@ Matrix4 Matrix4::translationZ(float tz) {
     return translation(0, 0, tz);
 }
 
-Matrix4 &Matrix4::translateX(float x) {
+Matrix4& Matrix4::translateX(float x) {
     return translate(x, 0, 0);
 }
 
-Matrix4 &Matrix4::translateY(float y) {
+Matrix4& Matrix4::translateY(float y) {
     return translate(0, y, 0);
 }
 
-Matrix4 &Matrix4::translateZ(float z) {
+Matrix4& Matrix4::translateZ(float z) {
     return translate(0, 0, z);
 }
 
@@ -128,7 +128,8 @@ void Matrix4::set(int32_t row, int32_t col, float value) {
 }
 
 bool Matrix4::normalize() {
-    if (NearZero(this->get(3, 3))) return false;
+    if (NearZero(this->get(3, 3)))
+        return false;
     float scale = 1.0f / this->get(3, 3);
 
     for (int i = 0; i < 16; i++) {
@@ -150,25 +151,25 @@ Matrix4 Matrix4::scalingZ(float sz) {
     return scaling(1, 1, sz);
 }
 
-Matrix4 &Matrix4::scale(float x, float y) {
+Matrix4& Matrix4::scale(float x, float y) {
     *this = *this * scaling(x, y);
     return *this;
 }
 
-Matrix4 &Matrix4::scale(float x, float y, float z) {
+Matrix4& Matrix4::scale(float x, float y, float z) {
     *this = *this * scaling(x, y, z);
     return *this;
 }
 
-Matrix4 &Matrix4::scaleX(float x) {
+Matrix4& Matrix4::scaleX(float x) {
     return scale(x, 1, 1);
 }
 
-Matrix4 &Matrix4::scaleY(float y) {
+Matrix4& Matrix4::scaleY(float y) {
     return scale(1, y, 1);
 }
 
-Matrix4 &Matrix4::scaleZ(float z) {
+Matrix4& Matrix4::scaleZ(float z) {
     return scale(1, 1, z);
 }
 
@@ -216,7 +217,7 @@ float Matrix4::staticDot(const float a[3], const float b[3]) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 };
 
-void Matrix4::staticCombine(float *out, const float *a, const float *b,
+void Matrix4::staticCombine(float* out, const float* a, const float* b,
                             float scaleA, float scaleB) {
     for (int i = 0; i < 3; i++) {
         out[i] = a[i] * scaleA + b[i] * scaleB;
@@ -254,27 +255,27 @@ Matrix4 Matrix4::rotationZ(float angle) {
     return result;
 }
 
-Matrix4 &Matrix4::rotate(float angle) {
+Matrix4& Matrix4::rotate(float angle) {
     *this = *this * rotation(angle);
     return *this;
 }
 
-Matrix4 &Matrix4::rotate(float x, float y, float z, float angle) {
+Matrix4& Matrix4::rotate(float x, float y, float z, float angle) {
     *this = *this * rotation(x, y, z, angle);
     return *this;
 }
 
-Matrix4 &Matrix4::rotateX(float angle) {
+Matrix4& Matrix4::rotateX(float angle) {
     *this = *this * rotationX(angle);
     return *this;
 }
 
-Matrix4 &Matrix4::rotateY(float angle) {
+Matrix4& Matrix4::rotateY(float angle) {
     *this = *this * rotationY(angle);
     return *this;
 }
 
-Matrix4 &Matrix4::rotateZ(float angle) {
+Matrix4& Matrix4::rotateZ(float angle) {
     *this = *this * rotationZ(angle);
     return *this;
 }
@@ -291,17 +292,17 @@ Matrix4 Matrix4::skewXMatrix(float angle) {
     result.data[4] = tan(angle);
     return result;
 }
-Matrix4 &Matrix4::skew(float angleX, float angleY) {
+Matrix4& Matrix4::skew(float angleX, float angleY) {
     *this = *this * skewMatrix(angleX, angleY);
     return *this;
 }
 
-Matrix4 &Matrix4::skewX(float angle) {
+Matrix4& Matrix4::skewX(float angle) {
     *this = *this * skewXMatrix(angle);
     return *this;
 }
 
-Matrix4 &Matrix4::skewY(float angle) {
+Matrix4& Matrix4::skewY(float angle) {
     *this = *this * skewYMatrix(angle);
     return *this;
 }
@@ -364,7 +365,7 @@ Matrix4 Matrix4::quaternionMatrix(float x, float y, float z, float w) {
     return matrix;
 }
 
-Matrix4 Matrix4::invertMatrix(const Matrix4 &matrix) {
+Matrix4 Matrix4::invertMatrix(const Matrix4& matrix) {
     return fromValues(matrix.get(1, 1) * matrix.get(2, 2) * matrix.get(3, 3) -
                           matrix.get(1, 1) * matrix.get(2, 3) * matrix.get(3, 2) -
                           matrix.get(2, 1) * matrix.get(1, 2) * matrix.get(3, 3) +
@@ -481,7 +482,7 @@ void Matrix4::transpose() {
     std::swap(data[2 * 4 + 3], data[3 * 4 + 2]);
 }
 
-Matrix4 Matrix4::operator*(const Matrix4 &other) const {
+Matrix4 Matrix4::operator*(const Matrix4& other) const {
     Matrix4 result;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -493,14 +494,14 @@ Matrix4 Matrix4::operator*(const Matrix4 &other) const {
     }
     return result;
 }
-Matrix4 Matrix4::operator*=(const Matrix4 &other) {
+Matrix4 Matrix4::operator*=(const Matrix4& other) {
     *this = *this * other;
     return *this;
 }
-bool Matrix4::operator==(const Matrix4 &other) const {
+bool Matrix4::operator==(const Matrix4& other) const {
     return std::equal(data.begin(), data.end(), other.data.begin());
 }
-bool Matrix4::operator!=(const Matrix4 &other) const {
+bool Matrix4::operator!=(const Matrix4& other) const {
     return !(*this == other);
 }
 } // namespace TaroHelper

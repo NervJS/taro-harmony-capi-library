@@ -14,7 +14,10 @@ namespace TaroAnimate {
     constexpr float FRACTION_PARAMETER_MIN = 0.0f;
 
     TaroCubicCurve::TaroCubicCurve(float x0, float y0, float x1, float y1)
-        : x0_(x0), y0_(y0), x1_(x1), y1_(y1) {}
+        : x0_(x0),
+          y0_(y0),
+          x1_(x1),
+          y1_(y1) {}
 
     float TaroCubicCurve::moveInternal(float time) {
         if (std::isnan(time)) {

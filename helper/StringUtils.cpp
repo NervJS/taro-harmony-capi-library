@@ -164,21 +164,24 @@ static const const std::unordered_map<std::string, uint32_t> TARO_COLOR_MAPPING 
 
 // 解析十六进制字符为整数
 static int hexCharToInt(char c) {
-    if (c >= '0' && c <= '9') return c - '0';
-    if (c >= 'A' && c <= 'F') return 10 + (c - 'A');
-    if (c >= 'a' && c <= 'f') return 10 + (c - 'a');
+    if (c >= '0' && c <= '9')
+        return c - '0';
+    if (c >= 'A' && c <= 'F')
+        return 10 + (c - 'A');
+    if (c >= 'a' && c <= 'f')
+        return 10 + (c - 'a');
     return 0;
 }
 
 std::vector<std::string> StringUtils::split(
-    const std::string &str, const std::string &delimiter) {
+    const std::string& str, const std::string& delimiter) {
     std::vector<std::string> tokens;
     split(tokens, str, delimiter);
     return tokens;
 }
 
-void StringUtils::split(std::vector<std::string> &tokens,
-                        const std::string &str, const std::string &delimiter) {
+void StringUtils::split(std::vector<std::string>& tokens,
+                        const std::string& str, const std::string& delimiter) {
     size_t start = 0;
     size_t end = str.find(delimiter);
 
@@ -196,14 +199,14 @@ void StringUtils::split(std::vector<std::string> &tokens,
 }
 
 std::vector<std::string> StringUtils::splitWithEscape(
-    const std::string &str, const std::string &delimiter, const char &escape) {
+    const std::string& str, const std::string& delimiter, const char& escape) {
     std::vector<std::string> tokens;
     splitWithEscape(tokens, str, delimiter, escape);
     return tokens;
 }
 
-void StringUtils::splitWithEscape(std::vector<std::string> &tokens,
-                                  const std::string &str, const std::string &delimiter, const char &escape) {
+void StringUtils::splitWithEscape(std::vector<std::string>& tokens,
+                                  const std::string& str, const std::string& delimiter, const char& escape) {
     size_t start = 0;
     size_t end = str.find(delimiter);
     std::string token;
@@ -233,15 +236,15 @@ void StringUtils::splitWithEscape(std::vector<std::string> &tokens,
     }
 }
 
-std::string StringUtils::join(const std::vector<std::string> &tokens,
-                              const std::string &delimiter) {
+std::string StringUtils::join(const std::vector<std::string>& tokens,
+                              const std::string& delimiter) {
     std::string result;
     join(tokens, delimiter, result);
     return result;
 }
 
-void StringUtils::join(const std::vector<std::string> &tokens,
-                       const std::string &delimiter, std::string &result) {
+void StringUtils::join(const std::vector<std::string>& tokens,
+                       const std::string& delimiter, std::string& result) {
     std::ostringstream oss;
     for (size_t i = 0; i < tokens.size(); ++i) {
         if (i > 0) {
@@ -252,19 +255,19 @@ void StringUtils::join(const std::vector<std::string> &tokens,
     result = oss.str();
 }
 
-std::string StringUtils::toUpperCase(const std::string &str) {
+std::string StringUtils::toUpperCase(const std::string& str) {
     std::string result(str.size(), '\0');
     std::transform(str.begin(), str.end(), result.begin(), ::toupper);
     return result;
 }
 
-std::string StringUtils::toLowerCase(const std::string &str) {
+std::string StringUtils::toLowerCase(const std::string& str) {
     std::string result(str.size(), '\0');
     std::transform(str.begin(), str.end(), result.begin(), ::tolower);
     return result;
 }
 
-std::string StringUtils::toCamelCase(const std::string &str) {
+std::string StringUtils::toCamelCase(const std::string& str) {
     std::string result;
     bool capitalize = false;
     for (char c : str) {
@@ -279,7 +282,7 @@ std::string StringUtils::toCamelCase(const std::string &str) {
 }
 
 // 将 #RGB 或 #RRGGBB 转换为十六进制字符串
-uint32_t StringUtils::parseHexColor(const std::string &hex) {
+uint32_t StringUtils::parseHexColor(const std::string& hex) {
     int r = 0, g = 0, b = 0;
     if (hex.size() == 4) { // #RGB
         r = hexCharToInt(hex[1]);
@@ -300,7 +303,7 @@ uint32_t StringUtils::parseHexColor(const std::string &hex) {
 }
 
 // 将 rgba(r, g, b, a) 转换为十六进制字符串
-uint32_t StringUtils::parseRgbaColor(const std::string &color) {
+uint32_t StringUtils::parseRgbaColor(const std::string& color) {
     int r = 0, g = 0, b = 0;
     float a = 1.0; // 默认 alpha 值为 1.0 (完全不透明)
     unsigned int alpha;
@@ -323,7 +326,7 @@ uint32_t StringUtils::parseRgbaColor(const std::string &color) {
 }
 
 std::optional<uint32_t> StringUtils::parseColor(
-    const std::string &colorString) {
+    const std::string& colorString) {
     std::optional<uint32_t> val;
     if (colorString[0] == '#') {
         val = parseHexColor(colorString);
@@ -338,7 +341,7 @@ std::optional<uint32_t> StringUtils::parseColor(
     return val; // 默认返回值，也可视为错误处理
 }
 
-double StringUtils::percentageToDecimal(const std::string &str) {
+double StringUtils::percentageToDecimal(const std::string& str) {
     double percentage = 0.0;
     size_t len = str.size();
 
@@ -356,7 +359,7 @@ double StringUtils::percentageToDecimal(const std::string &str) {
     return percentage;
 }
 
-float StringUtils::parseSize(const std::string &sourceStr) {
+float StringUtils::parseSize(const std::string& sourceStr) {
     // 去除字符串前后的空格
     std::string str = sourceStr;
     str.erase(0, str.find_first_not_of(" \t"));
@@ -384,12 +387,12 @@ float StringUtils::parseSize(const std::string &sourceStr) {
     return value;
 }
 
-bool StringUtils::isStartWith(const std::string &str, const std::string &prefix,
+bool StringUtils::isStartWith(const std::string& str, const std::string& prefix,
                               const int32_t prefixLen) {
     return str.compare(0, prefixLen, prefix) == 0;
 }
 
-double percentageToDecimal(const std::string &str) {
+double percentageToDecimal(const std::string& str) {
     double percentage = 0.0;
     if (str.empty()) {
         return -1.0;

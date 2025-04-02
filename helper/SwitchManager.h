@@ -14,15 +14,15 @@ enum class Switches {
 class SwitchManager {
     private:
     std::array<bool, static_cast<size_t>(Switches::NumSwitches)> switches;
-    static SwitchManager *instance;
+    static SwitchManager* instance;
 
     SwitchManager();
 
     public:
-    SwitchManager(const SwitchManager &) = delete;
-    SwitchManager &operator=(const SwitchManager &) = delete;
+    SwitchManager(const SwitchManager&) = delete;
+    SwitchManager& operator=(const SwitchManager&) = delete;
 
-    static SwitchManager *getInstance();
+    static SwitchManager* getInstance();
 
     void setSwitch(Switches switchId, bool value);
 

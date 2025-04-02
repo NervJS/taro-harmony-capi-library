@@ -284,7 +284,8 @@ struct DelayedCall {
     std::function<void()> func;
 
     DelayedCall(OperationType type, std::function<void()> f)
-        : opType(type), func(f) {}
+        : opType(type),
+          func(f) {}
 };
 
 } // namespace TaroRuntime

@@ -10,16 +10,16 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroRadioEventChange : public TaroEventBase {
             public:
-            TaroRadioEventChange(const std::string &js_event_type, ArkUI_NodeEvent *event)
+            TaroRadioEventChange(const std::string& js_event_type, ArkUI_NodeEvent* event)
                 : TaroEventBase(
                       js_event_type, event) {
                 bubbles_ = false;
             }
             virtual ~TaroRadioEventChange() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
             private:
             std::optional<std::string> value_;

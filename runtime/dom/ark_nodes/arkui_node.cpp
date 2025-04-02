@@ -9,8 +9,8 @@
 #include <math.h>
 #include <native_vsync/native_vsync.h>
 
-#include "helper/TaroTimer.h"
 #include "helper/ImageLoader.h"
+#include "helper/TaroTimer.h"
 #include "runtime/TaroYogaApi.h"
 #include "runtime/cssom/CSSStyleSheet.h"
 #include "runtime/cssom/dimension/context.h"
@@ -95,7 +95,8 @@ namespace TaroDOM {
     TaroRenderNode::TaroRenderNode() {}
 
     TaroRenderNode::TaroRenderNode(TaroDOM::TaroElementRef element)
-        : BaseRenderNode(), element_ref_(element) {
+        : BaseRenderNode(),
+          element_ref_(element) {
         uid_ = uid_flag_++;
 #if IS_DEBUG
         auto el = element_ref_.lock();
@@ -110,7 +111,7 @@ namespace TaroDOM {
         style_ref_ = nullptr;
         old_style_ref_ = nullptr;
 
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         if (is_custom_layout_) {
             nativeNodeApi->removeNodeCustomEventReceiver(ark_node_, OnStaticCustomEvent);
             custom_layout_render_nodes_.erase(uid_);
@@ -159,13 +160,13 @@ namespace TaroDOM {
         }
     }
 
-    float TaroRenderNode::GetComputedStyle(const char *name) const {
+    float TaroRenderNode::GetComputedStyle(const char* name) const {
         return layoutDiffer_.GetComputedStyle(name);
     }
 
     void TaroRenderNode::SetCustomLayout() {
         is_custom_layout_ = true;
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         // 注册自定义事件监听器。
         nativeNodeApi->addNodeCustomEventReceiver(ark_node_, OnStaticCustomEvent);
         custom_layout_render_nodes_[uid_] = std::static_pointer_cast<TaroRenderNode>(shared_from_this());
@@ -174,13 +175,13 @@ namespace TaroDOM {
         nativeNodeApi->registerNodeCustomEvent(ark_node_, ARKUI_NODE_CUSTOM_EVENT_ON_LAYOUT, uid_, nullptr);
     }
 
-    void TaroRenderNode::OnDisplayChange(const PropertyType::Display &val, const PropertyType::Display &oldVal) {
-        for (auto &child : children_refs_) {
+    void TaroRenderNode::OnDisplayChange(const PropertyType::Display& val, const PropertyType::Display& oldVal) {
+        for (auto& child : children_refs_) {
             child->OnDisplayChange(val, oldVal);
         }
     }
 
-    void TaroRenderNode::OnStaticCustomEvent(ArkUI_NodeCustomEvent *event) {
+    void TaroRenderNode::OnStaticCustomEvent(ArkUI_NodeCustomEvent* event) {
         // 获取组件实例对象，调用相关实例方法。
         int32_t uid = OH_ArkUI_NodeCustomEvent_GetEventTargetId(event);
         auto it = custom_layout_render_nodes_.find(uid);
@@ -201,9 +202,9 @@ namespace TaroDOM {
         }
     }
 
-    void TaroRenderNode::OnMeasure(ArkUI_NodeCustomEvent *event) {
+    void TaroRenderNode::OnMeasure(ArkUI_NodeCustomEvent* event) {
         SystraceSection s("Taro Custom Layout:: OnMeasure");
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         // 创建子节点布局限制，复用父组件布局中的百分比参考值。
         auto childLayoutConstrain = OH_ArkUI_LayoutConstraint_Create();
         OH_ArkUI_LayoutConstraint_SetMaxHeight(childLayoutConstrain, static_cast<int32_t>(vp2Px(layoutDiffer_.computed_style_.height)));
@@ -225,15 +226,15 @@ namespace TaroDOM {
             static_cast<int32_t>(vp2Px(layoutDiffer_.computed_style_.height)));
     }
 
-    void TaroRenderNode::OnLayout(ArkUI_NodeCustomEvent *event) {
+    void TaroRenderNode::OnLayout(ArkUI_NodeCustomEvent* event) {
         SystraceSection s("Taro Custom Layout:: OnLayout");
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         // 获取父组件期望位置并设置。
         nativeNodeApi->setLayoutPosition(
             ark_node_,
             static_cast<int32_t>(vp2Px(layoutDiffer_.computed_style_.left)),
             static_cast<int32_t>(vp2Px(layoutDiffer_.computed_style_.top)));
-        for (auto &child : children_refs_) {
+        for (auto& child : children_refs_) {
             nativeNodeApi->layoutNode(
                 child->ark_node_,
                 static_cast<int32_t>(vp2Px(child->layoutDiffer_.computed_style_.left)),
@@ -241,35 +242,37 @@ namespace TaroDOM {
         }
     }
 
-// anonymous namespace
-namespace {
-    void ApplyLayout(std::shared_ptr<TaroRenderNode> node, bool layoutWithoutDiff) {
-        if (!YGNodeGetHasNewLayout(node->ygNodeRef)) {
-            node->SetLayoutDirty(false);
-            return;
-        }
-        // Reset the flag
-        YGNodeSetHasNewLayout(node->ygNodeRef, false);
-        // Do the real work
-        if (layoutWithoutDiff) {
-            node->is_first_layout_finish_ = false;
-        }
-        node->Layout();
-        // 启动Animation动画
-        if (node->animation_ != nullptr) {
-            node->animation_->startCSSAnimation();
-        }
+    // anonymous namespace
+    namespace {
+        void ApplyLayout(std::shared_ptr<TaroRenderNode> node, bool layoutWithoutDiff) {
+            if (!YGNodeGetHasNewLayout(node->ygNodeRef)) {
+                node->SetLayoutDirty(false);
+                return;
+            }
+            // Reset the flag
+            YGNodeSetHasNewLayout(node->ygNodeRef, false);
+            // Do the real work
+            if (layoutWithoutDiff) {
+                node->is_first_layout_finish_ = false;
+            }
+            node->Layout();
+            // 启动Animation动画
+            if (node->animation_ != nullptr) {
+                node->animation_->startCSSAnimation();
+            }
 
-        if (node->layoutDiffer_.GetDisplayStyle() == YGDisplayNone) {
-            // 如果display是none，没必要往下继续布局了，等它切回来的时候再布局
-            return;
-        }
+            if (node->layoutDiffer_.GetDisplayStyle() == YGDisplayNone) {
+                // 如果display是none，没必要往下继续布局了，等它切回来的时候再布局
+                return;
+            }
 
-        std::for_each(
-            node->children_refs_.begin(), node->children_refs_.end(),
-            [&](std::shared_ptr<TaroRenderNode> child) { ApplyLayout(child, layoutWithoutDiff); });
-    }
-};
+            std::for_each(
+                node->children_refs_.begin(), node->children_refs_.end(),
+                [&](std::shared_ptr<TaroRenderNode> child) {
+                    ApplyLayout(child, layoutWithoutDiff);
+                });
+        }
+    }; // namespace
 
     void TaroRenderNode::LayoutAll(bool layoutWithoutDiff) {
         DimensionContext::UpdateCurrentContext(GetDimensionContext());
@@ -587,12 +590,11 @@ namespace {
 
         if (auto element = element_ref_.lock()) {
             TARO_LOG_DEBUG("dirty", "ReLayout className: %{public}s, width: %{public}f, height: %{public}f, left: %{public}f, top: %{public}f",
-                element->class_name_.c_str(),
-                layoutDiffer_.computed_style_.width,
-                layoutDiffer_.computed_style_.height,
-                layoutDiffer_.computed_style_.left,
-                layoutDiffer_.computed_style_.top
-            );
+                           element->class_name_.c_str(),
+                           layoutDiffer_.computed_style_.width,
+                           layoutDiffer_.computed_style_.height,
+                           layoutDiffer_.computed_style_.left,
+                           layoutDiffer_.computed_style_.top);
         }
 
         LayoutDiffer::DiffAndSetStyle(layoutDiffer_.computed_style_, layoutDiffer_.old_computed_style_, this);
@@ -624,14 +626,14 @@ namespace {
         SetLayoutDirty(true);
     }
 
-    void TaroRenderNode::ClearDifferOldStyleFromElement () {
+    void TaroRenderNode::ClearDifferOldStyleFromElement() {
         paintDiffer_.ClearOldStyle();
         layoutDiffer_.old_computed_style_ = ComputedStyle();
         is_apply_reused = true;
         ForceUpdate();
     }
 
-    void TaroRenderNode::UpdateDifferOldStyleFromElement (std::weak_ptr<TaroDOM::TaroElement> element_ref) {
+    void TaroRenderNode::UpdateDifferOldStyleFromElement(std::weak_ptr<TaroDOM::TaroElement> element_ref) {
         if (auto reuse_element = element_ref.lock()) {
             if (auto reuse_render_node = reuse_element->GetHeadRenderNode()) {
                 *paintDiffer_.old_paint_style_ = *reuse_render_node->paintDiffer_.paint_style_;
@@ -657,7 +659,7 @@ namespace {
                 std::weak_ptr<TaroRenderNode> weakRenderNode = std::static_pointer_cast<TaroRenderNode>(shared_from_this());
                 auto oldUrl = *url;
                 TaroHelper::loadImage({.url = *url}, [weakRenderNode, oldUrl](
-                const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo> &result) {
+                                                         const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result) {
                     if (auto self = weakRenderNode.lock()) {
                         // 拿到执行的时候的当前background url跟捕获到URL 是否一样，不一样就不设了
                         if (self->paintDiffer_.paint_style_->background_image_.value.has_value()) {
@@ -676,7 +678,7 @@ namespace {
         }
     }
 
-    void TaroRenderNode::HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo> &result, const std::string url) {
+    void TaroRenderNode::HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result, const std::string url) {
         TaroCSSOM::TaroStylesheet::BackgroundImageItem b;
         b.type = TaroCSSOM::TaroStylesheet::PIC;
         if (auto res = std::get_if<TaroHelper::ErrorImageInfo>(&result); res) {
@@ -740,8 +742,9 @@ namespace {
         return nullptr;
     }
 
-    void TaroRenderNode::AppendChild(const std::shared_ptr<TaroRenderNode> &child) {
-        if (!child) return;
+    void TaroRenderNode::AppendChild(const std::shared_ptr<TaroRenderNode>& child) {
+        if (!child)
+            return;
         child->parent_ref_ = std::static_pointer_cast<TaroRenderNode>(shared_from_this());
         children_refs_.push_back(child);
         int32_t index = children_refs_.size() - 1;
@@ -756,8 +759,9 @@ namespace {
         }
     }
 
-    void TaroRenderNode::RemoveChild(const std::shared_ptr<TaroRenderNode> &child) {
-        if (child == nullptr || this == nullptr) return;
+    void TaroRenderNode::RemoveChild(const std::shared_ptr<TaroRenderNode>& child) {
+        if (child == nullptr || this == nullptr)
+            return;
         // 处理flowsection， flowsection的rendernode是父节点waterflow的rendernode
         if (this == child.get()) {
             return;
@@ -795,8 +799,8 @@ namespace {
     }
 
     void TaroRenderNode::ReplaceChild(
-        const std::shared_ptr<TaroRenderNode> &old_child,
-        const std::shared_ptr<TaroRenderNode> &new_child) {
+        const std::shared_ptr<TaroRenderNode>& old_child,
+        const std::shared_ptr<TaroRenderNode>& new_child) {
         auto it =
             std::find(children_refs_.begin(), children_refs_.end(), old_child);
         if (it != children_refs_.end()) {
@@ -833,7 +837,7 @@ namespace {
     }
 
     void TaroRenderNode::InsertChildAt(
-        const std::shared_ptr<TaroRenderNode> &child, uint8_t index) {
+        const std::shared_ptr<TaroRenderNode>& child, uint8_t index) {
         child->parent_ref_ = std::static_pointer_cast<TaroRenderNode>(shared_from_this());
         children_refs_.insert(children_refs_.begin() + index, child);
         TaroYogaApi::getInstance()->insertChildToParent(
@@ -848,20 +852,21 @@ namespace {
         }
     }
 
-    void TaroRenderNode::UpdateChild(const std::shared_ptr<TaroRenderNode> &child) {
+    void TaroRenderNode::UpdateChild(const std::shared_ptr<TaroRenderNode>& child) {
         auto it = std::find(children_refs_.begin(), children_refs_.end(), child);
         if (it == children_refs_.end()) {
             return;
         }
         auto index = std::distance(children_refs_.begin(), it);
         NativeNodeApi::getInstance()->insertChildAt(
-                GetArkUINodeHandle(), child->GetArkUINodeHandle(), index);
+            GetArkUINodeHandle(), child->GetArkUINodeHandle(), index);
     }
 
     void TaroRenderNode::InsertChildBefore(
-        const std::shared_ptr<TaroRenderNode> &child,
-        const std::shared_ptr<TaroRenderNode> &sibling) {
-        if (child == nullptr || sibling == nullptr) return;
+        const std::shared_ptr<TaroRenderNode>& child,
+        const std::shared_ptr<TaroRenderNode>& sibling) {
+        if (child == nullptr || sibling == nullptr)
+            return;
 
         auto it = std::find(children_refs_.begin(), children_refs_.end(), sibling);
         if (it != children_refs_.end()) {
@@ -881,9 +886,10 @@ namespace {
     }
 
     void TaroRenderNode::InsertChildAfter(
-        const std::shared_ptr<TaroRenderNode> &child,
-        const std::shared_ptr<TaroRenderNode> &sibling) {
-        if (child == nullptr || sibling == nullptr) return;
+        const std::shared_ptr<TaroRenderNode>& child,
+        const std::shared_ptr<TaroRenderNode>& sibling) {
+        if (child == nullptr || sibling == nullptr)
+            return;
 
         auto it = std::find(children_refs_.begin(), children_refs_.end(), sibling);
         if (it != children_refs_.end()) {
@@ -910,7 +916,7 @@ namespace {
         return should_position_;
     }
 
-    bool TaroRenderNode::IfImmediateAttach(const std::shared_ptr<TaroRenderNode> &child) {
+    bool TaroRenderNode::IfImmediateAttach(const std::shared_ptr<TaroRenderNode>& child) {
         const auto elementRef = child->element_ref_.lock();
         if (elementRef) {
             if (elementRef->HasStateFlag(STATE_FLAG::IMMEDIATE_ATTACH_TO_TREE)) {
@@ -920,9 +926,9 @@ namespace {
         return false;
     }
 
-    bool TaroRenderNode::OnSetPropertyIntoNode(const CSSProperty::Type &property,
-                                               const TaroChange &changeType,
-                                               const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style) {
+    bool TaroRenderNode::OnSetPropertyIntoNode(const CSSProperty::Type& property,
+                                               const TaroChange& changeType,
+                                               const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style) {
         // todo: wzq Animation Forwards属性和进行中的Animation动画不设置
         if (animation_ == nullptr && style_ref_->transition.has_value()) {
             auto elem = std::static_pointer_cast<TaroRenderNode>(shared_from_this());
@@ -938,7 +944,9 @@ namespace {
 
     template <typename T, size_t size>
     bool ArrayPropertyHasSet(std::array<Optional<T>, size> property) {
-        return std::any_of(property.begin(), property.end(), [](Optional<T> item) { return item.has_value(); });
+        return std::any_of(property.begin(), property.end(), [](Optional<T> item) {
+            return item.has_value();
+        });
     }
 
     void TaroRenderNode::MakeDrawPropertyDirtyFromLayoutEffect() {
@@ -969,7 +977,7 @@ namespace {
         }
     }
 
-    int TaroRenderNode::createJsAnimation(TaroAnimate::TaroJsAnimationOptionRef &option) {
+    int TaroRenderNode::createJsAnimation(TaroAnimate::TaroJsAnimationOptionRef& option) {
         if (this == nullptr) {
             return 0;
         }

@@ -12,7 +12,8 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     TaroList::TaroList(napi_value node)
-        : TaroScrollerContainer(node), attributes_(std::make_unique<TaroListAttributes>()) {
+        : TaroScrollerContainer(node),
+          attributes_(std::make_unique<TaroListAttributes>()) {
         lazy_container = true;
     }
 
@@ -36,7 +37,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroList::GetLowerThresholdCount(const napi_value &value) {
+    void TaroList::GetLowerThresholdCount(const napi_value& value) {
         NapiGetter getter(value);
         auto attribute = getter.Int32();
         if (attribute.has_value()) {
@@ -44,7 +45,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroList::GetUpperThresholdCount(const napi_value &value) {
+    void TaroList::GetUpperThresholdCount(const napi_value& value) {
         NapiGetter getter(value);
         auto attribute = getter.Int32();
         if (attribute.has_value()) {
@@ -52,7 +53,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroList::GetCacheCount(const napi_value &value) {
+    void TaroList::GetCacheCount(const napi_value& value) {
         NapiGetter getter(value);
         auto attribute = getter.Int32();
         if (attribute.has_value()) {
@@ -67,7 +68,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroList::GetStickyHeader(const napi_value &value) {
+    void TaroList::GetStickyHeader(const napi_value& value) {
         NapiGetter getter(value);
         auto attribute = getter.BoolNull();
         if (attribute.has_value()) {
@@ -83,7 +84,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroList::GetSpace(const napi_value &value) {
+    void TaroList::GetSpace(const napi_value& value) {
         NapiGetter getter(value);
         TaroHelper::Optional<double> val = getter.Double();
         if (val.has_value()) {
@@ -160,12 +161,12 @@ namespace TaroDOM {
         render_list->SetStyle(style_);
     }
 
-    bool TaroList::bindListenEvent(const std::string &event_name) {
+    bool TaroList::bindListenEvent(const std::string& event_name) {
         if (event_name == "scroll") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_DID_LIST_ON_SCROLL, event_name,
-                                          [&](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
+                                          [&](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
                                               if (auto scroll_event = std::dynamic_pointer_cast<TaroEvent::TaroEventDidWaterFlowScroll>(event)) {
-                                                  const ArkUI_AttributeItem *item = NativeNodeApi::getInstance()->getAttribute(
+                                                  const ArkUI_AttributeItem* item = NativeNodeApi::getInstance()->getAttribute(
                                                       GetHeadRenderNode()->GetArkUINodeHandle(), NODE_SCROLL_OFFSET);
                                                   scrollTop_ = item->value[1].f32;
                                                   NapiSetter::SetProperty(scroll_event->detail(), "scrollTop", scrollTop_);
@@ -215,8 +216,8 @@ namespace TaroDOM {
 
     void TaroList::handleOnScrollIndex() {
         std::weak_ptr<TaroNode> node_ref = shared_from_this();
-        auto scroll_fun = [node_ref](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
-            if (auto node = node_ref.lock()) {             
+        auto scroll_fun = [node_ref](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
+            if (auto node = node_ref.lock()) {
                 auto list = std::dynamic_pointer_cast<TaroListNode>(node->GetHeadRenderNode());
                 if (list == nullptr) {
                     TARO_LOG_ERROR("handleOnScrollIndex", "list render node is nullptr");

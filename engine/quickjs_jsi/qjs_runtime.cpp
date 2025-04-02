@@ -15,7 +15,8 @@
 #include "quickjs.h"
 
 QuickJSRuntime::QuickJSRuntime(std::unique_ptr<QuickJSRuntimeConfig> config, std::shared_ptr<MessageQueueThread> jsQueue)
-    : config_(std::move(config)), jsQueue_(jsQueue) {
+    : config_(std::move(config)),
+      jsQueue_(jsQueue) {
     runtime_ = JS_NewRuntime();
     context_ = JS_NewContext(runtime_);
     weakClassId_ = HostObjectProxy::initHostObjectClass(runtime_);
@@ -24,7 +25,7 @@ QuickJSRuntime::QuickJSRuntime(std::unique_ptr<QuickJSRuntimeConfig> config, std
     nativeStateClassId_ = HostObjectProxy::initHostNativeStateObjectClass(runtime_);
 }
 
-QuickJSRuntime::QuickJSRuntime(const QuickJSRuntime *quickJSRuntime, std::unique_ptr<QuickJSRuntimeConfig> config)
+QuickJSRuntime::QuickJSRuntime(const QuickJSRuntime* quickJSRuntime, std::unique_ptr<QuickJSRuntimeConfig> config)
     : config_(std::move(config)) {
     isSharedRuntime_ = true;
     runtime_ = quickJSRuntime->runtime_;
@@ -49,12 +50,12 @@ QuickJSRuntime::~QuickJSRuntime() {
 }
 
 // TODO: 在 V8 的实现中，添加了对 script 的缓存，当前版本暂时不考虑，后续可以考虑添加优化
-facebook::jsi::Value QuickJSRuntime::ExecuteScript(const JSValue &script, const std::string &sourceURL) {
+facebook::jsi::Value QuickJSRuntime::ExecuteScript(const JSValue& script, const std::string& sourceURL) {
     if (!JS_IsString(script)) {
         throw facebook::jsi::JSError(*this, "Script must be a string");
     }
 
-    const char *scriptStr = JS_ToCString(context_, script);
+    const char* scriptStr = JS_ToCString(context_, script);
     if (!scriptStr) {
         throw facebook::jsi::JSError(*this, "Failed to convert script to C string");
     }
@@ -72,16 +73,16 @@ facebook::jsi::Value QuickJSRuntime::ExecuteScript(const JSValue &script, const 
     return QJSJSIValueConverter::ToJSIValue(*this, result);
 }
 
-void QuickJSRuntime::ReportException(JSContext *ctx, JSValue exception) const {
+void QuickJSRuntime::ReportException(JSContext* ctx, JSValue exception) const {
     std::ostringstream ss;
 
     JSValue exceptionStr = JS_ToString(ctx, exception);
-    std::string exceptionMessage = QJSJSIValueConverter::ToSTLString(const_cast<QuickJSRuntime &>(*this), exceptionStr);
+    std::string exceptionMessage = QJSJSIValueConverter::ToSTLString(const_cast<QuickJSRuntime&>(*this), exceptionStr);
     JS_FreeValue(ctx, exceptionStr);
 
     JSValue stackStr = JS_GetPropertyStr(ctx, exception, "stack");
     if (!JS_IsUndefined(stackStr)) {
-        std::string stackTrace = QJSJSIValueConverter::ToSTLString(const_cast<QuickJSRuntime &>(*this), stackStr);
+        std::string stackTrace = QJSJSIValueConverter::ToSTLString(const_cast<QuickJSRuntime&>(*this), stackStr);
         ss << stackTrace << std::endl;
     }
     JS_FreeValue(ctx, stackStr);
@@ -94,7 +95,7 @@ void QuickJSRuntime::ReportException(JSContext *ctx, JSValue exception) const {
 
         JSValue sourceLine = JS_GetPropertyStr(ctx, exception, "sourceLine");
         if (JS_IsString(sourceLine)) {
-            std::string sourceLineStr = QJSJSIValueConverter::ToSTLString(const_cast<QuickJSRuntime &>(*this), sourceLine);
+            std::string sourceLineStr = QJSJSIValueConverter::ToSTLString(const_cast<QuickJSRuntime&>(*this), sourceLine);
             ss << sourceLineStr << std::endl;
 
             JSValue columnNum = JS_GetPropertyStr(ctx, exception, "columnNumber");
@@ -111,14 +112,14 @@ void QuickJSRuntime::ReportException(JSContext *ctx, JSValue exception) const {
     }
     JS_FreeValue(ctx, lineNum);
 
-    throw facebook::jsi::JSError(const_cast<QuickJSRuntime &>(*this), ss.str());
+    throw facebook::jsi::JSError(const_cast<QuickJSRuntime&>(*this), ss.str());
 }
 
 //
 // jsi::Runtime implementations
 //
-facebook::jsi::Value QuickJSRuntime::evaluateJavaScript(const std::shared_ptr<const facebook::jsi::Buffer> &buffer,
-                                                        const std::string &sourceURL) {
+facebook::jsi::Value QuickJSRuntime::evaluateJavaScript(const std::shared_ptr<const facebook::jsi::Buffer>& buffer,
+                                                        const std::string& sourceURL) {
     JSValue string = QJSJSIValueConverter::ToQuickJSString(*this, buffer);
     if (!JS_IsException(string)) {
         return ExecuteScript(string, sourceURL);
@@ -127,19 +128,19 @@ facebook::jsi::Value QuickJSRuntime::evaluateJavaScript(const std::shared_ptr<co
 }
 
 std::shared_ptr<const facebook::jsi::PreparedJavaScript>
-QuickJSRuntime::prepareJavaScript(const std::shared_ptr<const facebook::jsi::Buffer> &buffer, std::string sourceURL) {
+QuickJSRuntime::prepareJavaScript(const std::shared_ptr<const facebook::jsi::Buffer>& buffer, std::string sourceURL) {
     return std::make_shared<facebook::jsi::SourceJavaScriptPreparation>(buffer, std::move(sourceURL));
 }
 
-facebook::jsi::Value QuickJSRuntime::evaluatePreparedJavaScript(const std::shared_ptr<const facebook::jsi::PreparedJavaScript> &js) {
-    assert(dynamic_cast<const facebook::jsi::SourceJavaScriptPreparation *>(js.get()) &&
+facebook::jsi::Value QuickJSRuntime::evaluatePreparedJavaScript(const std::shared_ptr<const facebook::jsi::PreparedJavaScript>& js) {
+    assert(dynamic_cast<const facebook::jsi::SourceJavaScriptPreparation*>(js.get()) &&
            "preparedJavaScript must be a SourceJavaScriptPreparation");
     auto sourceJs = std::static_pointer_cast<const facebook::jsi::SourceJavaScriptPreparation>(js);
     return evaluateJavaScript(sourceJs, sourceJs->sourceURL());
 }
 
 bool QuickJSRuntime::drainMicrotasks(int maxMicrotasksHint) {
-    JSContext *ctx = context_;
+    JSContext* ctx = context_;
 
     while (JS_IsJobPending(runtime_)) {
         int err = JS_ExecutePendingJob(runtime_, &ctx);
@@ -167,12 +168,12 @@ bool QuickJSRuntime::isInspectable() {
     return false;
 }
 
-facebook::jsi::Runtime::PointerValue *QuickJSRuntime::cloneSymbol(const facebook::jsi::Runtime::PointerValue *pv) {
+facebook::jsi::Runtime::PointerValue* QuickJSRuntime::cloneSymbol(const facebook::jsi::Runtime::PointerValue* pv) {
     if (!pv) {
         return nullptr;
     }
 
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(pv);
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(pv);
     JSValue originalSymbol = qjsPointerValue->Get();
     assert(JS_IsSymbol(originalSymbol));
 
@@ -180,12 +181,12 @@ facebook::jsi::Runtime::PointerValue *QuickJSRuntime::cloneSymbol(const facebook
     return new QuickJSPointerValue(context_, clonedSymbol);
 }
 
-facebook::jsi::Runtime::PointerValue *QuickJSRuntime::cloneBigInt(const facebook::jsi::Runtime::PointerValue *pv) {
+facebook::jsi::Runtime::PointerValue* QuickJSRuntime::cloneBigInt(const facebook::jsi::Runtime::PointerValue* pv) {
     if (!pv) {
         return nullptr;
     }
 
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(pv);
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(pv);
     JSValue originalBigInt = qjsPointerValue->Get();
     assert(JS_IsBigInt(context_, originalBigInt));
 
@@ -193,12 +194,12 @@ facebook::jsi::Runtime::PointerValue *QuickJSRuntime::cloneBigInt(const facebook
     return new QuickJSPointerValue(context_, clonedBigInt);
 }
 
-facebook::jsi::Runtime::PointerValue *QuickJSRuntime::cloneString(const facebook::jsi::Runtime::PointerValue *pv) {
+facebook::jsi::Runtime::PointerValue* QuickJSRuntime::cloneString(const facebook::jsi::Runtime::PointerValue* pv) {
     if (!pv) {
         return nullptr;
     }
 
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(pv);
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(pv);
     JSValue originalString = qjsPointerValue->Get();
     assert(JS_IsString(originalString));
 
@@ -206,12 +207,12 @@ facebook::jsi::Runtime::PointerValue *QuickJSRuntime::cloneString(const facebook
     return new QuickJSPointerValue(context_, clonedString);
 }
 
-facebook::jsi::Runtime::PointerValue *QuickJSRuntime::cloneObject(const facebook::jsi::Runtime::PointerValue *pv) {
+facebook::jsi::Runtime::PointerValue* QuickJSRuntime::cloneObject(const facebook::jsi::Runtime::PointerValue* pv) {
     if (!pv) {
         return nullptr;
     }
 
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(pv);
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(pv);
     JSValue originalObject = qjsPointerValue->Get();
     assert(JS_IsObject(originalObject));
 
@@ -219,12 +220,12 @@ facebook::jsi::Runtime::PointerValue *QuickJSRuntime::cloneObject(const facebook
     return new QuickJSPointerValue(context_, clonedObject);
 }
 
-facebook::jsi::Runtime::PointerValue *QuickJSRuntime::clonePropNameID(const facebook::jsi::Runtime::PointerValue *pv) {
+facebook::jsi::Runtime::PointerValue* QuickJSRuntime::clonePropNameID(const facebook::jsi::Runtime::PointerValue* pv) {
     return cloneString(pv);
 }
 
-facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromAscii(const char *str, size_t length) {
-    QuickJSPointerValue *value = QuickJSPointerValue::createFromOneByte(context_, str, length);
+facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromAscii(const char* str, size_t length) {
+    QuickJSPointerValue* value = QuickJSPointerValue::createFromOneByte(context_, str, length);
     if (!value) {
         throw facebook::jsi::JSError(*this, "QuickJSPointerValue::createFromString() - string creation failed.");
     }
@@ -232,8 +233,8 @@ facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromAscii(const char *
     return make<facebook::jsi::PropNameID>(value);
 }
 
-facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromUtf8(const uint8_t *utf8, size_t length) {
-    QuickJSPointerValue *value = QuickJSPointerValue::createFromUtf8(context_, utf8, length);
+facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromUtf8(const uint8_t* utf8, size_t length) {
+    QuickJSPointerValue* value = QuickJSPointerValue::createFromUtf8(context_, utf8, length);
     if (!value) {
         throw facebook::jsi::JSError(*this,
                                      "QuickJSPointerValue::createPropNameIDFromUtf8() - string creation failed.");
@@ -242,27 +243,27 @@ facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromUtf8(const uint8_t
     return make<facebook::jsi::PropNameID>(value);
 }
 
-facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromString(const facebook::jsi::String &str) {
+facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromString(const facebook::jsi::String& str) {
     std::string utf8Value = utf8(str);
 
-    return createPropNameIDFromUtf8(reinterpret_cast<const uint8_t *>(utf8Value.c_str()), utf8Value.length());
+    return createPropNameIDFromUtf8(reinterpret_cast<const uint8_t*>(utf8Value.c_str()), utf8Value.length());
 }
 
-facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromSymbol(const facebook::jsi::Symbol &sym) {
-    const QuickJSPointerValue *quickPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(sym));
+facebook::jsi::PropNameID QuickJSRuntime::createPropNameIDFromSymbol(const facebook::jsi::Symbol& sym) {
+    const QuickJSPointerValue* quickPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(sym));
     assert(JS_IsSymbol(quickPointerValue->Get()));
-    return make<facebook::jsi::PropNameID>(const_cast<PointerValue *>(getPointerValue(sym)));
+    return make<facebook::jsi::PropNameID>(const_cast<PointerValue*>(getPointerValue(sym)));
 }
 
-std::string QuickJSRuntime::utf8(const facebook::jsi::PropNameID &sym) {
-    const QuickJSPointerValue *quickPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(sym));
+std::string QuickJSRuntime::utf8(const facebook::jsi::PropNameID& sym) {
+    const QuickJSPointerValue* quickPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(sym));
     JSValue value = quickPointerValue->Get();
     return QJSJSIValueConverter::ToSTLString(*this, value);
 }
 
-bool QuickJSRuntime::compare(const facebook::jsi::PropNameID &a, const facebook::jsi::PropNameID &b) {
-    const QuickJSPointerValue *quickJSPointerValueA = static_cast<const QuickJSPointerValue *>(getPointerValue(a));
-    const QuickJSPointerValue *quickJSPointerValueB = static_cast<const QuickJSPointerValue *>(getPointerValue(b));
+bool QuickJSRuntime::compare(const facebook::jsi::PropNameID& a, const facebook::jsi::PropNameID& b) {
+    const QuickJSPointerValue* quickJSPointerValueA = static_cast<const QuickJSPointerValue*>(getPointerValue(a));
+    const QuickJSPointerValue* quickJSPointerValueB = static_cast<const QuickJSPointerValue*>(getPointerValue(b));
 
     if (!quickJSPointerValueA || !quickJSPointerValueB) {
         throw std::invalid_argument("Invalid PropNameID");
@@ -279,7 +280,7 @@ bool QuickJSRuntime::compare(const facebook::jsi::PropNameID &a, const facebook:
     return result;
 }
 
-std::string QuickJSRuntime::symbolToString(const facebook::jsi::Symbol &symbol) {
+std::string QuickJSRuntime::symbolToString(const facebook::jsi::Symbol& symbol) {
     return facebook::jsi::Value(*this, symbol).toString(*this).utf8(*this);
 }
 
@@ -293,8 +294,8 @@ facebook::jsi::BigInt QuickJSRuntime::createBigIntFromUint64(uint64_t value) {
     return make<facebook::jsi::BigInt>(new QuickJSPointerValue(context_, qjsUnsignedBigInt));
 }
 
-bool QuickJSRuntime::bigintIsInt64(const facebook::jsi::BigInt &value) {
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(value));
+bool QuickJSRuntime::bigintIsInt64(const facebook::jsi::BigInt& value) {
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(value));
     JSValue jsValue = qjsPointerValue->Get();
 
     assert(JS_IsBigInt(context_, jsValue));
@@ -306,8 +307,8 @@ bool QuickJSRuntime::bigintIsInt64(const facebook::jsi::BigInt &value) {
     return ret == 0;
 }
 
-bool QuickJSRuntime::bigintIsUint64(const facebook::jsi::BigInt &value) {
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(value));
+bool QuickJSRuntime::bigintIsUint64(const facebook::jsi::BigInt& value) {
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(value));
     JSValue jsValue = qjsPointerValue->Get();
 
     assert(JS_IsBigInt(context_, jsValue));
@@ -323,8 +324,8 @@ bool QuickJSRuntime::bigintIsUint64(const facebook::jsi::BigInt &value) {
     return int64Value >= 0 && static_cast<uint64_t>(int64Value) <= UINT64_MAX;
 }
 
-uint64_t QuickJSRuntime::truncate(const facebook::jsi::BigInt &value) {
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(value));
+uint64_t QuickJSRuntime::truncate(const facebook::jsi::BigInt& value) {
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(value));
     JSValue jsValue = qjsPointerValue->Get();
 
     assert(JS_IsBigInt(context_, jsValue));
@@ -336,8 +337,8 @@ uint64_t QuickJSRuntime::truncate(const facebook::jsi::BigInt &value) {
     return static_cast<uint64_t>(int64Value);
 }
 
-facebook::jsi::String QuickJSRuntime::bigintToString(const facebook::jsi::BigInt &value, int radix) {
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(value));
+facebook::jsi::String QuickJSRuntime::bigintToString(const facebook::jsi::BigInt& value, int radix) {
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(value));
     JSValue jsValue = qjsPointerValue->Get();
 
     assert(JS_IsBigInt(context_, jsValue));
@@ -360,24 +361,24 @@ facebook::jsi::String QuickJSRuntime::bigintToString(const facebook::jsi::BigInt
     return make<facebook::jsi::String>(new QuickJSPointerValue(context_, jsResult));
 }
 
-facebook::jsi::String QuickJSRuntime::createStringFromAscii(const char *str, size_t length) {
-    QuickJSPointerValue *value = QuickJSPointerValue::createFromOneByte(context_, str, length);
+facebook::jsi::String QuickJSRuntime::createStringFromAscii(const char* str, size_t length) {
+    QuickJSPointerValue* value = QuickJSPointerValue::createFromOneByte(context_, str, length);
     if (!value) {
         throw facebook::jsi::JSError(*this, "createFromOneByte() - string creation failed.");
     }
     return make<facebook::jsi::String>(value);
 }
 
-facebook::jsi::String QuickJSRuntime::createStringFromUtf8(const uint8_t *str, size_t length) {
-    QuickJSPointerValue *value = QuickJSPointerValue::createFromUtf8(context_, str, length);
+facebook::jsi::String QuickJSRuntime::createStringFromUtf8(const uint8_t* str, size_t length) {
+    QuickJSPointerValue* value = QuickJSPointerValue::createFromUtf8(context_, str, length);
     if (!value) {
         throw facebook::jsi::JSError(*this, "createFromOneByte() - string creation failed.");
     }
     return make<facebook::jsi::String>(value);
 }
 
-std::string QuickJSRuntime::utf8(const facebook::jsi::String &str) {
-    const QuickJSPointerValue *quickPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(str));
+std::string QuickJSRuntime::utf8(const facebook::jsi::String& str) {
+    const QuickJSPointerValue* quickPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(str));
     JSValue value = quickPointerValue->Get();
     assert(JS_IsString(value));
     return QJSJSIValueConverter::ToSTLString(*this, value);
@@ -389,67 +390,67 @@ facebook::jsi::Object QuickJSRuntime::createObject() {
 }
 
 facebook::jsi::Object QuickJSRuntime::createObject(std::shared_ptr<facebook::jsi::HostObject> hostObject) {
-    HostObjectProxy *hostObjectProxy = new HostObjectProxy(*this, context_, hostObject);
+    HostObjectProxy* hostObjectProxy = new HostObjectProxy(*this, context_, hostObject);
     hostObjectProxy->BindFinalizer();
 
     return make<facebook::jsi::Object>(new QuickJSPointerValue(context_, hostObjectProxy->weakHandle_));
 }
 
-std::shared_ptr<facebook::jsi::HostObject> QuickJSRuntime::getHostObject(const facebook::jsi::Object &object) {
+std::shared_ptr<facebook::jsi::HostObject> QuickJSRuntime::getHostObject(const facebook::jsi::Object& object) {
     assert(isHostObject(object));
 
     JSValue quickObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
-    HostObjectProxy *hostObjectProxy = static_cast<HostObjectProxy *>(JS_GetOpaque(quickObject, weakClassId_));
+    HostObjectProxy* hostObjectProxy = static_cast<HostObjectProxy*>(JS_GetOpaque(quickObject, weakClassId_));
 
     assert(hostObjectProxy);
     return hostObjectProxy->GetHostObject();
 }
 
-facebook::jsi::HostFunctionType &QuickJSRuntime::getHostFunction(const facebook::jsi::Function &function) {
+facebook::jsi::HostFunctionType& QuickJSRuntime::getHostFunction(const facebook::jsi::Function& function) {
     assert(isHostFunction(function));
 
-    const QuickJSPointerValue *quickJSPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(function));
+    const QuickJSPointerValue* quickJSPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(function));
 
     assert(JS_IsFunction(context_, quickJSPointerValue->Get()));
 
     JSValue quickJSFunction = QJSJSIValueConverter::ToQuickJSFunction(*this, function);
-    HostFunctionProxy *hostFunctionProxy = static_cast<HostFunctionProxy *>(JS_GetOpaque(quickJSFunction, weakFunctionId_));
+    HostFunctionProxy* hostFunctionProxy = static_cast<HostFunctionProxy*>(JS_GetOpaque(quickJSFunction, weakFunctionId_));
 
     assert(hostFunctionProxy);
     return hostFunctionProxy->GetHostFunction();
 }
 
-bool QuickJSRuntime::hasNativeState(const facebook::jsi::Object &object) {
+bool QuickJSRuntime::hasNativeState(const facebook::jsi::Object& object) {
     JSValue quickJSObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
 
     return JS_GetOpaque(quickJSObject, nativeStateClassId_) != NULL;
 }
 
-std::shared_ptr<facebook::jsi::NativeState> QuickJSRuntime::getNativeState(const facebook::jsi::Object &object) {
+std::shared_ptr<facebook::jsi::NativeState> QuickJSRuntime::getNativeState(const facebook::jsi::Object& object) {
     if (isHostObject(object)) {
         throw facebook::jsi::JSINativeException("native state unsupported on HostObject");
     }
     assert(hasNativeState(object));
 
     JSValue quickJSObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
-    auto *nativeStatePtr = reinterpret_cast<std::shared_ptr<facebook::jsi::NativeState> *>(JS_GetOpaque(quickJSObject, nativeStateClassId_));
+    auto* nativeStatePtr = reinterpret_cast<std::shared_ptr<facebook::jsi::NativeState>*>(JS_GetOpaque(quickJSObject, nativeStateClassId_));
     return std::shared_ptr(*nativeStatePtr);
 }
 
-void QuickJSRuntime::setNativeState(const facebook::jsi::Object &object, std::shared_ptr<facebook::jsi::NativeState> state) {
+void QuickJSRuntime::setNativeState(const facebook::jsi::Object& object, std::shared_ptr<facebook::jsi::NativeState> state) {
     if (isHostObject(object)) {
         throw facebook::jsi::JSINativeException("native state unsupported on HostObject");
     }
 
-    JSContext *ctx = context_;
+    JSContext* ctx = context_;
     JSValue jsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     JSValue newObject = JS_NewObjectProtoClass(ctx, jsObject, nativeStateClassId_);
     if (JS_IsException(newObject)) {
         throw facebook::jsi::JSError(*this, "Unable to create new Object for setNativeState");
     }
 
-    auto *nativeStatePtr = new std::shared_ptr<facebook::jsi::NativeState>(std::move(state));
-    JS_SetOpaque(newObject, reinterpret_cast<void *>(nativeStatePtr));
+    auto* nativeStatePtr = new std::shared_ptr<facebook::jsi::NativeState>(std::move(state));
+    JS_SetOpaque(newObject, reinterpret_cast<void*>(nativeStatePtr));
 
     JSValue assignFunc = JS_GetPropertyStr(ctx, JS_GetGlobalObject(ctx), "Object.assign");
     if (JS_IsFunction(ctx, assignFunc)) {
@@ -460,12 +461,12 @@ void QuickJSRuntime::setNativeState(const facebook::jsi::Object &object, std::sh
     JS_FreeValue(ctx, assignFunc);
 
     // 使用 newObject 替换原 object 在 jsi 中的指针值
-    QuickJSPointerValue *quickJSPointerValue = static_cast<QuickJSPointerValue *>(const_cast<Runtime::PointerValue *>(getPointerValue(object)));
+    QuickJSPointerValue* quickJSPointerValue = static_cast<QuickJSPointerValue*>(const_cast<Runtime::PointerValue*>(getPointerValue(object)));
     quickJSPointerValue->Reset(context_, newObject);
 }
 
-facebook::jsi::Value QuickJSRuntime::getProperty(const facebook::jsi::Object &object, const facebook::jsi::PropNameID &name) {
-    JSContext *ctx = context_;
+facebook::jsi::Value QuickJSRuntime::getProperty(const facebook::jsi::Object& object, const facebook::jsi::PropNameID& name) {
+    JSContext* ctx = context_;
 
     JSValue jsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     JSValue propName = QJSJSIValueConverter::ToQuickJSString(*this, name);
@@ -487,8 +488,8 @@ facebook::jsi::Value QuickJSRuntime::getProperty(const facebook::jsi::Object &ob
     return value;
 }
 
-facebook::jsi::Value QuickJSRuntime::getProperty(const facebook::jsi::Object &object, const facebook::jsi::String &name) {
-    JSContext *ctx = context_;
+facebook::jsi::Value QuickJSRuntime::getProperty(const facebook::jsi::Object& object, const facebook::jsi::String& name) {
+    JSContext* ctx = context_;
 
     JSValue jsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     JSValue propName = QJSJSIValueConverter::ToQuickJSString(*this, name);
@@ -510,8 +511,8 @@ facebook::jsi::Value QuickJSRuntime::getProperty(const facebook::jsi::Object &ob
     return value;
 }
 
-bool QuickJSRuntime::hasProperty(const facebook::jsi::Object &object, const facebook::jsi::PropNameID &name) {
-    JSContext *ctx = context_;
+bool QuickJSRuntime::hasProperty(const facebook::jsi::Object& object, const facebook::jsi::PropNameID& name) {
+    JSContext* ctx = context_;
 
     JSValue jsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     JSValue propName = QJSJSIValueConverter::ToQuickJSString(*this, name);
@@ -530,8 +531,8 @@ bool QuickJSRuntime::hasProperty(const facebook::jsi::Object &object, const face
     return result != 0;
 }
 
-bool QuickJSRuntime::hasProperty(const facebook::jsi::Object &object, const facebook::jsi::String &name) {
-    JSContext *ctx = context_;
+bool QuickJSRuntime::hasProperty(const facebook::jsi::Object& object, const facebook::jsi::String& name) {
+    JSContext* ctx = context_;
 
     JSValue jsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     JSValue propName = QJSJSIValueConverter::ToQuickJSString(*this, name);
@@ -551,8 +552,8 @@ bool QuickJSRuntime::hasProperty(const facebook::jsi::Object &object, const face
 }
 
 void QuickJSRuntime::setPropertyValue(
-    const facebook::jsi::Object &object,
-    const facebook::jsi::PropNameID &name, const facebook::jsi::Value &value) {
+    const facebook::jsi::Object& object,
+    const facebook::jsi::PropNameID& name, const facebook::jsi::Value& value) {
     JSValue jsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     JSValue propName = QJSJSIValueConverter::ToQuickJSString(*this, name);
     JSValue jsValue = QJSJSIValueConverter::ToQJSValue(*this, value);
@@ -564,8 +565,8 @@ void QuickJSRuntime::setPropertyValue(
 }
 
 void QuickJSRuntime::setPropertyValue(
-    const facebook::jsi::Object &object,
-    const facebook::jsi::String &name, const facebook::jsi::Value &value) {
+    const facebook::jsi::Object& object,
+    const facebook::jsi::String& name, const facebook::jsi::Value& value) {
     JSValue jsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     JSValue propName = QJSJSIValueConverter::ToQuickJSString(*this, name);
     JSValue jsValue = QJSJSIValueConverter::ToQJSValue(*this, value);
@@ -576,14 +577,14 @@ void QuickJSRuntime::setPropertyValue(
     }
 }
 
-bool QuickJSRuntime::isArray(const facebook::jsi::Object &object) const {
+bool QuickJSRuntime::isArray(const facebook::jsi::Object& object) const {
     JSValue qjsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     bool result = JS_IsArray(context_, qjsObject);
     JS_FreeValue(context_, qjsObject); // 确保释放 JSValue
     return result;
 }
 
-bool QuickJSRuntime::isArrayBuffer(const facebook::jsi::Object &object) const {
+bool QuickJSRuntime::isArrayBuffer(const facebook::jsi::Object& object) const {
     JSValue qjsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
 
     // QuickJS 并没有直接的 JS_IsArrayBuffer API，但是我们可以通过判断对象的类名是否为 "ArrayBuffer" 来实现
@@ -609,29 +610,29 @@ bool QuickJSRuntime::isArrayBuffer(const facebook::jsi::Object &object) const {
     return false;
 }
 
-bool QuickJSRuntime::isFunction(const facebook::jsi::Object &object) const {
+bool QuickJSRuntime::isFunction(const facebook::jsi::Object& object) const {
     JSValue qjsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
     bool result = JS_IsFunction(context_, qjsObject);
     JS_FreeValue(context_, qjsObject); // 确保释放 JSValue
     return result;
 }
 
-bool QuickJSRuntime::isHostObject(const facebook::jsi::Object &object) const {
+bool QuickJSRuntime::isHostObject(const facebook::jsi::Object& object) const {
     JSValue qjsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
 
     return JS_GetOpaque(qjsObject, weakClassId_) != NULL;
 }
 
-bool QuickJSRuntime::isHostFunction(const facebook::jsi::Function &function) const {
+bool QuickJSRuntime::isHostFunction(const facebook::jsi::Function& function) const {
     JSValue qjsFunction = QJSJSIValueConverter::ToQuickJSFunction(*this, function);
 
     return JS_GetOpaque(qjsFunction, weakFunctionId_) != NULL;
 }
 
-facebook::jsi::Array QuickJSRuntime::getPropertyNames(const facebook::jsi::Object &object) {
-    JSContext *ctx = context_;
+facebook::jsi::Array QuickJSRuntime::getPropertyNames(const facebook::jsi::Object& object) {
+    JSContext* ctx = context_;
 
-    JSPropertyEnum *props;
+    JSPropertyEnum* props;
     uint32_t prop_count;
     JSValue qjsObject = QJSJSIValueConverter::ToQuickJSObject(*this, object);
 
@@ -659,8 +660,8 @@ facebook::jsi::Array QuickJSRuntime::getPropertyNames(const facebook::jsi::Objec
     return make<facebook::jsi::Object>(new QuickJSPointerValue(context_, result)).getArray(*this);
 }
 
-facebook::jsi::WeakObject QuickJSRuntime::createWeakObject(const facebook::jsi::Object &weakObject) {
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(weakObject));
+facebook::jsi::WeakObject QuickJSRuntime::createWeakObject(const facebook::jsi::Object& weakObject) {
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(weakObject));
     assert(JS_IsObject(qjsPointerValue->Get()));
 
     int currentWeakId = nextWeakId_;
@@ -675,8 +676,8 @@ facebook::jsi::WeakObject QuickJSRuntime::createWeakObject(const facebook::jsi::
     return make<facebook::jsi::WeakObject>(new QuickJSPointerValue(context_, std::move(weakRef)));
 }
 
-facebook::jsi::Value QuickJSRuntime::lockWeakObject(const facebook::jsi::WeakObject &weakObject) {
-    const QuickJSPointerValue *qjsPointerValue = static_cast<const QuickJSPointerValue *>(getPointerValue(weakObject));
+facebook::jsi::Value QuickJSRuntime::lockWeakObject(const facebook::jsi::WeakObject& weakObject) {
+    const QuickJSPointerValue* qjsPointerValue = static_cast<const QuickJSPointerValue*>(getPointerValue(weakObject));
     assert(JS_IsObject(qjsPointerValue->Get()));
 
     return QJSJSIValueConverter::ToJSIValue(*this, qjsPointerValue->Get());
@@ -697,7 +698,7 @@ facebook::jsi::ArrayBuffer QuickJSRuntime::createArrayBuffer(std::shared_ptr<fac
         throw facebook::jsi::JSError(*this, "Failed to create ArrayBuffer");
     }
 
-    auto *mutableBuffer = new std::shared_ptr<facebook::jsi::MutableBuffer>(std::move(buffer));
+    auto* mutableBuffer = new std::shared_ptr<facebook::jsi::MutableBuffer>(std::move(buffer));
 
     JS_SetOpaque(arrayBuffer, mutableBuffer);
     JS_SetClassProto(context_, arrayBufferClassId_, arrayBuffer);
@@ -705,7 +706,7 @@ facebook::jsi::ArrayBuffer QuickJSRuntime::createArrayBuffer(std::shared_ptr<fac
     return make<facebook::jsi::Object>(new QuickJSPointerValue(context_, arrayBuffer)).getArrayBuffer(*this);
 }
 
-size_t QuickJSRuntime::size(const facebook::jsi::Array &array) {
+size_t QuickJSRuntime::size(const facebook::jsi::Array& array) {
     JSValue qjsArray = QJSJSIValueConverter::ToQuickJSArray(*this, array);
     assert(JS_IsArray(context_, qjsArray));
     JSValue length_val = JS_GetPropertyStr(context_, qjsArray, "length");
@@ -721,7 +722,7 @@ size_t QuickJSRuntime::size(const facebook::jsi::Array &array) {
     return length;
 }
 
-size_t QuickJSRuntime::size(const facebook::jsi::ArrayBuffer &arrayBuffer) {
+size_t QuickJSRuntime::size(const facebook::jsi::ArrayBuffer& arrayBuffer) {
     JSValue qjsObject = QJSJSIValueConverter::ToQuickJSObject(*this, arrayBuffer);
     // TODO: 不确定这里将 arrayBuffer 判断为 object 是否准确
     assert(JS_IsObject(qjsObject));
@@ -732,7 +733,7 @@ size_t QuickJSRuntime::size(const facebook::jsi::ArrayBuffer &arrayBuffer) {
     return byteLength;
 }
 
-uint8_t *QuickJSRuntime::data(const facebook::jsi::ArrayBuffer &arrayBuffer) {
+uint8_t* QuickJSRuntime::data(const facebook::jsi::ArrayBuffer& arrayBuffer) {
     JSValue qjsObject = QJSJSIValueConverter::ToQuickJSObject(*this, arrayBuffer);
 
     // TODO: 不确定这里将 arrayBuffer 判断为 object 是否准确
@@ -742,7 +743,7 @@ uint8_t *QuickJSRuntime::data(const facebook::jsi::ArrayBuffer &arrayBuffer) {
     return JS_GetArrayBuffer(context_, &byteLength, qjsObject);
 }
 
-facebook::jsi::Value QuickJSRuntime::getValueAtIndex(const facebook::jsi::Array &array, size_t i) {
+facebook::jsi::Value QuickJSRuntime::getValueAtIndex(const facebook::jsi::Array& array, size_t i) {
     JSValue jsArray = QJSJSIValueConverter::ToQuickJSArray(*this, array);
     assert(JS_IsArray(context_, jsArray));
 
@@ -758,8 +759,8 @@ facebook::jsi::Value QuickJSRuntime::getValueAtIndex(const facebook::jsi::Array 
 }
 
 void QuickJSRuntime::setValueAtIndexImpl(
-    const facebook::jsi::Array &array,
-    size_t i, const facebook::jsi::Value &value) {
+    const facebook::jsi::Array& array,
+    size_t i, const facebook::jsi::Value& value) {
     JSValue jsArray = QJSJSIValueConverter::ToQuickJSArray(*this, array);
     assert(JS_IsArray(context_, jsArray));
 
@@ -773,9 +774,9 @@ void QuickJSRuntime::setValueAtIndexImpl(
 }
 
 // TODO: 此方法不确定是否正确，需要补充测试用例验证
-facebook::jsi::Function QuickJSRuntime::createFunctionFromHostFunction(const facebook::jsi::PropNameID &name, unsigned int paramCount,
+facebook::jsi::Function QuickJSRuntime::createFunctionFromHostFunction(const facebook::jsi::PropNameID& name, unsigned int paramCount,
                                                                        facebook::jsi::HostFunctionType func) {
-    HostFunctionProxy *hostFunctionProxy = new HostFunctionProxy(*this, context_, std::move(func));
+    HostFunctionProxy* hostFunctionProxy = new HostFunctionProxy(*this, context_, std::move(func));
     hostFunctionProxy->BindFinalizer();
     JSValue jsFunction = hostFunctionProxy->weakHandle_;
 
@@ -785,7 +786,7 @@ facebook::jsi::Function QuickJSRuntime::createFunctionFromHostFunction(const fac
     ;
 }
 
-facebook::jsi::Value QuickJSRuntime::call(const facebook::jsi::Function &function, const facebook::jsi::Value &jsThis, const facebook::jsi::Value *args,
+facebook::jsi::Value QuickJSRuntime::call(const facebook::jsi::Function& function, const facebook::jsi::Value& jsThis, const facebook::jsi::Value* args,
                                           size_t count) {
     JSValue qjsFunction = QJSJSIValueConverter::ToQuickJSFunction(*this, function);
     JSValue qjsReceiver;
@@ -820,8 +821,8 @@ facebook::jsi::Value QuickJSRuntime::call(const facebook::jsi::Function &functio
     return jsiResult;
 }
 
-facebook::jsi::Value QuickJSRuntime::callAsConstructor(const facebook::jsi::Function &function,
-                                                       const facebook::jsi::Value *args, size_t count) {
+facebook::jsi::Value QuickJSRuntime::callAsConstructor(const facebook::jsi::Function& function,
+                                                       const facebook::jsi::Value* args, size_t count) {
     JSValue qjsFunction = QJSJSIValueConverter::ToQuickJSFunction(*this, function);
 
     std::vector<JSValue> qjsArgs;
@@ -848,7 +849,7 @@ facebook::jsi::Value QuickJSRuntime::callAsConstructor(const facebook::jsi::Func
     return jsiResult;
 }
 
-bool QuickJSRuntime::strictEquals(const facebook::jsi::Symbol &a, const facebook::jsi::Symbol &b) const {
+bool QuickJSRuntime::strictEquals(const facebook::jsi::Symbol& a, const facebook::jsi::Symbol& b) const {
     JSValue qjsSymbolA = QJSJSIValueConverter::ToQuickJSSymbol(*this, a);
     JSValue qjsSymbolB = QJSJSIValueConverter::ToQuickJSSymbol(*this, b);
 
@@ -860,9 +861,9 @@ bool QuickJSRuntime::strictEquals(const facebook::jsi::Symbol &a, const facebook
     return result;
 }
 
-bool QuickJSRuntime::strictEquals(const facebook::jsi::BigInt &a, const facebook::jsi::BigInt &b) const {
-    JSValue qjsBigIntA = (static_cast<const QuickJSPointerValue *>(getPointerValue(a))->Get());
-    JSValue qjsBigIntB = (static_cast<const QuickJSPointerValue *>(getPointerValue(b))->Get());
+bool QuickJSRuntime::strictEquals(const facebook::jsi::BigInt& a, const facebook::jsi::BigInt& b) const {
+    JSValue qjsBigIntA = (static_cast<const QuickJSPointerValue*>(getPointerValue(a))->Get());
+    JSValue qjsBigIntB = (static_cast<const QuickJSPointerValue*>(getPointerValue(b))->Get());
 
     bool result = JS_StrictEq(context_, qjsBigIntA, qjsBigIntB);
 
@@ -872,7 +873,7 @@ bool QuickJSRuntime::strictEquals(const facebook::jsi::BigInt &a, const facebook
     return result;
 }
 
-bool QuickJSRuntime::strictEquals(const facebook::jsi::String &a, const facebook::jsi::String &b) const {
+bool QuickJSRuntime::strictEquals(const facebook::jsi::String& a, const facebook::jsi::String& b) const {
     JSValue qjsStringA = QJSJSIValueConverter::ToQuickJSString(*this, a);
     JSValue qjsStringB = QJSJSIValueConverter::ToQuickJSString(*this, b);
 
@@ -884,7 +885,7 @@ bool QuickJSRuntime::strictEquals(const facebook::jsi::String &a, const facebook
     return result;
 }
 
-bool QuickJSRuntime::strictEquals(const facebook::jsi::Object &a, const facebook::jsi::Object &b) const {
+bool QuickJSRuntime::strictEquals(const facebook::jsi::Object& a, const facebook::jsi::Object& b) const {
     JSValue qjsObjectA = QJSJSIValueConverter::ToQuickJSObject(*this, a);
     JSValue qjsObjectB = QJSJSIValueConverter::ToQuickJSObject(*this, b);
 
@@ -896,7 +897,7 @@ bool QuickJSRuntime::strictEquals(const facebook::jsi::Object &a, const facebook
     return result;
 }
 
-bool QuickJSRuntime::instanceOf(const facebook::jsi::Object &o, const facebook::jsi::Function &f) {
+bool QuickJSRuntime::instanceOf(const facebook::jsi::Object& o, const facebook::jsi::Function& f) {
     JSValue qjsObject = QJSJSIValueConverter::ToQuickJSObject(*this, o);
     JSValue qjsFunction = QJSJSIValueConverter::ToQuickJSFunction(*this, f);
 

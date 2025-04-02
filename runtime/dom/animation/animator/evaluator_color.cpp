@@ -8,7 +8,7 @@
 
 namespace TaroRuntime {
 namespace TaroAnimate {
-    double TaroEvaluatorColor::evaluate(const double &begin, const double &end,
+    double TaroEvaluatorColor::evaluate(const double& begin, const double& end,
                                         float fraction) {
         // convert begin color from ARGB to linear
         double begin_red = 0.0f;
@@ -45,7 +45,7 @@ namespace TaroAnimate {
     }
 
     AnimPropType_MultiValue TaroEvaluatorColor::evaluate(
-        const AnimPropType_MultiValue &begin, const AnimPropType_MultiValue &end,
+        const AnimPropType_MultiValue& begin, const AnimPropType_MultiValue& end,
         float fraction) {
         AnimPropType_MultiValue result;
         auto min_size = std::min(begin.values_.size(), end.values_.size());

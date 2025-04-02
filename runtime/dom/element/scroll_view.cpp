@@ -57,7 +57,7 @@ namespace TaroDOM {
         }
         render_view->SetFlexGrow(1);
         render_view->SetFlexShrink(0);
-    
+
         if (is_scroll_x) {
             render_view->SetFlexDirection(ArkUI_FlexDirection::ARKUI_FLEX_DIRECTION_ROW);
 

@@ -11,16 +11,16 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroTextInputEventChange : public TaroEventBase {
             public:
-            TaroTextInputEventChange(const std::string &js_event_type, ArkUI_NodeEvent *event)
+            TaroTextInputEventChange(const std::string& js_event_type, ArkUI_NodeEvent* event)
                 : TaroEventBase(js_event_type, event) {
                 bubbles_ = false;
             }
 
             virtual ~TaroTextInputEventChange() {}
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            virtual int serializeFun(napi_value &ret_obj) override;
+            virtual int serializeFun(napi_value& ret_obj) override;
 
             const std::string& getValue();
 
@@ -30,7 +30,7 @@ namespace TaroDOM {
 
         class TaroTextInputEventInput : public TaroTextInputEventChange {
             public:
-            TaroTextInputEventInput(const std::string &js_event_type, ArkUI_NodeEvent *event)
+            TaroTextInputEventInput(const std::string& js_event_type, ArkUI_NodeEvent* event)
                 : TaroTextInputEventChange(js_event_type, event) {}
 
             bool realTrigger() override;

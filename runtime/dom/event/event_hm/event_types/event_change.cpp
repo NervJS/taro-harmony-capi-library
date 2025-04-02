@@ -12,9 +12,9 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        int TaroTextInputEventChange::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroTextInputEventChange::parseHmEvent(ArkUI_NodeEvent* event) {
             if (value_.empty()) {
-                ArkUI_StringAsyncEvent *ptr_ev_string = OH_ArkUI_NodeEvent_GetStringAsyncEvent(event);
+                ArkUI_StringAsyncEvent* ptr_ev_string = OH_ArkUI_NodeEvent_GetStringAsyncEvent(event);
                 if (ptr_ev_string != nullptr && ptr_ev_string->pStr != nullptr) {
                     value_ = ptr_ev_string->pStr;
                 }
@@ -26,7 +26,7 @@ namespace TaroDOM {
             return value_;
         }
 
-        int TaroTextInputEventChange::serializeFun(napi_value &ret_obj) {
+        int TaroTextInputEventChange::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
 
             napi_value js_detail = detail();

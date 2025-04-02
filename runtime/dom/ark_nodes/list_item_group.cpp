@@ -19,7 +19,7 @@ namespace TaroDOM {
     TaroListItemGroupNode::~TaroListItemGroupNode() {}
 
     void TaroListItemGroupNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_LIST_ITEM_GROUP));
     }
 
@@ -43,13 +43,13 @@ namespace TaroDOM {
     }
 
     void TaroListItemGroupNode::setHeader(ArkUI_NodeHandle handle) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item = {.object = handle};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_LIST_ITEM_GROUP_SET_HEADER, &item);
     }
 
     void TaroListItemGroupNode::setFooter(ArkUI_NodeHandle handle) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item = {.object = handle};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_LIST_ITEM_GROUP_SET_FOOTER, &item);
     }

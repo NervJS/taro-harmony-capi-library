@@ -9,8 +9,8 @@
 #include <ace/xcomponent/native_interface_xcomponent.h>
 #include <arkui/native_node.h>
 
-#include "runtime/dom/element/element.h"
 #include "helper/ImageLoader.h"
+#include "runtime/dom/element/element.h"
 
 namespace TaroRuntime {
 namespace TaroDOM {
@@ -49,7 +49,7 @@ namespace TaroDOM {
         ~TaroImage() = default;
 
         void Build() override;
-        void Build(std::shared_ptr<TaroElement> &reuse_element) override;
+        void Build(std::shared_ptr<TaroElement>& reuse_element) override;
 
         std::unique_ptr<TaroImageAttributes> attributes_;
 

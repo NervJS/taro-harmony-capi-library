@@ -3,28 +3,30 @@
  */
 
 #include "text_styled.h"
+
 #include <native_drawing/drawing_brush.h>
+
 #include "runtime/cssom/CSSStyleSheet.h"
 #include "runtime/cssom/font/FontFamilyManager.h"
 
 namespace TaroRuntime {
 namespace TaroDOM {
     TextStyled::TextStyled() {}
-    
+
     TextStyled::~TextStyled() {}
 
     void TextStyled::InitStyledString(const StylesheetRef& nodeStyle, const StylesheetRef& textStyle, const DimensionContextRef& dimensionContext) {
-//         if (!m_StyledString) {
-            m_StyledString && m_OldStyledString.emplace_back(m_StyledString);
-            m_TypographyStyle = OH_Drawing_CreateTypographyStyle();
-            auto fontCollection = TaroCSSOM::FontFamilyManager::GetInstance()->GetFontCollection();
-            auto globalTextStyle = GetTextStyle(textStyle, dimensionContext);
-            SetTypographyStyle(m_TypographyStyle, textStyle, nodeStyle, globalTextStyle);
-            m_StyledString = OH_ArkUI_StyledString_Create(m_TypographyStyle, fontCollection);
-            if (globalTextStyle) {
-                OH_Drawing_DestroyTextStyle(globalTextStyle);
-            }
-//         }
+        //         if (!m_StyledString) {
+        m_StyledString&& m_OldStyledString.emplace_back(m_StyledString);
+        m_TypographyStyle = OH_Drawing_CreateTypographyStyle();
+        auto fontCollection = TaroCSSOM::FontFamilyManager::GetInstance()->GetFontCollection();
+        auto globalTextStyle = GetTextStyle(textStyle, dimensionContext);
+        SetTypographyStyle(m_TypographyStyle, textStyle, nodeStyle, globalTextStyle);
+        m_StyledString = OH_ArkUI_StyledString_Create(m_TypographyStyle, fontCollection);
+        if (globalTextStyle) {
+            OH_Drawing_DestroyTextStyle(globalTextStyle);
+        }
+        //         }
     }
 
     ArkUI_StyledString* TextStyled::GetStyledString() {
@@ -39,8 +41,9 @@ namespace TaroDOM {
         }
     }
 
-    void TextStyled::TextTypographyLayout(OH_Drawing_Typography * typography, const double width) {
-        if (!typography || width <= 0 || std::isnan(width)) return;
+    void TextStyled::TextTypographyLayout(OH_Drawing_Typography* typography, const double width) {
+        if (!typography || width <= 0 || std::isnan(width))
+            return;
         OH_Drawing_TypographyLayout(typography, width);
         m_HasBeenLayout = true;
     }
@@ -50,7 +53,8 @@ namespace TaroDOM {
     }
 
     void TextStyled::SetTypographyStyle(OH_Drawing_TypographyStyle* typographyStyle, const StylesheetRef& style, const StylesheetRef& style_ref, OH_Drawing_TextStyle* textStyle) {
-        if (!style) return;
+        if (!style)
+            return;
         if (style->wordBreak.has_value()) {
             auto wordBreak = style->wordBreak.value();
             OH_Drawing_SetTypographyTextWordBreakType(typographyStyle, wordBreak);
@@ -297,7 +301,8 @@ namespace TaroDOM {
             default:
                 break;
         }
-        if (width == -1 || height == -1) return;
+        if (width == -1 || height == -1)
+            return;
         imageInfo->width = width;
         imageInfo->height = height;
         placeholder.width = vp2Px(imageInfo->width);
@@ -317,7 +322,8 @@ namespace TaroDOM {
     }
 
     void TextStyled::ComputeImagePlaceHolderPosition(const StylesheetRef& styleRef, OH_Drawing_PlaceholderSpan& placeholder, std::shared_ptr<ImageInfo>& imageInfo, const DimensionContextRef& dimensionContext) {
-        if (!styleRef) return;
+        if (!styleRef)
+            return;
         if (styleRef->marginRight.has_value()) {
             auto marginRight = styleRef->marginRight.value().ParseToVp(dimensionContext);
             if (marginRight.has_value()) {
@@ -442,5 +448,5 @@ namespace TaroDOM {
         DestroyOldStyledString();
         DestroyOldTypography();
     }
-}
-}
+} // namespace TaroDOM
+} // namespace TaroRuntime

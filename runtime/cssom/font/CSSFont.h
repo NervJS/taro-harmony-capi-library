@@ -11,7 +11,7 @@ namespace TaroRuntime {
 namespace TaroCSSOM {
     class CSSFont {
         public:
-        int init(const napi_value &config);
+        int init(const napi_value& config);
     };
 } // namespace TaroCSSOM
 } // namespace TaroRuntime

@@ -15,9 +15,9 @@ namespace TaroDOM {
         public:
         TaroSwiperItem(napi_value node);
         ~TaroSwiperItem() = default;
-    
+
         void Build() override;
-        void SetAttributesToRenderNode() override ;
+        void SetAttributesToRenderNode() override;
     };
 } // namespace TaroDOM
 } // namespace TaroRuntime

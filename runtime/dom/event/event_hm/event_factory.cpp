@@ -11,7 +11,7 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        TaroEventFactory *TaroEventFactory::instance() {
+        TaroEventFactory* TaroEventFactory::instance() {
             static TaroEventFactory instance;
             return &instance;
         }
@@ -21,8 +21,8 @@ namespace TaroDOM {
         }
 
         std::shared_ptr<TaroEventBase>
-        TaroEventFactory::createEventDataObj(int event_type, const std::string &js_event_type,
-                                             ArkUI_NodeEvent *event) {
+        TaroEventFactory::createEventDataObj(int event_type, const std::string& js_event_type,
+                                             ArkUI_NodeEvent* event) {
             if (event_type < 0 || event_type >= TARO_EVENT_TYPE_MAX || event_type >= parser_factory_.size() || parser_factory_[event_type] == nullptr) {
                 return nullptr;
             }
@@ -33,14 +33,14 @@ namespace TaroDOM {
 
         int
         TaroEventFactory::registerHandler(int event_type, ArkUI_NodeEventType hm_ev_type,
-                                          const EventCreateFun &new_fun) {
+                                          const EventCreateFun& new_fun) {
             if (event_type < 0 || event_type >= TARO_EVENT_TYPE_MAX || event_type >= parser_factory_.size() ||
                 parser_factory_[event_type] != nullptr) {
                 TARO_LOG_ERROR("TaroEvent", "invalid event_type:%{public}d", event_type);
                 return -1;
             }
 
-            TaroEventHelper *helper = new TaroEventHelper;
+            TaroEventHelper* helper = new TaroEventHelper;
             helper->event_type_ = event_type;
             helper->hm_event_type_ = hm_ev_type;
             helper->event_create_fun_ = new_fun;
@@ -49,7 +49,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventFactory::getHmEventType(int event_type, ArkUI_NodeEventType &hm_event_type) {
+        int TaroEventFactory::getHmEventType(int event_type, ArkUI_NodeEventType& hm_event_type) {
             if (event_type < 0 || event_type >= TARO_EVENT_TYPE_MAX || event_type >= parser_factory_.size() ||
                 parser_factory_[event_type] == nullptr) {
                 TARO_LOG_ERROR("TaroEvent", "invalid event_type:%{public}d", event_type);

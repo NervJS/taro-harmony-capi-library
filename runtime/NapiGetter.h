@@ -21,52 +21,52 @@ class NapiGetter {
     virtual ~NapiGetter();
 
     NapiGetter GetValue();
-    static NapiGetter GetValue(const napi_value &value);
-    NapiGetter GetProperty(const char *propertyPath);
-    static NapiGetter GetProperty(const napi_value &node,
-                                  const char *propertyPath);
+    static NapiGetter GetValue(const napi_value& value);
+    NapiGetter GetProperty(const char* propertyPath);
+    static NapiGetter GetProperty(const napi_value& node,
+                                  const char* propertyPath);
     /** @deprecated 可能导致性能降低 */
-    static NapiGetter GetPropertyWithPath(const napi_value &node,
-                                          const char *propertyPath);
-    static std::vector<NapiGetter> GetAllPropertyNames(const napi_value &node);
+    static NapiGetter GetPropertyWithPath(const napi_value& node,
+                                          const char* propertyPath);
+    static std::vector<NapiGetter> GetAllPropertyNames(const napi_value& node);
     std::vector<NapiGetter> GetAllPropertyNames();
 
     static napi_valuetype GetValueTypeFromNode(napi_value node);
-    static napi_value GetPropertyFromNode(const napi_value &node,
-                                          const char *propertyName);
-    static napi_value GetPropertyFromNode(const napi_value &node,
-                                          const char *propertyName,
-                                          napi_value &nodeValue);
+    static napi_value GetPropertyFromNode(const napi_value& node,
+                                          const char* propertyName);
+    static napi_value GetPropertyFromNode(const napi_value& node,
+                                          const char* propertyName,
+                                          napi_value& nodeValue);
     /** @deprecated 可能导致性能降低 */
-    static napi_value GetPropertyFromNodeWithPath(const napi_value &node,
-                                                  const char *propertyPath);
-    static std::vector<napi_value> GetVectorFromNode(const napi_value &node);
+    static napi_value GetPropertyFromNodeWithPath(const napi_value& node,
+                                                  const char* propertyPath);
+    static std::vector<napi_value> GetVectorFromNode(const napi_value& node);
 
     // 循环遍历数组
     static void ForEachInArray(
-        const napi_value &node,
-        std::function<void(const napi_value &, const uint32_t &)> callback);
+        const napi_value& node,
+        std::function<void(const napi_value&, const uint32_t&)> callback);
     void ForEachInArray(
-        std::function<void(const napi_value &, const uint32_t &)>);
+        std::function<void(const napi_value&, const uint32_t&)>);
 
     napi_valuetype GetType() const;
-    void GetType(napi_valuetype &) const;
+    void GetType(napi_valuetype&) const;
     napi_valuetype Type();
     TaroHelper::Optional<std::string> String();
     TaroHelper::Optional<std::string_view> StringView();
-    std::string StringOr(std::string &default_value);
-    std::string StringOr(const char *default_value);
+    std::string StringOr(std::string& default_value);
+    std::string StringOr(const char* default_value);
     TaroHelper::Optional<int32_t> Int32();
-    int32_t Int32Or(const int32_t &default_value);
+    int32_t Int32Or(const int32_t& default_value);
     TaroHelper::Optional<uint32_t> UInt32();
-    uint32_t UInt32(const uint32_t &);
+    uint32_t UInt32(const uint32_t&);
     TaroHelper::Optional<double> Double();
-    double DoubleOr(const double &default_value);
-    double Double(const double &default_value);
+    double DoubleOr(const double& default_value);
+    double Double(const double& default_value);
     TaroHelper::Optional<bool> Bool();
-    bool BoolOr(const bool &default_value);
+    bool BoolOr(const bool& default_value);
     TaroHelper::Optional<bool> BoolNull();
-    bool BoolNullOr(const bool &default_value);
+    bool BoolNullOr(const bool& default_value);
 
     TaroHelper::Optional<std::vector<NapiGetter>> Vector();
 

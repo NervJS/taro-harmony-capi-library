@@ -8,8 +8,8 @@
 #include "./animator/curve_animation.h"
 #include "./animator/keyframe_animation.h"
 #include "animation_config.h"
-#include "runtime/render.h"
 #include "runtime/dom/animation/animation_lock.h"
+#include "runtime/render.h"
 
 namespace TaroRuntime {
 namespace TaroAnimate {
@@ -18,7 +18,7 @@ namespace TaroAnimate {
         std::weak_ptr<TaroDOM::TaroRenderNode> node)
         : TaroAnimate(node, TaroAnimateType::CSS_TRANSITION, props_controller) {}
 
-    int TaroCSSTransition::bindTransition(const const TaroCSSOM::TaroStylesheet::TransitionParam &param) {
+    int TaroCSSTransition::bindTransition(const const TaroCSSOM::TaroStylesheet::TransitionParam& param) {
         std::shared_ptr<TaroAnimator> animator = std::make_shared<TaroAnimator>();
         animator->setDuration(param.duration_);
         animator->setDelay(param.delay);
@@ -67,7 +67,7 @@ namespace TaroAnimate {
         TARO_LOG_DEBUG("TaroAnimation", "stop anim_id:%{public}d", anim_id);
         std::shared_ptr<TaroThread::TaskExecutor> runner = Render::GetInstance()->GetTaskRunner();
         std::weak_ptr<TaroCSSTransition> weak_this = shared_from_this();
-        runner->runTask(TaroThread::TaskThread::MAIN, [weak_this, anim_id]{
+        runner->runTask(TaroThread::TaskThread::MAIN, [weak_this, anim_id] {
             auto tmp_this = weak_this.lock();
             if (tmp_this) {
                 std::lock_guard lock(AnimationLock::getAnimationLock());
@@ -93,14 +93,14 @@ namespace TaroAnimate {
         }
     }
 
-    void TaroCSSTransition::getRunningProp(std::vector<CSSProperty::Type> &props) {
-        for (const auto &elem : type_to_animator_) {
+    void TaroCSSTransition::getRunningProp(std::vector<CSSProperty::Type>& props) {
+        for (const auto& elem : type_to_animator_) {
             props.push_back(elem.first);
         }
     }
 
     void TaroCSSTransition::cancelTransition(CSSProperty::Type prop_type) {
-        for (const auto &elem : type_to_animator_) {
+        for (const auto& elem : type_to_animator_) {
             if (elem.first == prop_type) {
                 elem.second->stop();
                 resetStyleProp(prop_type);
@@ -109,7 +109,7 @@ namespace TaroAnimate {
     }
 
     void TaroCSSTransition::refreshAnimation() {
-        for (const auto &elem : type_to_animator_) {
+        for (const auto& elem : type_to_animator_) {
             TaroAnimationProps::resetStyleSheetProp(node_owner_, elem.first);
         }
         clearAnimator();
@@ -117,9 +117,9 @@ namespace TaroAnimate {
     }
 
     std::shared_ptr<TaroAnimation> TaroCSSTransition::createCurveAnimation(
-        CSSProperty::Type prop_type, const TaroAnimationPropValue &begin_value,
-        const TaroAnimationPropValue &end_value, std::shared_ptr<TaroCurve> curve,
-        const TaroAnimationPropSetFun &set_fun) {
+        CSSProperty::Type prop_type, const TaroAnimationPropValue& begin_value,
+        const TaroAnimationPropValue& end_value, std::shared_ptr<TaroCurve> curve,
+        const TaroAnimationPropSetFun& set_fun) {
         // check type
         if (begin_value.index() != end_value.index()) {
             TARO_LOG_ERROR("TaroAnimation", "begin and value types are not same");
@@ -135,8 +135,8 @@ namespace TaroAnimate {
 
 #define CREATE_CURVE_ANIMATION(PROP_TYPE)                                    \
     {                                                                        \
-        const PROP_TYPE *begin_float = std::get_if<PROP_TYPE>(&begin_value); \
-        const PROP_TYPE *end_float = std::get_if<PROP_TYPE>(&end_value);     \
+        const PROP_TYPE* begin_float = std::get_if<PROP_TYPE>(&begin_value); \
+        const PROP_TYPE* end_float = std::get_if<PROP_TYPE>(&end_value);     \
         if (begin_float != nullptr && end_float != nullptr) {                \
             std::shared_ptr<TaroCurveAnimation<PROP_TYPE>> animation =       \
                 std::make_shared<TaroCurveAnimation<PROP_TYPE>>(             \

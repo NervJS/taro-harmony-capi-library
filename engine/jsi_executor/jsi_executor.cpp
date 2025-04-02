@@ -23,7 +23,7 @@ class JSIExecutor::NativeModuleProxy : public facebook::jsi::HostObject {
     NativeModuleProxy(std::shared_ptr<JSINativeModules> nativeModules)
         : weakNativeModules_(nativeModules) {}
 
-    facebook::jsi::Value get(facebook::jsi::Runtime &rt, const facebook::jsi::PropNameID &name) override {
+    facebook::jsi::Value get(facebook::jsi::Runtime& rt, const facebook::jsi::PropNameID& name) override {
         if (name.utf8(rt) == "name") {
             return facebook::jsi::String::createFromAscii(rt, "NativeModules");
         }
@@ -36,7 +36,7 @@ class JSIExecutor::NativeModuleProxy : public facebook::jsi::HostObject {
         return nativeModules->getModule(rt, name);
     }
 
-    void set(facebook::jsi::Runtime &, const facebook::jsi::PropNameID &, const facebook::jsi::Value &) override {
+    void set(facebook::jsi::Runtime&, const facebook::jsi::PropNameID&, const facebook::jsi::Value&) override {
         throw std::runtime_error(
             "Unable to put on NativeModules: Operation unsupported");
     }
@@ -48,7 +48,7 @@ class JSIExecutor::NativeModuleProxy : public facebook::jsi::HostObject {
 namespace {
 
 // basename_r isn't in all iOS SDKs, so use this simple version instead.
-std::string simpleBasename(const std::string &path) {
+std::string simpleBasename(const std::string& path) {
     size_t pos = path.rfind("/");
     return (pos != std::string::npos) ? path.substr(pos) : path;
 }
@@ -58,7 +58,7 @@ std::string simpleBasename(const std::string &path) {
 JSIExecutor::JSIExecutor(
     std::shared_ptr<facebook::jsi::Runtime> runtime,
     std::shared_ptr<ExecutorDelegate> delegate,
-    const JSIScopedTimeoutInvoker &scopedTimeoutInvoker,
+    const JSIScopedTimeoutInvoker& scopedTimeoutInvoker,
     RuntimeInstaller runtimeInstaller)
     : runtime_(runtime),
       delegate_(delegate),
@@ -87,9 +87,9 @@ void JSIExecutor::initializeRuntime() {
             facebook::jsi::PropNameID::forAscii(*runtime_, "nativeFlushQueueImmediate"),
             1,
             [this](
-                facebook::jsi::Runtime &,
-                const facebook::jsi::Value &,
-                const facebook::jsi::Value *args,
+                facebook::jsi::Runtime&,
+                const facebook::jsi::Value&,
+                const facebook::jsi::Value* args,
                 size_t count) {
                 if (count != 1) {
                     throw std::invalid_argument(
@@ -107,10 +107,12 @@ void JSIExecutor::initializeRuntime() {
             facebook::jsi::PropNameID::forAscii(*runtime_, "nativeCallSyncHook"),
             1,
             [this](
-                facebook::jsi::Runtime &,
-                const facebook::jsi::Value &,
-                const facebook::jsi::Value *args,
-                size_t count) { return nativeCallSyncHook(args, count); }));
+                facebook::jsi::Runtime&,
+                const facebook::jsi::Value&,
+                const facebook::jsi::Value* args,
+                size_t count) {
+                return nativeCallSyncHook(args, count);
+            }));
 
     runtime_->global().setProperty(
         *runtime_,
@@ -120,10 +122,12 @@ void JSIExecutor::initializeRuntime() {
             facebook::jsi::PropNameID::forAscii(*runtime_, "globalEvalWithSourceUrl"),
             1,
             [this](
-                facebook::jsi::Runtime &,
-                const facebook::jsi::Value &,
-                const facebook::jsi::Value *args,
-                size_t count) { return globalEvalWithSourceUrl(args, count); }));
+                facebook::jsi::Runtime&,
+                const facebook::jsi::Value&,
+                const facebook::jsi::Value* args,
+                size_t count) {
+                return globalEvalWithSourceUrl(args, count);
+            }));
 
     if (runtimeInstaller_) {
         runtimeInstaller_(*runtime_);
@@ -147,7 +151,7 @@ void JSIExecutor::loadBundle(
 
 void JSIExecutor::registerBundle(
     uint32_t bundleId,
-    const std::string &bundlePath) {
+    const std::string& bundlePath) {
     const auto tag = folly::to<std::string>(bundleId);
 
     auto script = JSBigFileString::fromPath(bundlePath);
@@ -159,7 +163,7 @@ void JSIExecutor::registerBundle(
 }
 
 // Looping on \c drainMicrotasks until it completes or hits the retries bound.
-static void performMicrotaskCheckpoint(facebook::jsi::Runtime &runtime) {
+static void performMicrotaskCheckpoint(facebook::jsi::Runtime& runtime) {
     uint8_t retries = 0;
     // A heuristic number to guard infinite or absurd numbers of retries.
     const static unsigned int kRetriesBound = 255;
@@ -171,7 +175,7 @@ static void performMicrotaskCheckpoint(facebook::jsi::Runtime &runtime) {
             if (runtime.drainMicrotasks()) {
                 break;
             }
-        } catch (facebook::jsi::JSError &error) {
+        } catch (facebook::jsi::JSError& error) {
             handleJSError(runtime, error, true);
         }
         retries++;
@@ -183,9 +187,9 @@ static void performMicrotaskCheckpoint(facebook::jsi::Runtime &runtime) {
 }
 
 void JSIExecutor::callFunction(
-    const std::string &moduleId,
-    const std::string &methodId,
-    const folly::dynamic &arguments) {
+    const std::string& moduleId,
+    const std::string& methodId,
+    const folly::dynamic& arguments) {
     SystraceSection s(
         "JSIExecutor::callFunction", "moduleId", moduleId, "methodId", methodId);
     if (!callFunctionReturnFlushedQueue_) {
@@ -224,7 +228,7 @@ void JSIExecutor::callFunction(
 
 void JSIExecutor::invokeCallback(
     const double callbackId,
-    const folly::dynamic &arguments) {
+    const folly::dynamic& arguments) {
     SystraceSection s("JSIExecutor::invokeCallback", "callbackId", callbackId);
     if (!invokeCallbackAndReturnFlushedQueue_) {
         bindBridge();
@@ -252,7 +256,7 @@ void JSIExecutor::setGlobalVariable(
         propName.c_str(),
         facebook::jsi::Value::createFromJsonUtf8(
             *runtime_,
-            reinterpret_cast<const uint8_t *>(jsonValue->c_str()),
+            reinterpret_cast<const uint8_t*>(jsonValue->c_str()),
             jsonValue->size()));
 }
 
@@ -260,7 +264,7 @@ std::string JSIExecutor::getDescription() {
     return "JSI (" + runtime_->description() + ")";
 }
 
-void *JSIExecutor::getJavaScriptContext() {
+void* JSIExecutor::getJavaScriptContext() {
     return runtime_.get();
 }
 
@@ -280,7 +284,7 @@ void JSIExecutor::handleMemoryPressure(int pressureLevel) {
         TRIM_MEMORY_RUNNING_MODERATE = 5,
         TRIM_MEMORY_UI_HIDDEN = 20,
     };
-    const char *levelName;
+    const char* levelName;
     switch (pressureLevel) {
         case TRIM_MEMORY_BACKGROUND:
             levelName = "TRIM_MEMORY_BACKGROUND";
@@ -356,7 +360,7 @@ void JSIExecutor::bindBridge() {
     });
 }
 
-void JSIExecutor::callNativeModules(const facebook::jsi::Value &queue, bool isEndOfBatch) {
+void JSIExecutor::callNativeModules(const facebook::jsi::Value& queue, bool isEndOfBatch) {
     SystraceSection s("JSIExecutor::callNativeModules");
     // If this fails, you need to pass a fully functional delegate with a
     // module registry to the factory/ctor.
@@ -404,7 +408,7 @@ void JSIExecutor::flush() {
     }
 }
 
-facebook::jsi::Value JSIExecutor::nativeCallSyncHook(const facebook::jsi::Value *args, size_t count) {
+facebook::jsi::Value JSIExecutor::nativeCallSyncHook(const facebook::jsi::Value* args, size_t count) {
     if (count != 3) {
         throw std::invalid_argument("nativeCallSyncHook arg count must be 3");
     }
@@ -451,7 +455,7 @@ facebook::jsi::Value JSIExecutor::nativeCallSyncHook(const facebook::jsi::Value 
     return returnValue;
 }
 
-facebook::jsi::Value JSIExecutor::globalEvalWithSourceUrl(const facebook::jsi::Value *args, size_t count) {
+facebook::jsi::Value JSIExecutor::globalEvalWithSourceUrl(const facebook::jsi::Value* args, size_t count) {
     if (count != 1 && count != 2) {
         throw std::invalid_argument(
             "globalEvalWithSourceUrl arg count must be 1 or 2");
@@ -467,7 +471,7 @@ facebook::jsi::Value JSIExecutor::globalEvalWithSourceUrl(const facebook::jsi::V
         std::make_unique<facebook::jsi::StringBuffer>(std::move(code)), url);
 }
 
-void bindNativeLogger(facebook::jsi::Runtime &runtime, Logger logger) {
+void bindNativeLogger(facebook::jsi::Runtime& runtime, Logger logger) {
     runtime.global().setProperty(
         runtime,
         "nativeLoggingHook",
@@ -476,9 +480,9 @@ void bindNativeLogger(facebook::jsi::Runtime &runtime, Logger logger) {
             facebook::jsi::PropNameID::forAscii(runtime, "nativeLoggingHook"),
             2,
             [logger = std::move(logger)](
-                facebook::jsi::Runtime &runtime,
-                const facebook::jsi::Value &,
-                const facebook::jsi::Value *args,
+                facebook::jsi::Runtime& runtime,
+                const facebook::jsi::Value&,
+                const facebook::jsi::Value* args,
                 size_t count) {
                 if (count != 2) {
                     throw std::invalid_argument(
@@ -491,7 +495,7 @@ void bindNativeLogger(facebook::jsi::Runtime &runtime, Logger logger) {
             }));
 }
 
-void bindNativePerformanceNow(facebook::jsi::Runtime &runtime) {
+void bindNativePerformanceNow(facebook::jsi::Runtime& runtime) {
     runtime.global().setProperty(
         runtime,
         "nativePerformanceNow",
@@ -499,8 +503,10 @@ void bindNativePerformanceNow(facebook::jsi::Runtime &runtime) {
             runtime,
             facebook::jsi::PropNameID::forAscii(runtime, "nativePerformanceNow"),
             0,
-            [](facebook::jsi::Runtime &runtime,
-               const facebook::jsi::Value &,
-               const facebook::jsi::Value *args,
-               size_t count) { return facebook::jsi::Value(JSExecutor::performanceNow()); }));
+            [](facebook::jsi::Runtime& runtime,
+               const facebook::jsi::Value&,
+               const facebook::jsi::Value* args,
+               size_t count) {
+                return facebook::jsi::Value(JSExecutor::performanceNow());
+            }));
 }

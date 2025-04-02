@@ -4,9 +4,9 @@
 
 #include "TaskExecutor.h"
 
-#include "folly/lang/Exception.h"
 #include "NapiTaskRunner.h"
 #include "ThreadTaskRunner.h"
+#include "folly/lang/Exception.h"
 #include "helper/TaroLog.h"
 #include "qos/qos.h"
 

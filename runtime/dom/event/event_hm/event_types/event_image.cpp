@@ -11,11 +11,11 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        TaroEventCompleteOnImage::TaroEventCompleteOnImage(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroEventCompleteOnImage::TaroEventCompleteOnImage(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
         }
 
-        int TaroEventCompleteOnImage::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventCompleteOnImage::parseHmEvent(ArkUI_NodeEvent* event) {
             auto component_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (component_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get component_event failed");
@@ -34,7 +34,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventCompleteOnImage::serializeFun(napi_value &ret_obj) {
+        int TaroEventCompleteOnImage::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
             NapiSetter::SetProperty(ret_obj, "loadingStatus", loading_status_);
             NapiSetter::SetProperty(ret_obj, "width", width_);

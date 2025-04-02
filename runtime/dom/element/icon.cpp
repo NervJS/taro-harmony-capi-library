@@ -158,7 +158,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroIcon::Build(std::shared_ptr<TaroElement> &reuse_element) {}
+    void TaroIcon::Build(std::shared_ptr<TaroElement>& reuse_element) {}
 
     bool TaroIcon::bindListenEvent(const std::string& event_name) {
         if (event_name == "click") {

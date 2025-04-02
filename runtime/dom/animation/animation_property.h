@@ -23,40 +23,40 @@ namespace TaroAnimate {
     class AnimationPropBase;
     class TaroAnimationPropsInfo;
     using TaroAnimationPropValue =
-        std::variant<double,  Dimension,
+        std::variant<double, Dimension,
                      std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam>>;
 
     using TaroAnimationPropSetFun =
-        std::function<void(const TaroAnimationPropValue &t)>;
+        std::function<void(const TaroAnimationPropValue& t)>;
 
     class TaroAnimationProps {
         public:
         static bool checkPropertyType(CSSProperty::Type prop_type,
-                                      const TaroAnimationPropValue &prop_value);
+                                      const TaroAnimationPropValue& prop_value);
 
         // 获取系统值
         static bool getSystemPropValue(
             CSSProperty::Type prop_type, std::shared_ptr<TaroDOM::TaroRenderNode> node,
-            TaroAnimationPropValue &prop_value);
+            TaroAnimationPropValue& prop_value);
 
         // 获取动画配置关键帧值
         static bool getAnimationPropValue(
             std::shared_ptr<TaroDOM::TaroRenderNode> node,
             CSSProperty::Type prop_type,
-            const TaroCSSOM::TaroStylesheet::KeyframeValue &n_val,
-            const TaroAnimationPropValue &sys_value,
-            TaroAnimationPropValue &prop_value);
+            const TaroCSSOM::TaroStylesheet::KeyframeValue& n_val,
+            const TaroAnimationPropValue& sys_value,
+            TaroAnimationPropValue& prop_value);
 
         // 设置节点属性信息
         static void setNodeProperty(std::weak_ptr<TaroDOM::TaroRenderNode> node,
                                     CSSProperty::Type prop_type,
-                                    const TaroAnimationPropsInfo &prop_value,
+                                    const TaroAnimationPropsInfo& prop_value,
                                     uint64_t version);
 
         // 设置动画初始值到节点
         static void setKeyframeToNode(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                       CSSProperty::Type prop_type,
-                                      const TaroCSSOM::TaroStylesheet::KeyframeValue &keyframe);
+                                      const TaroCSSOM::TaroStylesheet::KeyframeValue& keyframe);
 
         // 设置style值到node节点
         static void resetStyleSheetProp(std::weak_ptr<TaroDOM::TaroRenderNode> node,
@@ -68,22 +68,22 @@ namespace TaroAnimate {
         public:
         // 注册动画处理类
         int registerProp(CSSProperty::Type prop_type,
-                         AnimationPropBase *prop_handler);
+                         AnimationPropBase* prop_handler);
 
         // 获取动画处理类
-        const AnimationPropBase *getAnimationProp(CSSProperty::Type prop_type) const;
+        const AnimationPropBase* getAnimationProp(CSSProperty::Type prop_type) const;
 
-        static TaroAnimationProps *instance();
+        static TaroAnimationProps* instance();
 
         private:
         // 动画类型->对应的处理类
-        std::unordered_map<CSSProperty::Type, AnimationPropBase *> anim_props_;
+        std::unordered_map<CSSProperty::Type, AnimationPropBase*> anim_props_;
     };
 
     class TaroAnimationPropsRegister {
         public:
         explicit TaroAnimationPropsRegister(CSSProperty::Type prop_type,
-                                            AnimationPropBase *prop_handler) {
+                                            AnimationPropBase* prop_handler) {
             TaroAnimationProps::instance()->registerProp(prop_type, prop_handler);
         }
     };

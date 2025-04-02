@@ -14,14 +14,12 @@ void HarmonyStyleSetter::setPointerEvents(const ArkUI_NodeHandle& node, const st
  * @param val
  */
 void HarmonyStyleSetter::setPointerEvents(const ArkUI_NodeHandle& node, const int& val) {
-
     if (auto value = static_cast<PropertyType::PointerEvents>(val); value == PropertyType::PointerEvents::None) {
-
-//         setFloat(node, NODE_RESPONSE_REGION, 0, 0, 0, 0);
+        //         setFloat(node, NODE_RESPONSE_REGION, 0, 0, 0, 0);
         setInt(node, NODE_HIT_TEST_BEHAVIOR, ARKUI_HIT_TEST_MODE_NONE);
     } else {
-        TARO_LOG_DEBUG("setPointerEvents", "=+= setPointerEvents 2" );
-//         NativeNodeApi::getInstance()->resetAttribute(node, NODE_RESPONSE_REGION);
+        TARO_LOG_DEBUG("setPointerEvents", "=+= setPointerEvents 2");
+        //         NativeNodeApi::getInstance()->resetAttribute(node, NODE_RESPONSE_REGION);
         setFloat(node, NODE_HIT_TEST_BEHAVIOR, ARKUI_HIT_TEST_MODE_DEFAULT);
     }
 }
@@ -32,7 +30,7 @@ void HarmonyStyleSetter::setPointerEvents(const ArkUI_NodeHandle& node, const Op
 }
 
 void HarmonyStyleSetter::setPointerEvents(const ArkUI_NodeHandle& node) {
-//     NativeNodeApi::getInstance()->resetAttribute(node, NODE_RESPONSE_REGION);
+    //     NativeNodeApi::getInstance()->resetAttribute(node, NODE_RESPONSE_REGION);
     setInt(node, NODE_HIT_TEST_BEHAVIOR, ARKUI_HIT_TEST_MODE_DEFAULT);
 }
 

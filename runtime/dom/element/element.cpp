@@ -143,7 +143,7 @@ namespace TaroDOM {
         std::shared_ptr<TaroRenderNode> footer_render_node) {
         if (is_init_) {
             // Note: 取消原 footer_render_node 与子节点关联
-            for (const auto &child : child_nodes_) {
+            for (const auto& child : child_nodes_) {
                 if (child && child->is_init_) {
                     auto child_header = child->GetHeadRenderNode();
                     if (child_header) {
@@ -155,7 +155,7 @@ namespace TaroDOM {
         TaroNode::SetFooterRenderNode(footer_render_node);
     }
 
-    void TaroElement::HandleAttributeChanged(TaroRuntime::ATTRIBUTE_NAME name, const std::string &preValue, const std::string &curValue) {
+    void TaroElement::HandleAttributeChanged(TaroRuntime::ATTRIBUTE_NAME name, const std::string& preValue, const std::string& curValue) {
         switch (name) {
             case ATTRIBUTE_NAME::CLASS: {
                 class_list_.reset(curValue);
@@ -163,12 +163,14 @@ namespace TaroDOM {
                 break;
             };
             case ATTRIBUTE_NAME::STYLE: {
-                if (!is_init_) return;
+                if (!is_init_)
+                    return;
                 invalidateStyle(TaroCSSOM::Validity::ElementInvalid);
                 break;
             };
             case ATTRIBUTE_NAME::ANIMATION: {
-                if (!is_init_) return;
+                if (!is_init_)
+                    return;
                 createJSAnimation();
                 break;
             };
@@ -233,7 +235,8 @@ namespace TaroDOM {
         // 找到最近的一颗脏子树，向祖先冒上去
         markAncestorsForInvalidatedStyle();
         // 在下一个vsync进行重计算处理
-        if (!context_) return;
+        if (!context_)
+            return;
         DirtyTaskPipeline::GetInstance()->AddDirtyStyleNode(context_->page_element_.lock());
     }
 
@@ -317,7 +320,8 @@ namespace TaroDOM {
         auto root = std::static_pointer_cast<TaroElement>(shared_from_this());
         std::stack<std::shared_ptr<TaroRuntime::TaroDOM::TaroElement>> stack;
         stack.push(root);
-        if (!root) return;
+        if (!root)
+            return;
         while (!stack.empty()) {
             auto item = stack.top();
             stack.pop();
@@ -342,7 +346,7 @@ namespace TaroDOM {
         }
     }
 
-    std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> TaroElement::GetTextNodeStyleFromElement(const std::shared_ptr<TaroElement> &element) {
+    std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> TaroElement::GetTextNodeStyleFromElement(const std::shared_ptr<TaroElement>& element) {
         auto textNodeStyle = std::make_shared<TaroCSSOM::TaroStylesheet::Stylesheet>();
         if (element && element->is_init_) {
             // 从父节点继承下来
@@ -411,7 +415,7 @@ namespace TaroDOM {
         }
     }
 
-    TaroElementRef GetPreviousStaticSibling(TaroElement *taroElementRef) {
+    TaroElementRef GetPreviousStaticSibling(TaroElement* taroElementRef) {
         std::shared_ptr<TaroNode> prevNode = taroElementRef->GetPreviousSibling();
         auto prevElement = std::static_pointer_cast<TaroElement>(prevNode);
         while (prevElement && prevElement->IsFixed()) {
@@ -420,7 +424,7 @@ namespace TaroDOM {
         return prevElement;
     }
 
-    TaroElementRef GetNextStaticSibling(TaroElement *taroElementRef) {
+    TaroElementRef GetNextStaticSibling(TaroElement* taroElementRef) {
         std::shared_ptr<TaroNode> nextNode = taroElementRef->GetNextSibling();
         auto nextElement = std::static_pointer_cast<TaroElement>(nextNode);
         while (nextElement && nextElement->IsFixed()) {
@@ -435,7 +439,8 @@ namespace TaroDOM {
         }
         auto parent = GetParentNode();
         auto parentNode = parent->GetFooterRenderNode();
-        if (parentNode == nullptr) return;
+        if (parentNode == nullptr)
+            return;
 
         TaroElementRef nextElement = GetNextStaticSibling(this);
         TaroElementRef prevElement = GetPreviousStaticSibling(this);
@@ -485,7 +490,8 @@ namespace TaroDOM {
         auto element = std::static_pointer_cast<TaroElement>(shared_from_this());
         auto footer = GetFooterRenderNode();
 
-        if (!footer) return;
+        if (!footer)
+            return;
 
         if (before_render_node_) {
             if (!before_pseudo_style_) {
@@ -517,7 +523,8 @@ namespace TaroDOM {
 
     void TaroElement::MountFixedRenderNode() {
         auto header = GetHeadRenderNode();
-        if (!header || !header->style_ref_) return;
+        if (!header || !header->style_ref_)
+            return;
 
         auto new_position = header->style_ref_->position.value_or(PropertyType::Position::Static);
         if (new_position == PropertyType::Position::Fixed && !header->old_style_ref_) {
@@ -559,7 +566,8 @@ namespace TaroDOM {
     }
 
     bool TaroElement::IsFixed() {
-        if (!style_) return false;
+        if (!style_)
+            return false;
 
         return style_->position.value_or(PropertyType::Position::Static) ==
                PropertyType::Position::Fixed;
@@ -584,7 +592,8 @@ namespace TaroDOM {
     const std::shared_ptr<TaroElement> TaroElement::getPageRoot() {
         if (context_) {
             auto pageElement = context_->page_element_.lock();
-            if (pageElement) return pageElement;
+            if (pageElement)
+                return pageElement;
         }
         auto parentElement = std::static_pointer_cast<TaroElement>(shared_from_this());
         while (parentElement) {
@@ -598,10 +607,11 @@ namespace TaroDOM {
     }
 
     void TaroElement::updateListenEvent() {
-        if (!is_init_) return;
+        if (!is_init_)
+            return;
 
         if (!ignore_update_event) {
-            for (auto &pair : listeners_ref_) {
+            for (auto& pair : listeners_ref_) {
                 bindListenEvent(pair.first);
             }
         } else {
@@ -645,7 +655,7 @@ namespace TaroDOM {
             case FUNC_CODE::CLASSLIST_ADD: {
                 std::vector<NapiGetter> params = paramsGetter.Vector().value();
                 std::vector<std::string> tokens;
-                for (auto &param : params) {
+                for (auto& param : params) {
                     tokens.push_back(param.StringOr(""));
                 }
                 class_list_.add(tokens);
@@ -654,7 +664,7 @@ namespace TaroDOM {
             case FUNC_CODE::CLASSLIST_REMOVE: {
                 std::vector<NapiGetter> params = paramsGetter.Vector().value();
                 std::vector<std::string> tokens;
-                for (auto &param : params) {
+                for (auto& param : params) {
                     tokens.push_back(param.StringOr(""));
                 }
                 class_list_.remove(tokens);
@@ -697,11 +707,11 @@ namespace TaroDOM {
     }
 
     // TODO需要定义成纯虚函数，由各元素重写复用逻辑
-    void TaroElement::Build(std::shared_ptr<TaroElement> &reuse_element) {
+    void TaroElement::Build(std::shared_ptr<TaroElement>& reuse_element) {
         TARO_LOG_DEBUG("TaroNodeAdapter", "tag name %{public}d, we will implement it latter", tag_name_);
     }
 
-    bool TaroElement::Reusable(std::shared_ptr<TaroElement> &reuse_element) {
+    bool TaroElement::Reusable(std::shared_ptr<TaroElement>& reuse_element) {
         if (reuse_element->tag_name_ == tag_name_ && reuse_element->GetNodeHandle()) {
             return true;
         }
@@ -726,10 +736,11 @@ namespace TaroDOM {
                 scroll_container->on_visible_node.emplace(std::static_pointer_cast<TaroElement>(element));
                 if (!scroll_container->is_visible_node_listener_registered) {
                     std::weak_ptr<TaroScrollerContainer> weak_scroll_container = scroll_container;
-                    auto scroll_fun = [weak_scroll_container](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
+                    auto scroll_fun = [weak_scroll_container](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
                         auto scroll_container = weak_scroll_container.lock();
 
-                        if (!scroll_container) return 0;
+                        if (!scroll_container)
+                            return 0;
 
                         scroll_container->handleVisibleNode();
 
@@ -764,7 +775,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroElement::bindVisibleEvent(CallbackInfo &info) {
+    void TaroElement::bindVisibleEvent(CallbackInfo& info) {
         info_ = info;
         info_.registerd = true;
         if (is_init_) {

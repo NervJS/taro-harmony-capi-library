@@ -8,7 +8,7 @@ namespace TaroRuntime {
 namespace TaroCSSOM {
     namespace TaroStylesheet {
 
-        void BoundingBox::traver(std::function<void(const std::string &, const Dimension &)> callback) {
+        void BoundingBox::traver(std::function<void(const std::string&, const Dimension&)> callback) {
             if (top.has_value()) {
                 callback("top", top.value());
             }
@@ -22,16 +22,16 @@ namespace TaroCSSOM {
                 callback("left", left.value());
             }
         }
-        bool BoundingBox::operator==(const BoundingBox &other) const {
+        bool BoundingBox::operator==(const BoundingBox& other) const {
             return (this->top == other.top && this->left == other.left &&
                     this->right == other.right && this->bottom == other.bottom);
         }
-        bool BoundingBox::operator!=(const BoundingBox &other) const {
+        bool BoundingBox::operator!=(const BoundingBox& other) const {
             return !(*this == other);
         }
 
-        TaroHelper::Optional<Dimension> &BoundingBox::operator[](
-            const std::string &key) {
+        TaroHelper::Optional<Dimension>& BoundingBox::operator[](
+            const std::string& key) {
             if (key == "left") {
                 return left;
             } else if (key == "top") {

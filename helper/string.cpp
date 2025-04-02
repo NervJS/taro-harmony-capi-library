@@ -25,7 +25,8 @@ bool containsDigit(const std::string_view& str) {
  */
 std::string_view trim(std::string_view str) {
     size_t first = str.find_first_not_of(" ");
-    if (first == std::string_view::npos) return "";
+    if (first == std::string_view::npos)
+        return "";
     size_t last = str.find_last_not_of(" ");
     return str.substr(first, last - first + 1);
 }
@@ -97,12 +98,14 @@ std::vector<std::string_view> split(std::string_view str, const char* delimiter)
 
         if (end == std::string_view::npos) {
             auto item = trim(str.substr(start));
-            if (!item.empty()) result.emplace_back(item);
+            if (!item.empty())
+                result.emplace_back(item);
             break;
         }
 
         auto item = trim(str.substr(start, end - start));
-        if (!item.empty()) result.emplace_back(item);
+        if (!item.empty())
+            result.emplace_back(item);
 
         start = end + delimiterLength;
     }

@@ -55,8 +55,10 @@ namespace TaroCSSOM {
         std::shared_ptr<Stylesheet> Stylesheet::assign(
             const std::shared_ptr<Stylesheet>& s1,
             const std::shared_ptr<Stylesheet>& s2) {
-            if (!s1) return s2;
-            if (!s2) return s1;
+            if (!s1)
+                return s2;
+            if (!s2)
+                return s1;
             std::shared_ptr<Stylesheet> res = std::make_shared<Stylesheet>();
             ASSIGN_PROPERTY(height);
             ASSIGN_PROPERTY(width);
@@ -255,7 +257,8 @@ namespace TaroCSSOM {
                 }
             } else if (type == napi_string) {
                 auto styleStr = getter.String();
-                if (!styleStr.has_value()) return result;
+                if (!styleStr.has_value())
+                    return result;
 
                 std::string_view sv(styleStr.value());
                 size_t start = 0;
@@ -271,7 +274,7 @@ namespace TaroCSSOM {
                     if (colonPos != std::string_view::npos) {
                         std::string_view key = property.substr(0, colonPos);
                         std::string_view value = property.substr(colonPos + 1);
-                
+
                         // 去除键和值两端的空格
                         key = TaroHelper::string::trim(key);
                         value = TaroHelper::string::trim(value);
@@ -288,185 +291,515 @@ namespace TaroCSSOM {
 
         // 映射到 Stylesheet 每个属性的解析函数
         static std::unordered_map<std::string_view, std::function<void(Stylesheet*, std::string_view)>> parseHandles = {
-            {"opacity", [](Stylesheet* ss, std::string_view value) { ss->opacity.setValueFromStringView(value); }},
-            {"overflow", [](Stylesheet* ss, std::string_view value) { ss->overflow.setValueFromStringView(value); }},
-            {"visibility", [](Stylesheet* ss, std::string_view value) { ss->visibility.setValueFromStringView(value); }},
-            {"display", [](Stylesheet* ss, std::string_view value) { ss->display.setValueFromStringView(value); }},
-            {"width", [](Stylesheet* ss, std::string_view value) { ss->width.setValueFromStringView(value); }},
-            {"minWidth", [](Stylesheet* ss, std::string_view value) { ss->minWidth.setValueFromStringView(value); }},
-            {"min-width", [](Stylesheet* ss, std::string_view value) { ss->minWidth.setValueFromStringView(value); }},
-            {"maxWidth", [](Stylesheet* ss, std::string_view value) { ss->maxWidth.setValueFromStringView(value); }},
-            {"max-width", [](Stylesheet* ss, std::string_view value) { ss->maxWidth.setValueFromStringView(value); }},
-            {"height", [](Stylesheet* ss, std::string_view value) { ss->height.setValueFromStringView(value); }},
-            {"minHeight", [](Stylesheet* ss, std::string_view value) { ss->minHeight.setValueFromStringView(value); }},
-            {"min-height", [](Stylesheet* ss, std::string_view value) { ss->minHeight.setValueFromStringView(value); }},
-            {"maxHeight", [](Stylesheet* ss, std::string_view value) { ss->maxHeight.setValueFromStringView(value); }},
-            {"max-height", [](Stylesheet* ss, std::string_view value) { ss->maxHeight.setValueFromStringView(value); }},
+            {"opacity", [](Stylesheet* ss, std::string_view value) {
+                 ss->opacity.setValueFromStringView(value);
+             }},
+            {"overflow", [](Stylesheet* ss, std::string_view value) {
+                 ss->overflow.setValueFromStringView(value);
+             }},
+            {"visibility", [](Stylesheet* ss, std::string_view value) {
+                 ss->visibility.setValueFromStringView(value);
+             }},
+            {"display", [](Stylesheet* ss, std::string_view value) {
+                 ss->display.setValueFromStringView(value);
+             }},
+            {"width", [](Stylesheet* ss, std::string_view value) {
+                 ss->width.setValueFromStringView(value);
+             }},
+            {"minWidth", [](Stylesheet* ss, std::string_view value) {
+                 ss->minWidth.setValueFromStringView(value);
+             }},
+            {"min-width", [](Stylesheet* ss, std::string_view value) {
+                 ss->minWidth.setValueFromStringView(value);
+             }},
+            {"maxWidth", [](Stylesheet* ss, std::string_view value) {
+                 ss->maxWidth.setValueFromStringView(value);
+             }},
+            {"max-width", [](Stylesheet* ss, std::string_view value) {
+                 ss->maxWidth.setValueFromStringView(value);
+             }},
+            {"height", [](Stylesheet* ss, std::string_view value) {
+                 ss->height.setValueFromStringView(value);
+             }},
+            {"minHeight", [](Stylesheet* ss, std::string_view value) {
+                 ss->minHeight.setValueFromStringView(value);
+             }},
+            {"min-height", [](Stylesheet* ss, std::string_view value) {
+                 ss->minHeight.setValueFromStringView(value);
+             }},
+            {"maxHeight", [](Stylesheet* ss, std::string_view value) {
+                 ss->maxHeight.setValueFromStringView(value);
+             }},
+            {"max-height", [](Stylesheet* ss, std::string_view value) {
+                 ss->maxHeight.setValueFromStringView(value);
+             }},
 
-            {"box-shadow", [](Stylesheet* ss, std::string_view value) { ss->boxShadow.setValueFromStringView(value); }},
-            {"boxShadow", [](Stylesheet* ss, std::string_view value) { ss->boxShadow.setValueFromStringView(value); }},
+            {"box-shadow", [](Stylesheet* ss, std::string_view value) {
+                 ss->boxShadow.setValueFromStringView(value);
+             }},
+            {"boxShadow", [](Stylesheet* ss, std::string_view value) {
+                 ss->boxShadow.setValueFromStringView(value);
+             }},
 
-            {"position", [](Stylesheet* ss, std::string_view value) { ss->position.setValueFromStringView(value); }},
-            {"top", [](Stylesheet* ss, std::string_view value) { ss->top.setValueFromStringView(value); }},
-            {"right", [](Stylesheet* ss, std::string_view value) { ss->right.setValueFromStringView(value); }},
-            {"bottom", [](Stylesheet* ss, std::string_view value) { ss->bottom.setValueFromStringView(value); }},
-            {"left", [](Stylesheet* ss, std::string_view value) { ss->left.setValueFromStringView(value); }},
-            {"zIndex", [](Stylesheet* ss, std::string_view value) { ss->zIndex.setValueFromStringView(value); }},
-            {"z-index", [](Stylesheet* ss, std::string_view value) { ss->zIndex.setValueFromStringView(value); }},
+            {"position", [](Stylesheet* ss, std::string_view value) {
+                 ss->position.setValueFromStringView(value);
+             }},
+            {"top", [](Stylesheet* ss, std::string_view value) {
+                 ss->top.setValueFromStringView(value);
+             }},
+            {"right", [](Stylesheet* ss, std::string_view value) {
+                 ss->right.setValueFromStringView(value);
+             }},
+            {"bottom", [](Stylesheet* ss, std::string_view value) {
+                 ss->bottom.setValueFromStringView(value);
+             }},
+            {"left", [](Stylesheet* ss, std::string_view value) {
+                 ss->left.setValueFromStringView(value);
+             }},
+            {"zIndex", [](Stylesheet* ss, std::string_view value) {
+                 ss->zIndex.setValueFromStringView(value);
+             }},
+            {"z-index", [](Stylesheet* ss, std::string_view value) {
+                 ss->zIndex.setValueFromStringView(value);
+             }},
 
-            {"padding", [](Stylesheet* ss, std::string_view value) { parsePadding(ss, value); }},
-            {"paddingTop", [](Stylesheet* ss, std::string_view value) { ss->paddingTop.setValueFromStringView(value); }},
-            {"padding-top", [](Stylesheet* ss, std::string_view value) { ss->paddingTop.setValueFromStringView(value); }},
-            {"paddingRight", [](Stylesheet* ss, std::string_view value) { ss->paddingRight.setValueFromStringView(value); }},
-            {"padding-right", [](Stylesheet* ss, std::string_view value) { ss->paddingRight.setValueFromStringView(value); }},
-            {"paddingBottom", [](Stylesheet* ss, std::string_view value) { ss->paddingBottom.setValueFromStringView(value); }},
-            {"padding-bottom", [](Stylesheet* ss, std::string_view value) { ss->paddingBottom.setValueFromStringView(value); }},
-            {"paddingLeft", [](Stylesheet* ss, std::string_view value) { ss->paddingLeft.setValueFromStringView(value); }},
-            {"padding-left", [](Stylesheet* ss, std::string_view value) { ss->paddingLeft.setValueFromStringView(value); }},
+            {"padding", [](Stylesheet* ss, std::string_view value) {
+                 parsePadding(ss, value);
+             }},
+            {"paddingTop", [](Stylesheet* ss, std::string_view value) {
+                 ss->paddingTop.setValueFromStringView(value);
+             }},
+            {"padding-top", [](Stylesheet* ss, std::string_view value) {
+                 ss->paddingTop.setValueFromStringView(value);
+             }},
+            {"paddingRight", [](Stylesheet* ss, std::string_view value) {
+                 ss->paddingRight.setValueFromStringView(value);
+             }},
+            {"padding-right", [](Stylesheet* ss, std::string_view value) {
+                 ss->paddingRight.setValueFromStringView(value);
+             }},
+            {"paddingBottom", [](Stylesheet* ss, std::string_view value) {
+                 ss->paddingBottom.setValueFromStringView(value);
+             }},
+            {"padding-bottom", [](Stylesheet* ss, std::string_view value) {
+                 ss->paddingBottom.setValueFromStringView(value);
+             }},
+            {"paddingLeft", [](Stylesheet* ss, std::string_view value) {
+                 ss->paddingLeft.setValueFromStringView(value);
+             }},
+            {"padding-left", [](Stylesheet* ss, std::string_view value) {
+                 ss->paddingLeft.setValueFromStringView(value);
+             }},
 
-            {"margin", [](Stylesheet* ss, std::string_view value) { parseMargin(ss, value); }},
-            {"marginTop", [](Stylesheet* ss, std::string_view value) { ss->marginTop.setValueFromStringView(value); }},
-            {"margin-top", [](Stylesheet* ss, std::string_view value) { ss->marginTop.setValueFromStringView(value); }},
-            {"marginRight", [](Stylesheet* ss, std::string_view value) { ss->marginRight.setValueFromStringView(value); }},
-            {"margin-right", [](Stylesheet* ss, std::string_view value) { ss->marginRight.setValueFromStringView(value); }},
-            {"marginBottom", [](Stylesheet* ss, std::string_view value) { ss->marginBottom.setValueFromStringView(value); }},
-            {"margin-bottom", [](Stylesheet* ss, std::string_view value) { ss->marginBottom.setValueFromStringView(value); }},
-            {"marginLeft", [](Stylesheet* ss, std::string_view value) { ss->marginLeft.setValueFromStringView(value); }},
-            {"margin-left", [](Stylesheet* ss, std::string_view value) { ss->marginLeft.setValueFromStringView(value); }},
+            {"margin", [](Stylesheet* ss, std::string_view value) {
+                 parseMargin(ss, value);
+             }},
+            {"marginTop", [](Stylesheet* ss, std::string_view value) {
+                 ss->marginTop.setValueFromStringView(value);
+             }},
+            {"margin-top", [](Stylesheet* ss, std::string_view value) {
+                 ss->marginTop.setValueFromStringView(value);
+             }},
+            {"marginRight", [](Stylesheet* ss, std::string_view value) {
+                 ss->marginRight.setValueFromStringView(value);
+             }},
+            {"margin-right", [](Stylesheet* ss, std::string_view value) {
+                 ss->marginRight.setValueFromStringView(value);
+             }},
+            {"marginBottom", [](Stylesheet* ss, std::string_view value) {
+                 ss->marginBottom.setValueFromStringView(value);
+             }},
+            {"margin-bottom", [](Stylesheet* ss, std::string_view value) {
+                 ss->marginBottom.setValueFromStringView(value);
+             }},
+            {"marginLeft", [](Stylesheet* ss, std::string_view value) {
+                 ss->marginLeft.setValueFromStringView(value);
+             }},
+            {"margin-left", [](Stylesheet* ss, std::string_view value) {
+                 ss->marginLeft.setValueFromStringView(value);
+             }},
 
-            {"border", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 4); }},
-            {"borderTop", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 0); }},
-            {"border-top", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 0); }},
-            {"borderRight", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 1); }},
-            {"border-right", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 1); }},
-            {"borderBottom", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 2); }},
-            {"border-bottom", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 2); }},
-            {"borderLeft", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 3); }},
-            {"border-left", [](Stylesheet* ss, std::string_view value) { parseBorder(ss, value, 3); }},
+            {"border", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 4);
+             }},
+            {"borderTop", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 0);
+             }},
+            {"border-top", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 0);
+             }},
+            {"borderRight", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 1);
+             }},
+            {"border-right", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 1);
+             }},
+            {"borderBottom", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 2);
+             }},
+            {"border-bottom", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 2);
+             }},
+            {"borderLeft", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 3);
+             }},
+            {"border-left", [](Stylesheet* ss, std::string_view value) {
+                 parseBorder(ss, value, 3);
+             }},
 
-            {"borderWidth", [](Stylesheet* ss, std::string_view value) { parseBorderWidth(ss, value); }},
-            {"border-width", [](Stylesheet* ss, std::string_view value) { parseBorderWidth(ss, value); }},
-            {"borderTopWidth", [](Stylesheet* ss, std::string_view value) { ss->borderTopWidth.setValueFromStringView(value); }},
-            {"border-top-width", [](Stylesheet* ss, std::string_view value) { ss->borderTopWidth.setValueFromStringView(value); }},
-            {"borderRightWidth", [](Stylesheet* ss, std::string_view value) { ss->borderRightWidth.setValueFromStringView(value); }},
-            {"border-right-width", [](Stylesheet* ss, std::string_view value) { ss->borderRightWidth.setValueFromStringView(value); }},
-            {"borderBottomWidth", [](Stylesheet* ss, std::string_view value) { ss->borderBottomWidth.setValueFromStringView(value); }},
-            {"border-bottom-width", [](Stylesheet* ss, std::string_view value) { ss->borderBottomWidth.setValueFromStringView(value); }},
-            {"borderLeftWidth", [](Stylesheet* ss, std::string_view value) { ss->borderLeftWidth.setValueFromStringView(value); }},
-            {"border-left-width", [](Stylesheet* ss, std::string_view value) { ss->borderLeftWidth.setValueFromStringView(value); }},
+            {"borderWidth", [](Stylesheet* ss, std::string_view value) {
+                 parseBorderWidth(ss, value);
+             }},
+            {"border-width", [](Stylesheet* ss, std::string_view value) {
+                 parseBorderWidth(ss, value);
+             }},
+            {"borderTopWidth", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopWidth.setValueFromStringView(value);
+             }},
+            {"border-top-width", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopWidth.setValueFromStringView(value);
+             }},
+            {"borderRightWidth", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderRightWidth.setValueFromStringView(value);
+             }},
+            {"border-right-width", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderRightWidth.setValueFromStringView(value);
+             }},
+            {"borderBottomWidth", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomWidth.setValueFromStringView(value);
+             }},
+            {"border-bottom-width", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomWidth.setValueFromStringView(value);
+             }},
+            {"borderLeftWidth", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderLeftWidth.setValueFromStringView(value);
+             }},
+            {"border-left-width", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderLeftWidth.setValueFromStringView(value);
+             }},
 
-            {"borderStyle", [](Stylesheet* ss, std::string_view value) { parseBorderStyle(ss, value); }},
-            {"border-style", [](Stylesheet* ss, std::string_view value) { parseBorderStyle(ss, value); }},
-            {"borderTopStyle", [](Stylesheet* ss, std::string_view value) { ss->borderTopStyle.setValueFromStringView(value); }},
-            {"border-top-style", [](Stylesheet* ss, std::string_view value) { ss->borderTopStyle.setValueFromStringView(value); }},
-            {"borderRightStyle", [](Stylesheet* ss, std::string_view value) { ss->borderRightStyle.setValueFromStringView(value); }},
-            {"border-right-style", [](Stylesheet* ss, std::string_view value) { ss->borderRightStyle.setValueFromStringView(value); }},
-            {"borderBottomStyle", [](Stylesheet* ss, std::string_view value) { ss->borderBottomStyle.setValueFromStringView(value); }},
-            {"border-bottom-style", [](Stylesheet* ss, std::string_view value) { ss->borderBottomStyle.setValueFromStringView(value); }},
-            {"borderLeftStyle", [](Stylesheet* ss, std::string_view value) { ss->borderLeftStyle.setValueFromStringView(value); }},
-            {"border-left-style", [](Stylesheet* ss, std::string_view value) { ss->borderLeftStyle.setValueFromStringView(value); }},
+            {"borderStyle", [](Stylesheet* ss, std::string_view value) {
+                 parseBorderStyle(ss, value);
+             }},
+            {"border-style", [](Stylesheet* ss, std::string_view value) {
+                 parseBorderStyle(ss, value);
+             }},
+            {"borderTopStyle", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopStyle.setValueFromStringView(value);
+             }},
+            {"border-top-style", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopStyle.setValueFromStringView(value);
+             }},
+            {"borderRightStyle", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderRightStyle.setValueFromStringView(value);
+             }},
+            {"border-right-style", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderRightStyle.setValueFromStringView(value);
+             }},
+            {"borderBottomStyle", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomStyle.setValueFromStringView(value);
+             }},
+            {"border-bottom-style", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomStyle.setValueFromStringView(value);
+             }},
+            {"borderLeftStyle", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderLeftStyle.setValueFromStringView(value);
+             }},
+            {"border-left-style", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderLeftStyle.setValueFromStringView(value);
+             }},
 
-            {"borderColor", [](Stylesheet* ss, std::string_view value) { parseBorderColor(ss, value); }},
-            {"border-color", [](Stylesheet* ss, std::string_view value) { parseBorderColor(ss, value); }},
-            {"borderTopColor", [](Stylesheet* ss, std::string_view value) { ss->borderTopColor.setValueFromStringView(value); }},
-            {"border-top-color", [](Stylesheet* ss, std::string_view value) { ss->borderTopColor.setValueFromStringView(value); }},
-            {"borderRightColor", [](Stylesheet* ss, std::string_view value) { ss->borderRightColor.setValueFromStringView(value); }},
-            {"border-right-color", [](Stylesheet* ss, std::string_view value) { ss->borderRightColor.setValueFromStringView(value); }},
-            {"borderBottomColor", [](Stylesheet* ss, std::string_view value) { ss->borderBottomColor.setValueFromStringView(value); }},
-            {"border-bottom-color", [](Stylesheet* ss, std::string_view value) { ss->borderBottomColor.setValueFromStringView(value); }},
-            {"borderLeftColor", [](Stylesheet* ss, std::string_view value) { ss->borderLeftColor.setValueFromStringView(value); }},
-            {"border-left-color", [](Stylesheet* ss, std::string_view value) { ss->borderLeftColor.setValueFromStringView(value); }},
+            {"borderColor", [](Stylesheet* ss, std::string_view value) {
+                 parseBorderColor(ss, value);
+             }},
+            {"border-color", [](Stylesheet* ss, std::string_view value) {
+                 parseBorderColor(ss, value);
+             }},
+            {"borderTopColor", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopColor.setValueFromStringView(value);
+             }},
+            {"border-top-color", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopColor.setValueFromStringView(value);
+             }},
+            {"borderRightColor", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderRightColor.setValueFromStringView(value);
+             }},
+            {"border-right-color", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderRightColor.setValueFromStringView(value);
+             }},
+            {"borderBottomColor", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomColor.setValueFromStringView(value);
+             }},
+            {"border-bottom-color", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomColor.setValueFromStringView(value);
+             }},
+            {"borderLeftColor", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderLeftColor.setValueFromStringView(value);
+             }},
+            {"border-left-color", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderLeftColor.setValueFromStringView(value);
+             }},
 
-            {"borderRadius", [](Stylesheet* ss, std::string_view value) { parseBorderRadius(ss, value); }},
-            {"border-radius", [](Stylesheet* ss, std::string_view value) { parseBorderRadius(ss, value); }},
-            {"borderTopLeftRadius", [](Stylesheet* ss, std::string_view value) { ss->borderTopLeftRadius.setValueFromStringView(value); }},
-            {"border-top-left-radius", [](Stylesheet* ss, std::string_view value) { ss->borderTopLeftRadius.setValueFromStringView(value); }},
-            {"borderTopRightRadius", [](Stylesheet* ss, std::string_view value) { ss->borderTopRightRadius.setValueFromStringView(value); }},
-            {"border-top-right-radius", [](Stylesheet* ss, std::string_view value) { ss->borderTopRightRadius.setValueFromStringView(value); }},
-            {"borderBottomLeftRadius", [](Stylesheet* ss, std::string_view value) { ss->borderBottomLeftRadius.setValueFromStringView(value); }},
-            {"border-bottom-left-radius", [](Stylesheet* ss, std::string_view value) { ss->borderBottomLeftRadius.setValueFromStringView(value); }},
-            {"borderBottomRightRadius", [](Stylesheet* ss, std::string_view value) { ss->borderBottomRightRadius.setValueFromStringView(value); }},
-            {"border-bottom-right-radius", [](Stylesheet* ss, std::string_view value) { ss->borderBottomRightRadius.setValueFromStringView(value); }},
+            {"borderRadius", [](Stylesheet* ss, std::string_view value) {
+                 parseBorderRadius(ss, value);
+             }},
+            {"border-radius", [](Stylesheet* ss, std::string_view value) {
+                 parseBorderRadius(ss, value);
+             }},
+            {"borderTopLeftRadius", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopLeftRadius.setValueFromStringView(value);
+             }},
+            {"border-top-left-radius", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopLeftRadius.setValueFromStringView(value);
+             }},
+            {"borderTopRightRadius", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopRightRadius.setValueFromStringView(value);
+             }},
+            {"border-top-right-radius", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderTopRightRadius.setValueFromStringView(value);
+             }},
+            {"borderBottomLeftRadius", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomLeftRadius.setValueFromStringView(value);
+             }},
+            {"border-bottom-left-radius", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomLeftRadius.setValueFromStringView(value);
+             }},
+            {"borderBottomRightRadius", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomRightRadius.setValueFromStringView(value);
+             }},
+            {"border-bottom-right-radius", [](Stylesheet* ss, std::string_view value) {
+                 ss->borderBottomRightRadius.setValueFromStringView(value);
+             }},
 
-            {"transformOrigin", [](Stylesheet* ss, std::string_view value) { ss->transformOrigin.setValueFromStringView(value); }},
-            {"transform-origin", [](Stylesheet* ss, std::string_view value) { ss->transformOrigin.setValueFromStringView(value); }},
-            {"transform", [](Stylesheet* ss, std::string_view value) { ss->transform.setValueFromStringView(value); }},
+            {"transformOrigin", [](Stylesheet* ss, std::string_view value) {
+                 ss->transformOrigin.setValueFromStringView(value);
+             }},
+            {"transform-origin", [](Stylesheet* ss, std::string_view value) {
+                 ss->transformOrigin.setValueFromStringView(value);
+             }},
+            {"transform", [](Stylesheet* ss, std::string_view value) {
+                 ss->transform.setValueFromStringView(value);
+             }},
 
-            {"background", [](Stylesheet* ss, std::string_view value) { parseBackground(ss, value); }},
-            {"backgroundPosition", [](Stylesheet* ss, std::string_view value) { parseBackgroundPosition(ss, value); }},
-            {"background-position", [](Stylesheet* ss, std::string_view value) { parseBackgroundPosition(ss, value); }},
-            {"backgroundColor", [](Stylesheet* ss, std::string_view value) { ss->backgroundColor.setValueFromStringView(value); }},
-            {"background-color", [](Stylesheet* ss, std::string_view value) { ss->backgroundColor.setValueFromStringView(value); }},
-            {"backgroundImage", [](Stylesheet* ss, std::string_view value) { ss->backgroundImage.setValueFromStringView(value); }},
-            {"background-image", [](Stylesheet* ss, std::string_view value) { ss->backgroundImage.setValueFromStringView(value); }},
-            {"backgroundSize", [](Stylesheet* ss, std::string_view value) { ss->backgroundSize.setValueFromStringView(value); }},
-            {"background-size", [](Stylesheet* ss, std::string_view value) { ss->backgroundSize.setValueFromStringView(value); }},
-            {"backgroundPositionX", [](Stylesheet* ss, std::string_view value) { ss->backgroundPositionX.setValueFromStringView(value); }},
-            {"background-position-x", [](Stylesheet* ss, std::string_view value) { ss->backgroundPositionX.setValueFromStringView(value); }},
-            {"backgroundPositionY", [](Stylesheet* ss, std::string_view value) { ss->backgroundPositionY.setValueFromStringView(value); }},
-            {"background-position-y", [](Stylesheet* ss, std::string_view value) { ss->backgroundPositionY.setValueFromStringView(value); }},
-            {"backgroundRepeat", [](Stylesheet* ss, std::string_view value) { ss->backgroundRepeat.setValueFromStringView(value); }},
-            {"background-repeat", [](Stylesheet* ss, std::string_view value) { ss->backgroundRepeat.setValueFromStringView(value); }},
+            {"background", [](Stylesheet* ss, std::string_view value) {
+                 parseBackground(ss, value);
+             }},
+            {"backgroundPosition", [](Stylesheet* ss, std::string_view value) {
+                 parseBackgroundPosition(ss, value);
+             }},
+            {"background-position", [](Stylesheet* ss, std::string_view value) {
+                 parseBackgroundPosition(ss, value);
+             }},
+            {"backgroundColor", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundColor.setValueFromStringView(value);
+             }},
+            {"background-color", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundColor.setValueFromStringView(value);
+             }},
+            {"backgroundImage", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundImage.setValueFromStringView(value);
+             }},
+            {"background-image", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundImage.setValueFromStringView(value);
+             }},
+            {"backgroundSize", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundSize.setValueFromStringView(value);
+             }},
+            {"background-size", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundSize.setValueFromStringView(value);
+             }},
+            {"backgroundPositionX", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundPositionX.setValueFromStringView(value);
+             }},
+            {"background-position-x", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundPositionX.setValueFromStringView(value);
+             }},
+            {"backgroundPositionY", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundPositionY.setValueFromStringView(value);
+             }},
+            {"background-position-y", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundPositionY.setValueFromStringView(value);
+             }},
+            {"backgroundRepeat", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundRepeat.setValueFromStringView(value);
+             }},
+            {"background-repeat", [](Stylesheet* ss, std::string_view value) {
+                 ss->backgroundRepeat.setValueFromStringView(value);
+             }},
 
-            {"text-decoration", [](Stylesheet* ss, std::string_view value) { parseTextDecoration(ss, value); }},
-            {"textDecoration", [](Stylesheet* ss, std::string_view value) { parseTextDecoration(ss, value); }},
-            {"text-decoration-line", [](Stylesheet* ss, std::string_view value) { ss->textDecorationLine.setValueFromStringView(value); }},
-            {"textDecorationLine", [](Stylesheet* ss, std::string_view value) { ss->textDecorationLine.setValueFromStringView(value); }},
-            {"text-decoration-color", [](Stylesheet* ss, std::string_view value) { ss->textDecorationColor.setValueFromStringView(value); }},
-            {"textDecorationColor", [](Stylesheet* ss, std::string_view value) { ss->textDecorationColor.setValueFromStringView(value); }},
-            {"text-decoration-style", [](Stylesheet* ss, std::string_view value) { ss->textDecorationStyle.setValueFromStringView(value); }},
-            {"textDecorationStyle", [](Stylesheet* ss, std::string_view value) { ss->textDecorationStyle.setValueFromStringView(value); }},
+            {"text-decoration", [](Stylesheet* ss, std::string_view value) {
+                 parseTextDecoration(ss, value);
+             }},
+            {"textDecoration", [](Stylesheet* ss, std::string_view value) {
+                 parseTextDecoration(ss, value);
+             }},
+            {"text-decoration-line", [](Stylesheet* ss, std::string_view value) {
+                 ss->textDecorationLine.setValueFromStringView(value);
+             }},
+            {"textDecorationLine", [](Stylesheet* ss, std::string_view value) {
+                 ss->textDecorationLine.setValueFromStringView(value);
+             }},
+            {"text-decoration-color", [](Stylesheet* ss, std::string_view value) {
+                 ss->textDecorationColor.setValueFromStringView(value);
+             }},
+            {"textDecorationColor", [](Stylesheet* ss, std::string_view value) {
+                 ss->textDecorationColor.setValueFromStringView(value);
+             }},
+            {"text-decoration-style", [](Stylesheet* ss, std::string_view value) {
+                 ss->textDecorationStyle.setValueFromStringView(value);
+             }},
+            {"textDecorationStyle", [](Stylesheet* ss, std::string_view value) {
+                 ss->textDecorationStyle.setValueFromStringView(value);
+             }},
 
-            {"pointerEvents", [](Stylesheet* ss, std::string_view value) { ss->pointerEvents.setValueFromStringView(value); }},
-            {"pointer-events", [](Stylesheet* ss, std::string_view value) { ss->pointerEvents.setValueFromStringView(value); }},
-            {"color", [](Stylesheet* ss, std::string_view value) { ss->color.setValueFromStringView(value); }},
-            {"fontSize", [](Stylesheet* ss, std::string_view value) { ss->fontSize.setValueFromStringView(value); }},
-            {"font-size", [](Stylesheet* ss, std::string_view value) { ss->fontSize.setValueFromStringView(value); }},
-            {"fontWeight", [](Stylesheet* ss, std::string_view value) { ss->fontWeight.setValueFromStringView(value); }},
-            {"font-weight", [](Stylesheet* ss, std::string_view value) { ss->fontWeight.setValueFromStringView(value); }},
-            {"fontStyle", [](Stylesheet* ss, std::string_view value) { ss->fontStyle.setValueFromStringView(value); }},
-            {"font-style", [](Stylesheet* ss, std::string_view value) { ss->fontStyle.setValueFromStringView(value); }},
-            {"fontFamily", [](Stylesheet* ss, std::string_view value) { ss->fontFamily.setValueFromStringView(value); }},
-            {"font-family", [](Stylesheet* ss, std::string_view value) { ss->fontFamily.setValueFromStringView(value); }},
-            {"textAlign", [](Stylesheet* ss, std::string_view value) { ss->textAlign.setValueFromStringView(value); }},
-            {"text-align", [](Stylesheet* ss, std::string_view value) { ss->textAlign.setValueFromStringView(value); }},
-            {"letterSpacing", [](Stylesheet* ss, std::string_view value) { ss->letterSpacing.setValueFromStringView(value); }},
-            {"letter-spacing", [](Stylesheet* ss, std::string_view value) { ss->letterSpacing.setValueFromStringView(value); }},
-            {"lineHeight", [](Stylesheet* ss, std::string_view value) { ss->lineHeight.setValueFromStringView(value); }},
-            {"line-height", [](Stylesheet* ss, std::string_view value) { ss->lineHeight.setValueFromStringView(value); }},
-            {"whiteSpace", [](Stylesheet* ss, std::string_view value) { ss->whiteSpace.setValueFromStringView(value); }},
-            {"white-space", [](Stylesheet* ss, std::string_view value) { ss->whiteSpace.setValueFromStringView(value); }},
-            {"wordBreak", [](Stylesheet* ss, std::string_view value) { ss->wordBreak.setValueFromStringView(value); }},
-            {"word-break", [](Stylesheet* ss, std::string_view value) { ss->wordBreak.setValueFromStringView(value); }},
-            {"textOverflow", [](Stylesheet* ss, std::string_view value) { ss->textOverflow.setValueFromStringView(value); }},
-            {"text-overflow", [](Stylesheet* ss, std::string_view value) { ss->textOverflow.setValueFromStringView(value); }},
-            {"verticalAlign", [](Stylesheet* ss, std::string_view value) { ss->verticalAlign.setValueFromStringView(value); }},
-            {"vertical-align", [](Stylesheet* ss, std::string_view value) { ss->verticalAlign.setValueFromStringView(value); }},
-            {"webkitLineClamp", [](Stylesheet* ss, std::string_view value) { ss->webkitLineClamp.setValueFromStringView(value); }},
-            {"webkit-line-clamp", [](Stylesheet* ss, std::string_view value) { ss->webkitLineClamp.setValueFromStringView(value); }},
+            {"pointerEvents", [](Stylesheet* ss, std::string_view value) {
+                 ss->pointerEvents.setValueFromStringView(value);
+             }},
+            {"pointer-events", [](Stylesheet* ss, std::string_view value) {
+                 ss->pointerEvents.setValueFromStringView(value);
+             }},
+            {"color", [](Stylesheet* ss, std::string_view value) {
+                 ss->color.setValueFromStringView(value);
+             }},
+            {"fontSize", [](Stylesheet* ss, std::string_view value) {
+                 ss->fontSize.setValueFromStringView(value);
+             }},
+            {"font-size", [](Stylesheet* ss, std::string_view value) {
+                 ss->fontSize.setValueFromStringView(value);
+             }},
+            {"fontWeight", [](Stylesheet* ss, std::string_view value) {
+                 ss->fontWeight.setValueFromStringView(value);
+             }},
+            {"font-weight", [](Stylesheet* ss, std::string_view value) {
+                 ss->fontWeight.setValueFromStringView(value);
+             }},
+            {"fontStyle", [](Stylesheet* ss, std::string_view value) {
+                 ss->fontStyle.setValueFromStringView(value);
+             }},
+            {"font-style", [](Stylesheet* ss, std::string_view value) {
+                 ss->fontStyle.setValueFromStringView(value);
+             }},
+            {"fontFamily", [](Stylesheet* ss, std::string_view value) {
+                 ss->fontFamily.setValueFromStringView(value);
+             }},
+            {"font-family", [](Stylesheet* ss, std::string_view value) {
+                 ss->fontFamily.setValueFromStringView(value);
+             }},
+            {"textAlign", [](Stylesheet* ss, std::string_view value) {
+                 ss->textAlign.setValueFromStringView(value);
+             }},
+            {"text-align", [](Stylesheet* ss, std::string_view value) {
+                 ss->textAlign.setValueFromStringView(value);
+             }},
+            {"letterSpacing", [](Stylesheet* ss, std::string_view value) {
+                 ss->letterSpacing.setValueFromStringView(value);
+             }},
+            {"letter-spacing", [](Stylesheet* ss, std::string_view value) {
+                 ss->letterSpacing.setValueFromStringView(value);
+             }},
+            {"lineHeight", [](Stylesheet* ss, std::string_view value) {
+                 ss->lineHeight.setValueFromStringView(value);
+             }},
+            {"line-height", [](Stylesheet* ss, std::string_view value) {
+                 ss->lineHeight.setValueFromStringView(value);
+             }},
+            {"whiteSpace", [](Stylesheet* ss, std::string_view value) {
+                 ss->whiteSpace.setValueFromStringView(value);
+             }},
+            {"white-space", [](Stylesheet* ss, std::string_view value) {
+                 ss->whiteSpace.setValueFromStringView(value);
+             }},
+            {"wordBreak", [](Stylesheet* ss, std::string_view value) {
+                 ss->wordBreak.setValueFromStringView(value);
+             }},
+            {"word-break", [](Stylesheet* ss, std::string_view value) {
+                 ss->wordBreak.setValueFromStringView(value);
+             }},
+            {"textOverflow", [](Stylesheet* ss, std::string_view value) {
+                 ss->textOverflow.setValueFromStringView(value);
+             }},
+            {"text-overflow", [](Stylesheet* ss, std::string_view value) {
+                 ss->textOverflow.setValueFromStringView(value);
+             }},
+            {"verticalAlign", [](Stylesheet* ss, std::string_view value) {
+                 ss->verticalAlign.setValueFromStringView(value);
+             }},
+            {"vertical-align", [](Stylesheet* ss, std::string_view value) {
+                 ss->verticalAlign.setValueFromStringView(value);
+             }},
+            {"webkitLineClamp", [](Stylesheet* ss, std::string_view value) {
+                 ss->webkitLineClamp.setValueFromStringView(value);
+             }},
+            {"webkit-line-clamp", [](Stylesheet* ss, std::string_view value) {
+                 ss->webkitLineClamp.setValueFromStringView(value);
+             }},
 
-            {"flex", [](Stylesheet* ss, std::string_view value) { parseFlex(ss, value); }},
-            {"flexFlow", [](Stylesheet* ss, std::string_view value) { parseFlexFlow(ss, value); }},
-            {"flexDirection", [](Stylesheet* ss, std::string_view value) { ss->flexDirection.setValueFromStringView(value); }},
-            {"flex-direction", [](Stylesheet* ss, std::string_view value) { ss->flexDirection.setValueFromStringView(value); }},
-            {"flexWrap", [](Stylesheet* ss, std::string_view value) { ss->flexWrap.setValueFromStringView(value); }},
-            {"flex-wrap", [](Stylesheet* ss, std::string_view value) { ss->flexWrap.setValueFromStringView(value); }},
-            {"alignItems", [](Stylesheet* ss, std::string_view value) { ss->alignItems.setValueFromStringView(value); }},
-            {"align-items", [](Stylesheet* ss, std::string_view value) { ss->alignItems.setValueFromStringView(value); }},
-            {"alignSelf", [](Stylesheet* ss, std::string_view value) { ss->alignSelf.setValueFromStringView(value); }},
-            {"align-self", [](Stylesheet* ss, std::string_view value) { ss->alignSelf.setValueFromStringView(value); }},
-            {"alignContent", [](Stylesheet* ss, std::string_view value) { ss->alignContent.setValueFromStringView(value); }},
-            {"align-content", [](Stylesheet* ss, std::string_view value) { ss->alignContent.setValueFromStringView(value); }},
-            {"justifyContent", [](Stylesheet* ss, std::string_view value) { ss->justifyContent.setValueFromStringView(value); }},
-            {"justify-content", [](Stylesheet* ss, std::string_view value) { ss->justifyContent.setValueFromStringView(value); }},
-            {"flexGrow", [](Stylesheet* ss, std::string_view value) { ss->flexGrow.setValueFromStringView(value); }},
-            {"flex-grow", [](Stylesheet* ss, std::string_view value) { ss->flexGrow.setValueFromStringView(value); }},
-            {"flexShrink", [](Stylesheet* ss, std::string_view value) { ss->flexShrink.setValueFromStringView(value); }},
-            {"flex-shrink", [](Stylesheet* ss, std::string_view value) { ss->flexShrink.setValueFromStringView(value); }},
-            {"flexBasis", [](Stylesheet* ss, std::string_view value) { ss->flexBasis.setValueFromStringView(value); }},
-            {"flex-basis", [](Stylesheet* ss, std::string_view value) { ss->flexBasis.setValueFromStringView(value); }},
-            {"box-orient", [](Stylesheet* ss, std::string_view value) { ss->boxOrient.setValueFromStringView(value); }},
-            {"-webkit-box-orient", [](Stylesheet* ss, std::string_view value) { ss->boxOrient.setValueFromStringView(value); }},
+            {"flex", [](Stylesheet* ss, std::string_view value) {
+                 parseFlex(ss, value);
+             }},
+            {"flexFlow", [](Stylesheet* ss, std::string_view value) {
+                 parseFlexFlow(ss, value);
+             }},
+            {"flexDirection", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexDirection.setValueFromStringView(value);
+             }},
+            {"flex-direction", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexDirection.setValueFromStringView(value);
+             }},
+            {"flexWrap", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexWrap.setValueFromStringView(value);
+             }},
+            {"flex-wrap", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexWrap.setValueFromStringView(value);
+             }},
+            {"alignItems", [](Stylesheet* ss, std::string_view value) {
+                 ss->alignItems.setValueFromStringView(value);
+             }},
+            {"align-items", [](Stylesheet* ss, std::string_view value) {
+                 ss->alignItems.setValueFromStringView(value);
+             }},
+            {"alignSelf", [](Stylesheet* ss, std::string_view value) {
+                 ss->alignSelf.setValueFromStringView(value);
+             }},
+            {"align-self", [](Stylesheet* ss, std::string_view value) {
+                 ss->alignSelf.setValueFromStringView(value);
+             }},
+            {"alignContent", [](Stylesheet* ss, std::string_view value) {
+                 ss->alignContent.setValueFromStringView(value);
+             }},
+            {"align-content", [](Stylesheet* ss, std::string_view value) {
+                 ss->alignContent.setValueFromStringView(value);
+             }},
+            {"justifyContent", [](Stylesheet* ss, std::string_view value) {
+                 ss->justifyContent.setValueFromStringView(value);
+             }},
+            {"justify-content", [](Stylesheet* ss, std::string_view value) {
+                 ss->justifyContent.setValueFromStringView(value);
+             }},
+            {"flexGrow", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexGrow.setValueFromStringView(value);
+             }},
+            {"flex-grow", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexGrow.setValueFromStringView(value);
+             }},
+            {"flexShrink", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexShrink.setValueFromStringView(value);
+             }},
+            {"flex-shrink", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexShrink.setValueFromStringView(value);
+             }},
+            {"flexBasis", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexBasis.setValueFromStringView(value);
+             }},
+            {"flex-basis", [](Stylesheet* ss, std::string_view value) {
+                 ss->flexBasis.setValueFromStringView(value);
+             }},
+            {"box-orient", [](Stylesheet* ss, std::string_view value) {
+                 ss->boxOrient.setValueFromStringView(value);
+             }},
+            {"-webkit-box-orient", [](Stylesheet* ss, std::string_view value) {
+                 ss->boxOrient.setValueFromStringView(value);
+             }},
         };
 
         /**
@@ -474,7 +807,8 @@ namespace TaroCSSOM {
          * 注：方法内部做去除字符串两端空格的处理
          */
         void Stylesheet::parseCssProperty(std::string_view name, std::string_view value) {
-            if (name.empty() || value.empty()) return;
+            if (name.empty() || value.empty())
+                return;
 
             auto it = parseHandles.find(name);
             if (it != parseHandles.end()) {

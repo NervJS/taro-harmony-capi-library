@@ -18,7 +18,7 @@ namespace TaroDOM {
         void Build() override;
         void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;
         void LinkElement(std::shared_ptr<TaroElement> element);
-        std::shared_ptr<TaroNode> GetElementById(const std::string &id);
+        std::shared_ptr<TaroNode> GetElementById(const std::string& id);
         std::shared_ptr<TaroNode> GetFirstNode();
         void ProcessForNode(napi_value value);
         void RegisterEventCallback(TAG_NAME nodeName, std::function<void(std::shared_ptr<void>)> callback);

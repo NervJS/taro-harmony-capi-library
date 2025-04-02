@@ -72,7 +72,7 @@ namespace TaroDOM {
         virtual void onCancel(napi_value picker) = 0;
         virtual void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) = 0;
 
-        virtual TaroPickerCommonAttributes *GetAttrs() const = 0;
+        virtual TaroPickerCommonAttributes* GetAttrs() const = 0;
 
         protected:
         void SetCommonAttributesToRenderNode(std::shared_ptr<TaroRenderNode> renderNode);
@@ -91,13 +91,13 @@ namespace TaroDOM {
         void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;
         void RegisterEvents();
 
-        virtual TaroPickerCommonAttributes *GetAttrs() const override {
+        virtual TaroPickerCommonAttributes* GetAttrs() const override {
             return attributes_.get();
         }
         std::unique_ptr<TaroPickerCommonAttributes> attributes_;
 
         protected:
-        bool bindListenEvent(const std::string &) override;
+        bool bindListenEvent(const std::string&) override;
 
         private:
         std::shared_ptr<TaroPickerDelegate> delegate;
@@ -115,7 +115,7 @@ namespace TaroDOM {
         TaroSelectorPickerDelegate(const std::shared_ptr<TaroPicker> element)
             : TaroPickerDelegate(element) {
             element->attributes_.reset(new TaroSelectorPickerAttributes());
-            attributes_ = static_cast<TaroSelectorPickerAttributes *>(element->GetAttrs());
+            attributes_ = static_cast<TaroSelectorPickerAttributes*>(element->GetAttrs());
         };
         void onGetNodeAttributes() override;
         void onSetAttributesToRenderNode(std::shared_ptr<TaroRenderNode> renderNode) override;
@@ -124,12 +124,12 @@ namespace TaroDOM {
         void onCancel(napi_value picker) override;
         void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;
 
-        virtual TaroSelectorPickerAttributes *GetAttrs() const override {
+        virtual TaroSelectorPickerAttributes* GetAttrs() const override {
             return attributes_;
         }
 
         private:
-        TaroSelectorPickerAttributes *attributes_;
+        TaroSelectorPickerAttributes* attributes_;
 
         std::map<std::string, std::vector<SelectorSource>> origin;
         bool isObjArray = false;
@@ -146,7 +146,7 @@ namespace TaroDOM {
         TaroMultiSelectorPickerDelegate(const std::shared_ptr<TaroPicker> element)
             : TaroPickerDelegate(element) {
             element->attributes_.reset(new TaroMultiSelectorPickerAttributes());
-            attributes_ = static_cast<TaroMultiSelectorPickerAttributes *>(element->GetAttrs());
+            attributes_ = static_cast<TaroMultiSelectorPickerAttributes*>(element->GetAttrs());
         };
         void onGetNodeAttributes() override;
         void onSetAttributesToRenderNode(std::shared_ptr<TaroRenderNode> rendorNode) override;
@@ -159,12 +159,12 @@ namespace TaroDOM {
         void SetRangeKeyAttribute(NapiGetter rangeKeyNapiGetter);
         void SetValueAttribute(NapiGetter rangeKeyNapiGetter);
 
-        virtual TaroMultiSelectorPickerAttributes *GetAttrs() const override {
+        virtual TaroMultiSelectorPickerAttributes* GetAttrs() const override {
             return attributes_;
         }
 
         private:
-        TaroMultiSelectorPickerAttributes *attributes_;
+        TaroMultiSelectorPickerAttributes* attributes_;
         std::map<std::string, std::vector<std::vector<SelectorSource>>> sources;
 
         bool isObjArray = false;
@@ -180,7 +180,7 @@ namespace TaroDOM {
         TaroTimePickerDelegate(const std::shared_ptr<TaroPicker> element)
             : TaroPickerDelegate(element) {
             element->attributes_.reset(new TaroTimePickerAttributes());
-            attributes_ = static_cast<TaroTimePickerAttributes *>(element->GetAttrs());
+            attributes_ = static_cast<TaroTimePickerAttributes*>(element->GetAttrs());
         };
         void onGetNodeAttributes() override;
         void onSetAttributesToRenderNode(std::shared_ptr<TaroRenderNode> renderNode) override;
@@ -189,12 +189,12 @@ namespace TaroDOM {
         void onCancel(napi_value picker) override;
         void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;
 
-        virtual TaroTimePickerAttributes *GetAttrs() const override {
+        virtual TaroTimePickerAttributes* GetAttrs() const override {
             return attributes_;
         }
 
         private:
-        TaroTimePickerAttributes *attributes_;
+        TaroTimePickerAttributes* attributes_;
         Optional<std::string> changed;
     };
 
@@ -203,7 +203,7 @@ namespace TaroDOM {
         TaroDatePickerDelegate(const std::shared_ptr<TaroPicker> element)
             : TaroPickerDelegate(element) {
             element->attributes_.reset(new TaroDatePickerAttributes());
-            attributes_ = static_cast<TaroDatePickerAttributes *>(element->GetAttrs());
+            attributes_ = static_cast<TaroDatePickerAttributes*>(element->GetAttrs());
         };
         void onGetNodeAttributes() override;
         void onSetAttributesToRenderNode(std::shared_ptr<TaroRenderNode> renderNode) override;
@@ -212,12 +212,12 @@ namespace TaroDOM {
         void onConfirm(std::shared_ptr<TaroRenderNode> renderNode, napi_value picker) override;
         void onCancel(napi_value picker) override;
 
-        virtual TaroDatePickerAttributes *GetAttrs() const override {
+        virtual TaroDatePickerAttributes* GetAttrs() const override {
             return attributes_;
         }
 
         private:
-        TaroDatePickerAttributes *attributes_;
+        TaroDatePickerAttributes* attributes_;
         Optional<std::string> changed;
     };
 
@@ -227,7 +227,7 @@ namespace TaroDOM {
         TaroRegionPickerDelegate(const std::shared_ptr<TaroPicker> element)
             : TaroPickerDelegate(element) {
             element->attributes_.reset(new TaroRegionPickerAttributes());
-            attributes_ = static_cast<TaroRegionPickerAttributes *>(element->GetAttrs());
+            attributes_ = static_cast<TaroRegionPickerAttributes*>(element->GetAttrs());
         };
         void onGetNodeAttributes() override;
         void onSetAttributesToRenderNode(std::shared_ptr<TaroRenderNode> renderNode) override;
@@ -236,12 +236,12 @@ namespace TaroDOM {
         void onConfirm(std::shared_ptr<TaroRenderNode> renderNode, napi_value picker) override;
         void onCancel(napi_value picker) override;
 
-        virtual TaroRegionPickerAttributes *GetAttrs() const override {
+        virtual TaroRegionPickerAttributes* GetAttrs() const override {
             return attributes_;
         }
 
         private:
-        TaroRegionPickerAttributes *attributes_;
+        TaroRegionPickerAttributes* attributes_;
         std::map<std::string, std::vector<std::string>> cityMap;
         std::map<std::string, std::vector<std::string>> regionMap;
         std::vector<std::string> provinces;

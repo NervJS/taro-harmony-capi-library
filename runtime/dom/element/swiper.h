@@ -79,7 +79,7 @@ namespace TaroDOM {
         void updateNextMargin(const napi_value& value);
         void updatePrevMargin(const napi_value& value);
         void updateDisplayCount(const napi_value& value);
-    
+
         void updateDisplayTouch(const napi_value& value);
         void updateDisableProgrammaticAnimation(const napi_value& value);
 

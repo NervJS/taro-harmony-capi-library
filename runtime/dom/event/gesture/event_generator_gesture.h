@@ -9,8 +9,8 @@
 #include <arkui/native_node.h>
 #include <napi/native_api.h>
 
-#include "gesture_event_base.h"
 #include "../event_generator.h"
+#include "gesture_event_base.h"
 
 namespace TaroRuntime::TaroDOM::TaroEvent {
 class EventGenerator_Gesture final : public EventGenerator {

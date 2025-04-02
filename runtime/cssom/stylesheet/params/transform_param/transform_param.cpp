@@ -13,12 +13,12 @@ namespace TaroCSSOM {
         }
 
         std::shared_ptr<TransformItemBase> TransformParam::staticBlendTransformItem(
-            const TransformItemBase &f, const TransformItemBase &t,
-            const float &progress) {
+            const TransformItemBase& f, const TransformItemBase& t,
+            const float& progress) {
             switch (f.type) {
                 case ETransformType::ROTATE: {
-                    auto from = dynamic_cast<const TransformRotateItem &>(f);
-                    auto to = dynamic_cast<const TransformRotateItem &>(t);
+                    auto from = dynamic_cast<const TransformRotateItem&>(f);
+                    auto to = dynamic_cast<const TransformRotateItem&>(t);
                     std::shared_ptr<TransformRotateItem> result =
                         std::make_shared<TransformRotateItem>();
                     result->angle = staticBlendAngle(from.angle, to.angle, progress);
@@ -36,8 +36,8 @@ namespace TaroCSSOM {
                     return std::move(result);
                 }
                 case ETransformType::SCALE: {
-                    auto from = dynamic_cast<const TransformScaleItem &>(f);
-                    auto to = dynamic_cast<const TransformScaleItem &>(t);
+                    auto from = dynamic_cast<const TransformScaleItem&>(f);
+                    auto to = dynamic_cast<const TransformScaleItem&>(t);
                     std::shared_ptr<TransformScaleItem> result =
                         std::make_shared<TransformScaleItem>();
 
@@ -48,8 +48,8 @@ namespace TaroCSSOM {
                 }
 
                 case ETransformType::TRANSLATE: {
-                    auto from = dynamic_cast<const TransformTranslateItem &>(f);
-                    auto to = dynamic_cast<const TransformTranslateItem &>(t);
+                    auto from = dynamic_cast<const TransformTranslateItem&>(f);
+                    auto to = dynamic_cast<const TransformTranslateItem&>(t);
                     std::shared_ptr<TransformTranslateItem> result =
                         std::make_shared<TransformTranslateItem>();
 
@@ -59,8 +59,8 @@ namespace TaroCSSOM {
                     return std::move(result);
                 }
                 case ETransformType::SKEW: {
-                    auto from = dynamic_cast<const TransformSkewItem &>(f);
-                    auto to = dynamic_cast<const TransformSkewItem &>(t);
+                    auto from = dynamic_cast<const TransformSkewItem&>(f);
+                    auto to = dynamic_cast<const TransformSkewItem&>(t);
                     std::shared_ptr<TransformSkewItem> result =
                         std::make_shared<TransformSkewItem>();
 
@@ -70,8 +70,8 @@ namespace TaroCSSOM {
                 }
 
                 case ETransformType::PERSPECTIVE: {
-                    auto from = dynamic_cast<const TransformPerspectiveItem &>(f);
-                    auto to = dynamic_cast<const TransformPerspectiveItem &>(t);
+                    auto from = dynamic_cast<const TransformPerspectiveItem&>(f);
+                    auto to = dynamic_cast<const TransformPerspectiveItem&>(t);
                     std::shared_ptr<TransformPerspectiveItem> result =
                         std::make_shared<TransformPerspectiveItem>();
 
@@ -83,16 +83,16 @@ namespace TaroCSSOM {
                 }
 
                 case ETransformType::QUATERNION: {
-                    auto from = dynamic_cast<const TransformQuaternionItem &>(f);
-                    auto to = dynamic_cast<const TransformQuaternionItem &>(t);
+                    auto from = dynamic_cast<const TransformQuaternionItem&>(f);
+                    auto to = dynamic_cast<const TransformQuaternionItem&>(t);
                     TransformQuaternionItem item =
                         TransformQuaternionItem::staticSlerp(from, to, progress);
                     return std::move(std::make_shared<TransformQuaternionItem>(item));
                 }
 
                 case ETransformType::MATRIX: {
-                    auto from = dynamic_cast<const TransformMatrixItem &>(f);
-                    auto to = dynamic_cast<const TransformMatrixItem &>(t);
+                    auto from = dynamic_cast<const TransformMatrixItem&>(f);
+                    auto to = dynamic_cast<const TransformMatrixItem&>(t);
                     std::shared_ptr<TransformMatrixItem> result =
                         std::make_shared<TransformMatrixItem>();
                     std::vector<std::shared_ptr<TransformItemBase>> fromList =
@@ -115,28 +115,32 @@ namespace TaroCSSOM {
             //     return std::move(result);
         }
 
-        bool TransformParam::operator==(const TransformParam &other) const {
-            const std::vector<std::shared_ptr<TransformItemBase>> &current = this->data;
-            const std::vector<std::shared_ptr<TransformItemBase>> &otherData = other.data;
+        bool TransformParam::operator==(const TransformParam& other) const {
+            const std::vector<std::shared_ptr<TransformItemBase>>& current = this->data;
+            const std::vector<std::shared_ptr<TransformItemBase>>& otherData = other.data;
 
-            if (current.size() != otherData.size()) return false;
+            if (current.size() != otherData.size())
+                return false;
 
             return std::equal(
                 current.begin(), current.end(), otherData.begin(),
                 [](std::shared_ptr<TransformItemBase> a,
-                   std::shared_ptr<TransformItemBase> b) { return a == b; });
+                   std::shared_ptr<TransformItemBase> b) {
+                    return a == b;
+                });
         }
 
-        bool TransformParam::operator!=(const TransformParam &other) const {
+        bool TransformParam::operator!=(const TransformParam& other) const {
             return !(other == *this);
         }
 
         std::vector<std::shared_ptr<TransformItemBase>>
-        TransformParam::staticMatrixToTransformItems(const TaroHelper::Matrix4 &m) {
+        TransformParam::staticMatrixToTransformItems(const TaroHelper::Matrix4& m) {
             TaroHelper::Matrix4 matrix = m;
             std::vector<std::shared_ptr<TransformItemBase>> res;
 
-            if (!matrix.normalize()) return res;
+            if (!matrix.normalize())
+                return res;
 
             // 解析透视矩阵
 
@@ -242,7 +246,8 @@ namespace TaroCSSOM {
                 scale->z *= -1.0;
 
                 for (int i = 0; i < 3; i++)
-                    for (int j = 0; j < 3; j++) column[i][j] *= -1.0;
+                    for (int j = 0; j < 3; j++)
+                        column[i][j] *= -1.0;
             }
 
             // 提取旋转矩阵的元素
@@ -309,7 +314,7 @@ namespace TaroCSSOM {
             return form + (to - form) * progress;
         }
 
-        TAngle TransformParam::staticBlendAngle(const TAngle &form, const TAngle &to, const float progress) {
+        TAngle TransformParam::staticBlendAngle(const TAngle& form, const TAngle& to, const float progress) {
             if (form.unit == to.unit) {
                 float ret_val = form.value + (to.value - form.value) * progress;
                 return TAngle(ret_val, form.unit);
@@ -325,7 +330,7 @@ namespace TaroCSSOM {
             if (form.Unit() == to.Unit()) {
                 Dimension res;
                 res.SetUnit(form.Unit());
-                res.SetValue(form.Value() + (to.Value() - form.Value()) * progress) ;
+                res.SetValue(form.Value() + (to.Value() - form.Value()) * progress);
                 return res;
             } else {
                 auto formval = form.ParseToVp().has_value() ? form.ParseToVp().value() : 0;
@@ -334,26 +339,26 @@ namespace TaroCSSOM {
             }
         }
 
-        TaroHelper::Matrix4 TransformParam::staticTransformItemsToMatrix4(const TransformParam &option) {
+        TaroHelper::Matrix4 TransformParam::staticTransformItemsToMatrix4(const TransformParam& option) {
             return staticTransformItemsToMatrix4(option.data);
         }
-        TaroHelper::Matrix4 TransformParam::staticTransformItemsToMatrix4(const TransformParam &option, float widthBase, float heightBase) {
+        TaroHelper::Matrix4 TransformParam::staticTransformItemsToMatrix4(const TransformParam& option, float widthBase, float heightBase) {
             return staticTransformItemsToMatrix4(option.data, widthBase, heightBase);
         }
 
-        TaroHelper::Matrix4 TransformParam::staticTransformItemsToMatrix4(const std::vector<std::shared_ptr<TransformItemBase>> &value) {
+        TaroHelper::Matrix4 TransformParam::staticTransformItemsToMatrix4(const std::vector<std::shared_ptr<TransformItemBase>>& value) {
             TaroHelper::Matrix4 res;
             if (value.size()) {
-                for (const auto &item : value) {
+                for (const auto& item : value) {
                     res = item->toMatrix4() * res;
                 }
             }
             return res;
         };
-        TaroHelper::Matrix4 TransformParam::staticTransformItemsToMatrix4(const std::vector<std::shared_ptr<TransformItemBase>> &value, float widthBase, float heightBase) {
+        TaroHelper::Matrix4 TransformParam::staticTransformItemsToMatrix4(const std::vector<std::shared_ptr<TransformItemBase>>& value, float widthBase, float heightBase) {
             TaroHelper::Matrix4 res;
             if (value.size()) {
-                for (const auto &item : value) {
+                for (const auto& item : value) {
                     if (item->type == ETransformType::TRANSLATE) {
                         res = std::dynamic_pointer_cast<TransformTranslateItem>(item)->toMatrix4(widthBase, heightBase) * res;
                     } else {
@@ -363,7 +368,7 @@ namespace TaroCSSOM {
             }
             return res;
         };
-        TransformParam TransformParam::staticBlend(const TransformParam &f, const TransformParam &t, const float &progress) {
+        TransformParam TransformParam::staticBlend(const TransformParam& f, const TransformParam& t, const float& progress) {
             TransformParam res;
             std::vector<std::shared_ptr<TransformItemBase>> returnTransform;
             auto from = f.data;
@@ -380,7 +385,8 @@ namespace TaroCSSOM {
                     returnTransform.emplace_back(
                         staticBlendTransformItem(*from[i], *to[i], progress));
                 } else {
-                    if (i >= from.size() && i >= to.size()) break;
+                    if (i >= from.size() && i >= to.size())
+                        break;
 
                     // 把from剩下的变成一个matrix
                     std::vector<std::shared_ptr<TransformItemBase>> otheFromList;
@@ -415,7 +421,7 @@ namespace TaroCSSOM {
             return std::move(res);
         }
 
-        TransformParam TransformParam::staticTransformItemsPercent(const TransformParam &option, float widthBase, float heightBase) {
+        TransformParam TransformParam::staticTransformItemsPercent(const TransformParam& option, float widthBase, float heightBase) {
             TransformParam res;
             res.data.reserve(option.data.size());
             for (size_t idx = 0; idx < option.data.size(); idx++) {

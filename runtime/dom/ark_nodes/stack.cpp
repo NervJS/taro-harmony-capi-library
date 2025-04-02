@@ -43,14 +43,14 @@ namespace TaroDOM {
     }
 
     void TaroStackNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_STACK));
         //         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_CUSTOM));
         // SetCustomLayout();
     }
 
     void TaroStackNode::SetTranslate(float x, float y, float z) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[3] = {0};
         ArkUI_AttributeItem item = {value, 3};
         value[0].f32 = x;
@@ -60,7 +60,7 @@ namespace TaroDOM {
     }
 
     void TaroStackNode::SetScale(float x, float y) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[2] = {0};
         ArkUI_AttributeItem item = {value, 2};
         value[0].f32 = x;
@@ -68,8 +68,8 @@ namespace TaroDOM {
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_SCALE, &item);
     }
 
-    void TaroStackNode::SetAlign(const ArkUI_Alignment &align) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+    void TaroStackNode::SetAlign(const ArkUI_Alignment& align) {
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[] = {0};
         ArkUI_AttributeItem item = {value, 1};
         value[0].i32 = align;

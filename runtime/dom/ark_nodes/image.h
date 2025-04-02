@@ -27,7 +27,7 @@ namespace TaroDOM {
         void BuildSpanImage();
 
         void Layout() override;
-    
+
         void SetStyle(StylesheetRef style_ref) override;
         /**
          * 在一些宽度或者高度自适应的mode，需要通过图片信息算出没有显示设置的尺寸
@@ -45,14 +45,14 @@ namespace TaroDOM {
         void setDraggable(bool enabled);
 
         void setImageSrc(std::string src, const double height = 0.0, const double width = 0.0, bool lazyLoad = false);
-        void setImageSrc(ArkUI_DrawableDescriptor *drawableDescriptor);
+        void setImageSrc(ArkUI_DrawableDescriptor* drawableDescriptor);
         void setImageFillColor(uint32_t color);
-        void setAlt(const std::string &uri);
-        void setErrorHolder(const std::string &uri);
-        void setMode(const std::string &mode);
+        void setAlt(const std::string& uri);
+        void setErrorHolder(const std::string& uri);
+        void setMode(const std::string& mode);
 
         void bindImageComplete();
-    
+
         private:
         std::string current_src_;
         double height_;

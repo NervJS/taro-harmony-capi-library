@@ -21,15 +21,15 @@ class JSBigString {
     JSBigString() = default;
 
     // Not copyable
-    JSBigString(const JSBigString &) = delete;
-    JSBigString &operator=(const JSBigString &) = delete;
+    JSBigString(const JSBigString&) = delete;
+    JSBigString& operator=(const JSBigString&) = delete;
 
     virtual ~JSBigString() {}
 
     virtual bool isAscii() const = 0;
 
     // This needs to be a \0 terminated string
-    virtual const char *c_str() const = 0;
+    virtual const char* c_str() const = 0;
 
     // Length of the c_str without the NULL byte.
     virtual size_t size() const = 0;
@@ -40,13 +40,14 @@ class JSBigString {
 class JSBigStdString : public JSBigString {
     public:
     JSBigStdString(std::string str, bool isAscii = false)
-        : m_isAscii(isAscii), m_str(std::move(str)) {}
+        : m_isAscii(isAscii),
+          m_str(std::move(str)) {}
 
     bool isAscii() const override {
         return m_isAscii;
     }
 
-    const char *c_str() const override {
+    const char* c_str() const override {
         return m_str.c_str();
     }
 
@@ -66,7 +67,8 @@ class JSBigStdString : public JSBigString {
 class EXPORT JSBigBufferString : public JSBigString {
     public:
     JSBigBufferString(size_t size)
-        : m_data(new char[size + 1]), m_size(size) {
+        : m_data(new char[size + 1]),
+          m_size(size) {
         // Guarantee nul-termination.  The caller is responsible for
         // filling in the rest of m_data.
         m_data[m_size] = '\0';
@@ -80,7 +82,7 @@ class EXPORT JSBigBufferString : public JSBigString {
         return true;
     }
 
-    const char *c_str() const override {
+    const char* c_str() const override {
         return m_data;
     }
 
@@ -88,12 +90,12 @@ class EXPORT JSBigBufferString : public JSBigString {
         return m_size;
     }
 
-    char *data() {
+    char* data() {
         return m_data;
     }
 
     private:
-    char *m_data;
+    char* m_data;
     size_t m_size;
 };
 
@@ -107,18 +109,18 @@ class EXPORT JSBigFileString : public JSBigString {
         return true;
     }
 
-    const char *c_str() const override;
+    const char* c_str() const override;
 
     size_t size() const override;
     int fd() const;
 
     static std::unique_ptr<const JSBigFileString> fromPath(
-        const std::string &sourceURL);
+        const std::string& sourceURL);
 
     private:
     int m_fd;                   // The file descriptor being mmapped
     size_t m_size;              // The size of the mmapped region
     mutable off_t m_pageOff;    // The offset in the mmapped region to the data.
     off_t m_mapOff;             // The offset in the file to the mmapped region.
-    mutable const char *m_data; // Pointer to the mmapped region.
+    mutable const char* m_data; // Pointer to the mmapped region.
 };

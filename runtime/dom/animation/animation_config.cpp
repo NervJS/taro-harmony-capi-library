@@ -7,7 +7,7 @@
 namespace TaroRuntime {
 namespace TaroAnimate {
     TaroAnimationFillMode TaroAnimationConfig::parseFillMode(
-        const std::string &fill_mode) {
+        const std::string& fill_mode) {
         static std::unordered_map<std::string, TaroAnimationFillMode> map_fill_modes =
             {{"none", TaroAnimationFillMode::None},
              {"forwards", TaroAnimationFillMode::Forwards},
@@ -20,7 +20,7 @@ namespace TaroAnimate {
         return TaroAnimationFillMode::None;
     }
     TaroAnimationDirection TaroAnimationConfig::parseDirection(
-        const std::string &direction) {
+        const std::string& direction) {
         static std::unordered_map<std::string, TaroAnimationDirection>
             map_directions = {
                 {"normal", TaroAnimationDirection::Normal},

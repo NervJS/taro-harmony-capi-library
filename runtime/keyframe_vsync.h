@@ -15,8 +15,8 @@ using KeyframeVsyncFun = std::function<void(uint64_t, uint32_t)>;
 enum class VsyncPriority {
     Low = 0,    // 低优先级
     Medium = 1, // 中优先级
-    High = 2,    // 高优先级
-    Highest = 3    // 最高优先级
+    High = 2,   // 高优先级
+    Highest = 3 // 最高优先级
 };
 
 class KeyframeVsync {

@@ -123,10 +123,12 @@ class CalcExpressionPool {
  */
 class Dimension {
     public:
-    Dimension(): unit_(DimensionUnit::NONE) {};
+    Dimension()
+        : unit_(DimensionUnit::NONE) {};
     virtual ~Dimension() = default;
     constexpr Dimension(double value, DimensionUnit unit = DimensionUnit::VP)
-        : value_(value), unit_(unit) {}
+        : value_(value),
+          unit_(unit) {}
 
     Dimension(const std::string& val) {
         auto d = FromString(val);
@@ -143,7 +145,9 @@ class Dimension {
     };
 
     Dimension(const Dimension& other)
-        : value_(other.value_), unit_(other.unit_), calcExpr_(other.calcExpr_) {}
+        : value_(other.value_),
+          unit_(other.unit_),
+          calcExpr_(other.calcExpr_) {}
 
     void Reset() {
         value_ = 0.0;
@@ -176,11 +180,10 @@ class Dimension {
         return unit_ != DimensionUnit::INVALID && unit_ != DimensionUnit::INVALID;
     }
 
-    
     bool IsNonZero() const {
         return GreatNotEqual(value_, 0.0);
     }
-    
+
     bool IsNonNegative() const {
         return NonNegative(value_);
     }
@@ -243,11 +246,10 @@ class Dimension {
     bool operator==(const Dimension& dimension) const {
         if (
             unit_ == DimensionUnit::DESIGN_PX || dimension.unit_ == DimensionUnit::DESIGN_PX ||
-            unit_ == DimensionUnit::CALC || dimension.unit_ == DimensionUnit::CALC || 
-            unit_ == DimensionUnit::VW || dimension.unit_ == DimensionUnit::VW || 
-            unit_ == DimensionUnit::VH || dimension.unit_ == DimensionUnit::VH || 
-            unit_ == DimensionUnit::SAFE_AREA || dimension.unit_ == DimensionUnit::SAFE_AREA
-        ) {
+            unit_ == DimensionUnit::CALC || dimension.unit_ == DimensionUnit::CALC ||
+            unit_ == DimensionUnit::VW || dimension.unit_ == DimensionUnit::VW ||
+            unit_ == DimensionUnit::VH || dimension.unit_ == DimensionUnit::VH ||
+            unit_ == DimensionUnit::SAFE_AREA || dimension.unit_ == DimensionUnit::SAFE_AREA) {
             return false;
         }
         return (unit_ == dimension.unit_) && NearEqual(value_, dimension.value_);

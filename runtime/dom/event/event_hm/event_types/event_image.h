@@ -11,13 +11,13 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroEventCompleteOnImage : public TaroEventBase {
             public:
-            TaroEventCompleteOnImage(const std::string &js_event_type, ArkUI_NodeEvent *event);
+            TaroEventCompleteOnImage(const std::string& js_event_type, ArkUI_NodeEvent* event);
 
             virtual ~TaroEventCompleteOnImage() {}
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
             public:
             int32_t loading_status_ = 0.0f;

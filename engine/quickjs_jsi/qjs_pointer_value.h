@@ -12,20 +12,20 @@
 
 class QuickJSPointerValue final : public QuickJSRuntime::PointerValue {
     public:
-    QuickJSPointerValue(JSContext *ctx, const JSValueConst &value);
-    QuickJSPointerValue(JSContext *ctx, JSValue &&value);
+    QuickJSPointerValue(JSContext* ctx, const JSValueConst& value);
+    QuickJSPointerValue(JSContext* ctx, JSValue&& value);
 
     ~QuickJSPointerValue();
 
     JSValue Get() const;
-    void Reset(JSContext *ctx, JSValueConst value);
+    void Reset(JSContext* ctx, JSValueConst value);
 
-    static QuickJSPointerValue *createFromOneByte(JSContext *ctx, const char *str, size_t length);
-    static QuickJSPointerValue *createFromUtf8(JSContext *ctx, const uint8_t *str, size_t length);
+    static QuickJSPointerValue* createFromOneByte(JSContext* ctx, const char* str, size_t length);
+    static QuickJSPointerValue* createFromUtf8(JSContext* ctx, const uint8_t* str, size_t length);
 
     void invalidate();
 
     private:
-    JSContext *ctx_;
+    JSContext* ctx_;
     JSValue value_;
 };

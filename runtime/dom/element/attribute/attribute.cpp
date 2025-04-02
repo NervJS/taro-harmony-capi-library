@@ -71,7 +71,7 @@ namespace TaroDOM {
         id_ = GetIdAttribute(GetAttributeNodeValue(Id::ATTR_NAME.data()));
         class_name_ = GetClassNameAttribute(GetAttributeNodeValue(ClassName::ATTR_NAME.data()));
         inline_style_ = GetStyleAttribute(GetAttributeNodeValue(Style::ATTR_NAME.data()));
-    
+
         HandleAttributeChanged(ATTRIBUTE_NAME::STYLE, "", "");
         HandleAttributeChanged(ATTRIBUTE_NAME::CLASS, Attribute::ClassName::DEFAULT_VALUE, class_name_);
     }

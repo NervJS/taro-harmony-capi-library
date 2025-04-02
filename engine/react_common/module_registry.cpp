@@ -30,7 +30,8 @@ std::string normalizeName(std::string name) {
 ModuleRegistry::ModuleRegistry(
     std::vector<std::unique_ptr<NativeModule>> modules,
     ModuleNotFoundCallback callback)
-    : modules_{std::move(modules)}, moduleNotFoundCallback_{callback} {}
+    : modules_{std::move(modules)},
+      moduleNotFoundCallback_{callback} {}
 
 void ModuleRegistry::updateModuleNamesFromIndex(size_t index) {
     for (; index < modules_.size(); index++) {
@@ -86,7 +87,7 @@ std::vector<std::string> ModuleRegistry::moduleNames() {
     return names;
 }
 
-std::optional<ModuleConfig> ModuleRegistry::getConfig(const std::string &name) {
+std::optional<ModuleConfig> ModuleRegistry::getConfig(const std::string& name) {
     SystraceSection s("ModuleRegistry::getConfig", "module", name);
 
     // Initialize modulesByName_
@@ -123,7 +124,7 @@ std::optional<ModuleConfig> ModuleRegistry::getConfig(const std::string &name) {
     size_t index = it->second;
 
     CHECK(index < modules_.size());
-    NativeModule *module = modules_[index].get();
+    NativeModule* module = modules_[index].get();
 
     // string name, object constants, array methodNames (methodId is index),
     // [array promiseMethodIds], [array syncMethodIds]
@@ -148,7 +149,7 @@ std::optional<ModuleConfig> ModuleRegistry::getConfig(const std::string &name) {
         folly::dynamic promiseMethodIds = folly::dynamic::array;
         folly::dynamic syncMethodIds = folly::dynamic::array;
 
-        for (auto &descriptor : methods) {
+        for (auto& descriptor : methods) {
             // TODO: #10487027 compare tags instead of doing string comparison?
             methodNames.push_back(std::move(descriptor.name));
             if (descriptor.type == "promise") {
@@ -200,7 +201,7 @@ std::string ModuleRegistry::getModuleSyncMethodName(
 void ModuleRegistry::callNativeMethod(
     unsigned int moduleId,
     unsigned int methodId,
-    folly::dynamic &&params,
+    folly::dynamic&& params,
     int callId) {
     if (moduleId >= modules_.size()) {
         throw std::runtime_error(folly::to<std::string>(
@@ -212,7 +213,7 @@ void ModuleRegistry::callNativeMethod(
 MethodCallResult ModuleRegistry::callSerializableNativeHook(
     unsigned int moduleId,
     unsigned int methodId,
-    folly::dynamic &&params) {
+    folly::dynamic&& params) {
     if (moduleId >= modules_.size()) {
         throw std::runtime_error(folly::to<std::string>(
             "moduleId ", moduleId, "out of range [0..", modules_.size(), ")"));

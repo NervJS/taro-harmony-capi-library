@@ -113,7 +113,7 @@ void EventCenter::trigger(const std::string& event_name, std::shared_ptr<EventCe
         if (callback->is_js) {
             auto callback_js = std::dynamic_pointer_cast<CallBackInfo_JS>(callback);
             auto napi_val = data->memToJs();
-    
+
             ArkJS arkJs(NativeNodeApi::env);
             std::vector<napi_value> vec_napi_value;
             uint32_t length = arkJs.getArrayLength(napi_val);

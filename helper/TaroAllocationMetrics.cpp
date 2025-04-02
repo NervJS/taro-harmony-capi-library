@@ -17,16 +17,16 @@ void PrintMemoryUsage() {
 
 #if IS_DEBUG == 1
 // 内存分配
-void *operator new(size_t size) {
-    void *ptr = malloc(size);
+void* operator new(size_t size) {
+    void* ptr = malloc(size);
     if (ptr == nullptr) {
         throw std::bad_alloc();
     }
     TaroAllocation::s_AllocationMetrics.TotalAllocated += size;
     return ptr;
 }
-void *operator new[](size_t size) {
-    void *ptr = malloc(size);
+void* operator new[](size_t size) {
+    void* ptr = malloc(size);
     if (ptr == nullptr) {
         throw std::bad_alloc();
     }
@@ -34,11 +34,11 @@ void *operator new[](size_t size) {
     return ptr;
 }
 // 内存销毁
-void operator delete(void *memory, size_t size) noexcept {
+void operator delete(void* memory, size_t size) noexcept {
     TaroAllocation::s_AllocationMetrics.TotalFreed += size;
     free(memory);
 }
-void operator delete[](void *memory, size_t size) noexcept {
+void operator delete[](void* memory, size_t size) noexcept {
     TaroAllocation::s_AllocationMetrics.TotalFreed += size;
     free(memory);
 }

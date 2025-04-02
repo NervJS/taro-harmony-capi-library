@@ -22,5 +22,7 @@ void PrintMemoryUsage();
 #if IS_DEBUG == 1
 #define TARO_PRINT_MEMORY() TaroAllocation::PrintMemoryUsage()
 #else
-#define TARO_PRINT_MEMORY() do {} while(0)
+#define TARO_PRINT_MEMORY() \
+    do {                    \
+    } while (0)
 #endif

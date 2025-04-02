@@ -31,7 +31,7 @@ namespace TaroAnimate {
             return "";
         }
 
-        virtual bool isEqual(const std::shared_ptr<TaroCurve> &curve) const {
+        virtual bool isEqual(const std::shared_ptr<TaroCurve>& curve) const {
             return false;
         }
     };
@@ -69,7 +69,8 @@ namespace TaroAnimate {
         public:
         explicit TaroStepsCurve(int32_t steps, TaroStepsCurvePosition position =
                                                    TaroStepsCurvePosition::START)
-            : steps_(steps <= 0 ? 1 : steps), position_(position) {}
+            : steps_(steps <= 0 ? 1 : steps),
+              position_(position) {}
         ~TaroStepsCurve() = default;
 
         float moveInternal(float time) override {

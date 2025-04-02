@@ -41,14 +41,14 @@ namespace TaroAnimate {
     void TaroAnimator::setDuration(int32_t duration) {
         duration_ = duration;
     }
-    void TaroAnimator::setName(const std::string &name) {
+    void TaroAnimator::setName(const std::string& name) {
         name_ = name;
     }
 
-    void TaroAnimator::setStopCallBack(const StopCallBackFun &stop_fun) {
+    void TaroAnimator::setStopCallBack(const StopCallBackFun& stop_fun) {
         stop_callback_funs_.emplace_back(stop_fun);
     }
-    void TaroAnimator::setIterCallBack(const IterCallBackFun &iter_fun) {
+    void TaroAnimator::setIterCallBack(const IterCallBackFun& iter_fun) {
         iter_callback_fun_ = iter_fun;
     }
 
@@ -124,7 +124,7 @@ namespace TaroAnimate {
         if (start_time_ + start_delay_ + pause_total_time_ > frame_time) {
             if (fill_mode_ == TaroAnimationFillMode::Backwards ||
                 fill_mode_ == TaroAnimationFillMode::Both) {
-                for (auto &animation : animations_) {
+                for (auto& animation : animations_) {
                     animation->setStartValue(is_reverse_);
                 }
             }
@@ -140,7 +140,7 @@ namespace TaroAnimate {
         float normalized_time =
             getNormalizedTime(elapse_time % duration_, iteration_left_ == 0);
 
-        for (const auto &animation : animations_) {
+        for (const auto& animation : animations_) {
             animation->onNormalizedTimestampChanged(normalized_time, is_reverse_);
         }
 
@@ -172,14 +172,14 @@ namespace TaroAnimate {
         // 设置fill mode
         if (fill_mode_ == TaroAnimationFillMode::None ||
             fill_mode_ == TaroAnimationFillMode::Backwards) {
-            for (auto &animation : animations_) {
+            for (auto& animation : animations_) {
                 // animation->setSysValue();
             }
         }
 
         // 触发stop事件
         state_ = TaroAnimationState::STOPPED;
-        for (auto &stop_callback_fun : stop_callback_funs_) {
+        for (auto& stop_callback_fun : stop_callback_funs_) {
             stop_callback_fun();
         }
     }
@@ -246,12 +246,12 @@ namespace TaroAnimate {
         updateRepeatTimesLeft(elapse_time_);
         if (state_ == TaroAnimationState::STOPPED &&
             (fill_mode_ == TaroAnimationFillMode::Forwards || fill_mode_ == TaroAnimationFillMode::Both)) {
-            for (const auto &animation : animations_) {
+            for (const auto& animation : animations_) {
                 animation->onNormalizedTimestampChanged(1.0, is_reverse_);
             }
         } else if (state_ != TaroAnimationState::STOPPED) {
             float normalized_time = getNormalizedTime(elapse_time_ % duration_, iteration_left_ == 0);
-            for (const auto &animation : animations_) {
+            for (const auto& animation : animations_) {
                 animation->onNormalizedTimestampChanged(1.0, is_reverse_);
             }
         }

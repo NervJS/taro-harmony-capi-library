@@ -10,18 +10,18 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        int TaroCheckboxEventChange::parseHmEvent(ArkUI_NodeEvent *event) {
-            ArkUI_StringAsyncEvent *ptr_ev_string = OH_ArkUI_NodeEvent_GetStringAsyncEvent(event);
+        int TaroCheckboxEventChange::parseHmEvent(ArkUI_NodeEvent* event) {
+            ArkUI_StringAsyncEvent* ptr_ev_string = OH_ArkUI_NodeEvent_GetStringAsyncEvent(event);
             if (ptr_ev_string != nullptr && ptr_ev_string->pStr != nullptr) {
                 value_ = ptr_ev_string->pStr;
             }
 
-            ArkUI_NodeComponentEvent *event_data = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
+            ArkUI_NodeComponentEvent* event_data = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             selected_value_ = event_data->data[0].i32;
             return 0;
         }
 
-        int TaroCheckboxEventChange::serializeFun(napi_value &ret_obj) {
+        int TaroCheckboxEventChange::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
 
             napi_value js_detail = detail();

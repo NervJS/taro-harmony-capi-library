@@ -24,11 +24,11 @@ namespace TaroDOM {
 
         void SetStyle(StylesheetRef style_ref) override;
         void Layout() override;
-        ChildAvailableSize GetChildAvailableSize ();
+        ChildAvailableSize GetChildAvailableSize();
 
         // set swiper properties
         void SetIndex(int32_t index, bool disableAnimation = false);
-    
+
         void SetDisableSwiper(bool loop);
 
         void SetLoop(bool loop);
@@ -46,7 +46,7 @@ namespace TaroDOM {
         void SetIndicatorActiveColor(ArkUI_SwiperIndicatorType type,
                                      uint32_t indicatorColor,
                                      uint32_t indicatorActiveColor);
-    
+
         void SetOverflowNow(bool isHidden);
 
         void SetNextMargin(float nextMargin);

@@ -4,13 +4,13 @@
 
 #include "./TaroLog.h"
 
-#include <boost/stacktrace.hpp>
 #include <sstream>
+#include <boost/stacktrace.hpp>
 
 namespace TaroLog {
-  std::string GetCallStack() {
+std::string GetCallStack() {
     std::ostringstream oss;
     oss << boost::stacktrace::stacktrace();
     return oss.str();
-  }
+}
 } // namespace TaroLog

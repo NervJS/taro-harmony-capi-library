@@ -243,8 +243,6 @@ namespace TaroCSSOM {
                 const ArkUI_NodeHandle& node, ArkUI_NodeAttributeType attributeType,
                 const Optional<TaroRuntime::Dimension>& val1, const Optional<TaroRuntime::Dimension>& val2);
 
-
-
             static void setFloat(
                 const ArkUI_NodeHandle& node, ArkUI_NodeAttributeType attributeType,
                 const Optional<Dimension>& val1,
@@ -262,8 +260,6 @@ namespace TaroCSSOM {
                 const Optional<TaroRuntime::Dimension>& right,
                 const Optional<TaroRuntime::Dimension>& bottom,
                 const Optional<TaroRuntime::Dimension>& left);
-
-
 
             static void setFloat(
                 const ArkUI_NodeHandle& node, ArkUI_NodeAttributeType attributeType,

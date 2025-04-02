@@ -18,7 +18,7 @@ namespace TaroDOM {
 
         ~TaroCustomNode();
 
-        virtual void OnMeasure(ArkUI_NodeCustomEvent *event) override;
+        virtual void OnMeasure(ArkUI_NodeCustomEvent* event) override;
 
         void Build() override;
     };

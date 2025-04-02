@@ -9,8 +9,8 @@
 #include "helper/Time.h"
 #include "helper/api_cost_statistic.h"
 #include "runtime/dom/element/element.h"
-#include "thread/TaskExecutor.h"
 #include "runtime/render.h"
+#include "thread/TaskExecutor.h"
 
 namespace TaroRuntime::TaroDOM::TaroEvent {
 TaroEventTaskThread* TaroEventTaskThread::instance() {
@@ -19,7 +19,7 @@ TaroEventTaskThread* TaroEventTaskThread::instance() {
 }
 
 int TaroEventTaskThread::init() {
-    std::thread task_thread([this](){
+    std::thread task_thread([this]() {
         execEvent();
     });
     task_thread.detach();
@@ -32,14 +32,14 @@ void TaroEventTaskThread::pushHmEvent(const TaroEventBasePtr& event) {
 
 void TaroEventTaskThread::execEvent() {
     auto runner = Render::GetInstance()->GetTaskRunner();
-    while(true) {
+    while (true) {
         auto event = hm_event_queue_.dequeue();
         runner->runTask(TaroThread::TaskThread::MAIN, [event]() {
             uint64_t cost = TaroHelper::TaroTime::getCurrentUsTime() - event->time_mark_;
-//             TaroHelper::TimeCostStatistic::instance()->record("event_task", cost);
+            //             TaroHelper::TimeCostStatistic::instance()->record("event_task", cost);
             event->target_->getEventEmitter()->triggerEvents(event);
         });
     }
 }
 
-}  // namespace TaroRuntime::TaroDOM::TaroEvent
+} // namespace TaroRuntime::TaroDOM::TaroEvent

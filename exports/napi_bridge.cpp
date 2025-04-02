@@ -84,14 +84,14 @@ napi_value NapiBridge::loadScript(napi_env env, napi_callback_info info) {
         if (it == taroInstanceById.end()) {
             return arkJs.getUndefined();
         }
-        auto &taroInstance = it->second;
+        auto& taroInstance = it->second;
         auto onFinishRef = arkJs.createReference(args[3]);
 
         taroInstance->loadScript(
             arkJs.getArrayBuffer(args[1]),
             arkJs.getString(args[2]),
             [taskExecutor = taroInstance->getTaskExecutor(), env, onFinishRef](
-                const std::string &errorMsg) {
+                const std::string& errorMsg) {
                 taskExecutor->runTask(
                     TaroThread::TaskThread::MAIN, [env, onFinishRef, errorMsg]() {
                         ArkJS arkJs(env);
@@ -165,7 +165,7 @@ napi_value NapiBridge::destroyTaroInstance(napi_env env, napi_callback_info info
 
 class CustomEventListener : public ::testing::EmptyTestEventListener {
     public:
-    virtual void OnTestEnd(const ::testing::TestInfo &test_info) override {
+    virtual void OnTestEnd(const ::testing::TestInfo& test_info) override {
         if (test_info.result()->Failed()) {
             TARO_LOG_ERROR("TARO_TEST", "Test failed: %{public}s.%{public}s", test_info.test_case_name(),
                            test_info.name());
@@ -182,8 +182,8 @@ napi_value NapiBridge::startEngineTest(napi_env env, napi_callback_info info) {
     try {
 #if IS_TEST_OPEN == 1
         ::testing::InitGoogleTest();
-        ::testing::TestEventListeners &listeners = ::testing::UnitTest::GetInstance()->listeners();
-        CustomEventListener *listener = new CustomEventListener();
+        ::testing::TestEventListeners& listeners = ::testing::UnitTest::GetInstance()->listeners();
+        CustomEventListener* listener = new CustomEventListener();
         listeners.Append(listener);
         RUN_ALL_TESTS();
         delete listener;

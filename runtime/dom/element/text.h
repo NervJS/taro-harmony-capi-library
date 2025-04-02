@@ -23,10 +23,10 @@ namespace TaroDOM {
 
         ~TaroText() = default;
         void Build() override;
-    
-        void Build(std::shared_ptr<TaroElement> &reuse_element) override;
-    
-        bool Reusable(std::shared_ptr<TaroElement> &reuse_element) override;
+
+        void Build(std::shared_ptr<TaroElement>& reuse_element) override;
+
+        bool Reusable(std::shared_ptr<TaroElement>& reuse_element) override;
 
         std::unique_ptr<TaroTextAttributes> attributes_;
 
@@ -52,7 +52,7 @@ namespace TaroDOM {
 
         std::string GetTextContent();
         std::string GetTextContent(napi_value value);
-        
+
         void SetTextRenderNodeInfo(const std::shared_ptr<TaroTextNode>& renderNode);
 
         private:

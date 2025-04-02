@@ -16,7 +16,7 @@ namespace TaroDOM {
         public:
         // TODO: 临时性标记，当前页面 Remove 文本节点是否需要触发布局
         bool unstable_isTextNeedLayout = true;
-    
+
         TaroPageContainer(napi_value node);
 
         ~TaroPageContainer();
@@ -24,7 +24,7 @@ namespace TaroDOM {
         void Build() override;
         void SetAttributesToRenderNode() override;
 
-        std::shared_ptr<TaroRenderNode> &getFixedRoot() {
+        std::shared_ptr<TaroRenderNode>& getFixedRoot() {
             return fixed_root_;
         };
 

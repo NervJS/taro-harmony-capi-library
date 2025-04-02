@@ -53,7 +53,8 @@ void Render::BuildElement(std::shared_ptr<TaroDOM::TaroElement> parent) {
 
 void Render::SetTaroNodeAttribute(std::shared_ptr<TaroDOM::TaroElement> node,
                                   napi_value name, napi_value value) {
-    if (node == nullptr) return;
+    if (node == nullptr)
+        return;
 
     ArkJS arkJs(NativeNodeApi::env);
     node->SetAttribute(arkJs.getString(name), value);
@@ -61,14 +62,16 @@ void Render::SetTaroNodeAttribute(std::shared_ptr<TaroDOM::TaroElement> node,
 
 void Render::RemoveTaroNodeAttribute(std::shared_ptr<TaroDOM::TaroElement> node,
                                      napi_value name) {
-    if (node == nullptr) return;
+    if (node == nullptr)
+        return;
 
     ArkJS arkJs(NativeNodeApi::env);
     node->RemoveAttribute(arkJs.getString(name));
 }
 
 napi_value Render::GetTaroNodeAttribute(std::shared_ptr<TaroDOM::TaroElement> node, napi_value name) {
-    if (node == nullptr) return nullptr;
+    if (node == nullptr)
+        return nullptr;
 
     ArkJS arkJs(NativeNodeApi::env);
     std::string attrName = arkJs.getString(name);
@@ -84,7 +87,8 @@ napi_value Render::GetTaroNodeAttribute(std::shared_ptr<TaroDOM::TaroElement> no
 }
 
 napi_value Render::HasTaroNodeAttribute(std::shared_ptr<TaroDOM::TaroElement> node, napi_value name) {
-    if (node == nullptr) return nullptr;
+    if (node == nullptr)
+        return nullptr;
 
     ArkJS arkJs(NativeNodeApi::env);
     std::string attrName = arkJs.getString(name);
@@ -93,7 +97,8 @@ napi_value Render::HasTaroNodeAttribute(std::shared_ptr<TaroDOM::TaroElement> no
 }
 
 napi_value Render::HasTaroNodeAttributes(std::shared_ptr<TaroDOM::TaroElement> node) {
-    if (node == nullptr) return nullptr;
+    if (node == nullptr)
+        return nullptr;
 
     ArkJS arkJs(NativeNodeApi::env);
     bool hasAttrs = node->HasAttributes();

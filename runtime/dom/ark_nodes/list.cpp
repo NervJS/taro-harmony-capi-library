@@ -21,19 +21,19 @@ namespace TaroDOM {
 
     TaroListNode::~TaroListNode() {
         if (init_adapter_) {
-            NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
             nativeNodeApi->resetAttribute(GetArkUINodeHandle(), NODE_LIST_NODE_ADAPTER);
         }
     }
 
     void TaroListNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_LIST));
         TaroScrollContainerNode::setEdgeEffect(ARKUI_EDGE_EFFECT_NONE);
     }
 
     void TaroListNode::setCacheCount(int32_t count) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[1] = {{.i32 = count}};
         ArkUI_AttributeItem item{value, 1};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_LIST_CACHED_COUNT, &item);
@@ -42,7 +42,7 @@ namespace TaroDOM {
     void TaroListNode::Layout() {
         TaroRenderNode::Layout();
         if (!init_adapter_) {
-            NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
             ArkUI_AttributeItem item{nullptr, 0, nullptr, adapter_->GetHandle()};
             nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_LIST_NODE_ADAPTER, &item);
             init_adapter_ = true;

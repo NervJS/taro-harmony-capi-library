@@ -8,7 +8,7 @@
 namespace TaroHelper {
 
 TaroHelper::Optional<uint32_t> ColorUtils::getInt32FromNapiGetter(
-    TaroRuntime::NapiGetter &getter) {
+    TaroRuntime::NapiGetter& getter) {
     TaroHelper::Optional<uint32_t> res;
     napi_valuetype type;
     getter.GetType(type);

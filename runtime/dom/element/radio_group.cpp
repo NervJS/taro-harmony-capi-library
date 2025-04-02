@@ -55,7 +55,7 @@ namespace TaroDOM {
         }
     }
 
-    bool TaroRadioGroup::bindListenEvent(const std::string &event_name) {
+    bool TaroRadioGroup::bindListenEvent(const std::string& event_name) {
         if (event_name == "change") {
             event_emitter_->registerEvent(TaroEvent::EventGeneratorType::UserDefine, -1, event_name);
         } else {

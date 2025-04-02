@@ -14,12 +14,18 @@ void HarmonyStyleSetter::setTransformOrigin(const ArkUI_NodeHandle& node,
     ArkUI_NumberValue arkUI_NumberValue[6] = {};
     ArkUI_AttributeItem item = {arkUI_NumberValue, 6};
 
-    if (auto val = value.x.ParseToVp(); val.has_value()) arkUI_NumberValue[0].f32 = val.value();
-    if (auto val = value.y.ParseToVp(); val.has_value()) arkUI_NumberValue[1].f32 = val.value();
-    if (auto val = value.z.ParseToVp(); val.has_value()) arkUI_NumberValue[2].f32 = val.value();
-    if (value.px.IsValid()) arkUI_NumberValue[3].f32 = value.px.Value();
-    if (value.py.IsValid()) arkUI_NumberValue[4].f32 = value.py.Value();
-    if (value.pz.IsValid()) arkUI_NumberValue[5].f32 = value.pz.Value();
+    if (auto val = value.x.ParseToVp(); val.has_value())
+        arkUI_NumberValue[0].f32 = val.value();
+    if (auto val = value.y.ParseToVp(); val.has_value())
+        arkUI_NumberValue[1].f32 = val.value();
+    if (auto val = value.z.ParseToVp(); val.has_value())
+        arkUI_NumberValue[2].f32 = val.value();
+    if (value.px.IsValid())
+        arkUI_NumberValue[3].f32 = value.px.Value();
+    if (value.py.IsValid())
+        arkUI_NumberValue[4].f32 = value.py.Value();
+    if (value.pz.IsValid())
+        arkUI_NumberValue[5].f32 = value.pz.Value();
 
     TaroRuntime::NativeNodeApi::getInstance()->setAttribute(node, NODE_TRANSFORM_CENTER, &item);
 }

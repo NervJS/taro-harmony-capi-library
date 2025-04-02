@@ -139,14 +139,13 @@ namespace TaroDOM {
             case CANVAS_FUNC_CODE::Scale:
                 node->Scale(paramsGetter);
                 break;
-            case CANVAS_FUNC_CODE::Measure:
-                {
-                    double width;
-                    double height;
-                    node->Measure(paramsGetter, width, height);
-                    ArkJS arkJs(NativeNodeApi::env);
-                    return arkJs.createDouble(width);
-                }
+            case CANVAS_FUNC_CODE::Measure: {
+                double width;
+                double height;
+                node->Measure(paramsGetter, width, height);
+                ArkJS arkJs(NativeNodeApi::env);
+                return arkJs.createDouble(width);
+            }
             case CANVAS_FUNC_CODE::DrawImage:
                 node->DrawImage(paramsGetter);
                 break;
@@ -156,13 +155,12 @@ namespace TaroDOM {
             case CANVAS_FUNC_CODE::RESET:
                 node->Reset();
                 break;
-            case CANVAS_FUNC_CODE::ToDataUrl:
-                {
-                    std::string dataUrl;
-                    node->ExportImage(paramsGetter, dataUrl);
-                    ArkJS arkJs(NativeNodeApi::env);
-                    return arkJs.createString(dataUrl);
-                }
+            case CANVAS_FUNC_CODE::ToDataUrl: {
+                std::string dataUrl;
+                node->ExportImage(paramsGetter, dataUrl);
+                ArkJS arkJs(NativeNodeApi::env);
+                return arkJs.createString(dataUrl);
+            }
             default:
                 return TaroElement::ExecuteFunc(renderNode, name, params);
         }

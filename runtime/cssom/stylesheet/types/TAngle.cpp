@@ -8,31 +8,33 @@
 #include <string>
 #include <string_view>
 #include <sys/types.h>
-#include "helper/Debug.h"
 
+#include "helper/Debug.h"
 #include "runtime/cssom/stylesheet/css_property.h"
 
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 const float PI = M_PI;
 const float PI2 = 2 * PI;
 
-
-
 TAngle TAngle::MakeFromString(std::string_view str) {
     str = TaroHelper::string::trim(str);
 #if IS_DEBUG
-        if (!TaroHelper::string::containsDigit(str)) {
-            return {0, PropertyType::AngleUnit::UNKNOWN};
-        }
+    if (!TaroHelper::string::containsDigit(str)) {
+        return {0, PropertyType::AngleUnit::UNKNOWN};
+    }
 #endif
     try {
         size_t pos;
         float value = std::stod(str.data(), &pos);
         std::string_view unit = str.substr(pos);
-        if (unit == "deg") return {value, PropertyType::AngleUnit::DEGREES};
-        if (unit == "grad") return {value, PropertyType::AngleUnit::GRADIANS};
-        if (unit == "rad") return {value, PropertyType::AngleUnit::RADIANS};
-        if (unit == "turn") return {value, PropertyType::AngleUnit::TURNS};
+        if (unit == "deg")
+            return {value, PropertyType::AngleUnit::DEGREES};
+        if (unit == "grad")
+            return {value, PropertyType::AngleUnit::GRADIANS};
+        if (unit == "rad")
+            return {value, PropertyType::AngleUnit::RADIANS};
+        if (unit == "turn")
+            return {value, PropertyType::AngleUnit::TURNS};
 
     } catch (...) {
         // stod 解析失败

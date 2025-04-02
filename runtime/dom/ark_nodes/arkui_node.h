@@ -101,8 +101,8 @@ namespace TaroDOM {
         void LayoutAll(bool layoutWithoutDiff = false);
         void CheckCalcProperty(double parentWidth, double parentHeight);
 
-        virtual void OnMeasure(ArkUI_NodeCustomEvent *event);
-        virtual void OnLayout(ArkUI_NodeCustomEvent *event);
+        virtual void OnMeasure(ArkUI_NodeCustomEvent* event);
+        virtual void OnLayout(ArkUI_NodeCustomEvent* event);
 
         // 布局
         virtual void Layout();
@@ -112,32 +112,32 @@ namespace TaroDOM {
         // 需要子类实现：构建节点->创建C-API节点
         virtual void Build() {};
 
-        virtual float GetComputedStyle(const char *name) const;
+        virtual float GetComputedStyle(const char* name) const;
 
         ArkUI_NodeHandle GetArkUINodeHandle();
         void SetArkUINodeHandle(ArkUI_NodeHandle handle);
 
-        bool OnSetPropertyIntoNode(const CSSProperty::Type &property,
-                                   const TaroChange &changeType,
-                                   const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style) override;
+        bool OnSetPropertyIntoNode(const CSSProperty::Type& property,
+                                   const TaroChange& changeType,
+                                   const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style) override;
 
         // 布局的影响会导致部分绘制样式（依赖布局尺寸）需要重新绘制
         void MakeDrawPropertyDirtyFromLayoutEffect();
         // 判断是否需要立即挂载
-        bool IfImmediateAttach(const std::shared_ptr<TaroRenderNode> &child);
+        bool IfImmediateAttach(const std::shared_ptr<TaroRenderNode>& child);
 
-        virtual void AppendChild(const std::shared_ptr<TaroRenderNode> &child);
-        virtual void RemoveChild(const std::shared_ptr<TaroRenderNode> &child);
+        virtual void AppendChild(const std::shared_ptr<TaroRenderNode>& child);
+        virtual void RemoveChild(const std::shared_ptr<TaroRenderNode>& child);
 
-        virtual void ReplaceChild(const std::shared_ptr<TaroRenderNode> &old_child, const std::shared_ptr<TaroRenderNode> &new_child);
-        virtual void InsertChildAt(const std::shared_ptr<TaroRenderNode> &child, uint8_t index);
-        virtual void InsertChildBefore(const std::shared_ptr<TaroRenderNode> &child, const std::shared_ptr<TaroRenderNode> &sibling);
-        virtual void InsertChildAfter(const std::shared_ptr<TaroRenderNode> &child, const std::shared_ptr<TaroRenderNode> &sibling);
+        virtual void ReplaceChild(const std::shared_ptr<TaroRenderNode>& old_child, const std::shared_ptr<TaroRenderNode>& new_child);
+        virtual void InsertChildAt(const std::shared_ptr<TaroRenderNode>& child, uint8_t index);
+        virtual void InsertChildBefore(const std::shared_ptr<TaroRenderNode>& child, const std::shared_ptr<TaroRenderNode>& sibling);
+        virtual void InsertChildAfter(const std::shared_ptr<TaroRenderNode>& child, const std::shared_ptr<TaroRenderNode>& sibling);
 
-        void OnDisplayChange(const PropertyType::Display &val, const PropertyType::Display &oldVal) override;
+        void OnDisplayChange(const PropertyType::Display& val, const PropertyType::Display& oldVal) override;
 
         virtual void SetContent() {};
-        void UpdateChild(const std::shared_ptr<TaroRenderNode> &child);
+        void UpdateChild(const std::shared_ptr<TaroRenderNode>& child);
 
         void SetShouldPosition(bool flag);
         bool GetShouldPosition();
@@ -149,7 +149,7 @@ namespace TaroDOM {
         bool GetIsInline();
 
         // 绑定js动画
-        int createJsAnimation(TaroAnimate::TaroJsAnimationOptionRef &option);
+        int createJsAnimation(TaroAnimate::TaroJsAnimationOptionRef& option);
 
         // 判断是否脱离文档流
         bool IsDetachFromDocumentFlow();
@@ -157,7 +157,7 @@ namespace TaroDOM {
         // 用于节点复用
         void ForceUpdate();
         void ClearDifferOldStyleFromElement();
-        void UpdateDifferOldStyleFromElement (std::weak_ptr<TaroDOM::TaroElement> element);
+        void UpdateDifferOldStyleFromElement(std::weak_ptr<TaroDOM::TaroElement> element);
 
         bool calc_lock_ = false;
         bool is_apply_reused = false;
@@ -168,7 +168,7 @@ namespace TaroDOM {
         protected:
         // 自定义布局
         void SetCustomLayout();
-        static void OnStaticCustomEvent(ArkUI_NodeCustomEvent *event);
+        static void OnStaticCustomEvent(ArkUI_NodeCustomEvent* event);
 
         private:
         TaroCSSOM::TaroStylesheet::BackgroundSizeParam CalcBackgroundSize(Optional<TaroCSSOM::TaroStylesheet::BackgroundImageItem> backgroundImage);
@@ -178,7 +178,7 @@ namespace TaroDOM {
         bool isInline_;
         bool should_position_ = true;
 
-        void HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo> &result, const std::string url);
+        void HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result, const std::string url);
 
         static int32_t uid_flag_;
         static std::unordered_map<int32_t, std::weak_ptr<TaroRenderNode>> custom_layout_render_nodes_;

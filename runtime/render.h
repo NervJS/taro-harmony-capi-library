@@ -24,8 +24,8 @@
 namespace TaroRuntime {
 class Render {
     public:
-    static Render *GetInstance() {
-        static Render *render = new Render();
+    static Render* GetInstance() {
+        static Render* render = new Render();
         render->GetTaskRunner();
         return render;
     }
@@ -58,7 +58,7 @@ class Render {
     void SetEtsXComponent(const uint32_t nid,
                           std::shared_ptr<ArkUI_NodeContentHandle> component);
 
-    std::shared_ptr<TaroDOM::TaroPageContainer> FindPageById(const std::shared_ptr<TaroDOM::TaroNode> &node, uint32_t nid);
+    std::shared_ptr<TaroDOM::TaroPageContainer> FindPageById(const std::shared_ptr<TaroDOM::TaroNode>& node, uint32_t nid);
 
     std::shared_ptr<ArkUI_NodeContentHandle> GetEtsXComponent(const uint32_t nid);
 
@@ -73,7 +73,7 @@ class Render {
         return g_task_executor;
     }
 
-    OH_NativeVSync *event_vsync_;
+    OH_NativeVSync* event_vsync_;
 
     private:
     const std::string X_COMPONENT_ID_PREFIX = "taro_x_";

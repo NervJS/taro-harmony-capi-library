@@ -26,7 +26,7 @@ namespace TaroDOM {
         ~TaroIcon();
 
         void Build() override;
-        void Build(std::shared_ptr<TaroElement> &reuse_element) override;
+        void Build(std::shared_ptr<TaroElement>& reuse_element) override;
 
         std::unique_ptr<TaroIconAttributes> attributes_;
 

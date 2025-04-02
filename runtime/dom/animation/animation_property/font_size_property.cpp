@@ -16,7 +16,7 @@ namespace TaroAnimate {
 
     bool AnimationPropFontSize::getSystemPropValue(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                    CSSProperty::Type prop_type,
-                                                   TaroAnimationPropValue &prop_value) const {
+                                                   TaroAnimationPropValue& prop_value) const {
         auto style = node->style_ref_;
         prop_value = 1.0f;
         if (!style->fontSize.has_value()) {
@@ -34,8 +34,8 @@ namespace TaroAnimate {
 
     void AnimationPropFontSize::setNodeProperty(
         std::shared_ptr<TaroDOM::TaroRenderNode> node, CSSProperty::Type prop_type,
-        const TaroAnimationPropValue &prop_value) const {
-        const double *double_value = std::get_if<double>(&prop_value);
+        const TaroAnimationPropValue& prop_value) const {
+        const double* double_value = std::get_if<double>(&prop_value);
         if (double_value == nullptr) {
             return;
         }

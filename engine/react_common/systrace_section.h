@@ -30,8 +30,8 @@ struct ConcreteSystraceSection {
     public:
     template <typename... ConvertsToStringPiece>
     explicit ConcreteSystraceSection(
-        const char *name,
-        ConvertsToStringPiece &&...args)
+        const char* name,
+        ConvertsToStringPiece&&... args)
         : m_section(TRACE_TAG_REACT_CXX_BRIDGE, name, args...) {}
 
     private:
@@ -46,8 +46,8 @@ struct DummySystraceSection {
     template <typename... ConvertsToStringPiece>
     explicit DummySystraceSection(
         // TARO patch: remove unsupported `__unused` qualifier
-        const char *name,
-        ConvertsToStringPiece &&...args) {}
+        const char* name,
+        ConvertsToStringPiece&&... args) {}
 };
 using SystraceSection = DummySystraceSection;
 #endif

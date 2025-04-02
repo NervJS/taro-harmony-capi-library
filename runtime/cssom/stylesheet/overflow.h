@@ -17,9 +17,9 @@ class Overflow : public AttributeBase<PropertyType::Overflow> {
     public:
     Overflow() = default;
 
-    Overflow(const napi_value &);
+    Overflow(const napi_value&);
 
-    void setValueFromNapi(const napi_value &);
+    void setValueFromNapi(const napi_value&);
 };
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet
 

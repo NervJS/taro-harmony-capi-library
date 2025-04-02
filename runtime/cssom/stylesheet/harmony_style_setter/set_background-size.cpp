@@ -22,10 +22,12 @@ void HarmonyStyleSetter::setBackgroundSize(
         TaroRuntime::NativeNodeApi::getInstance()->setAttribute(
             node, NODE_BACKGROUND_IMAGE_SIZE_WITH_STYLE, &item);
     } else if (value.type == SIZEOPTIONS) {
-        if (!value.width.has_value() || !value.height.has_value()) return;
+        if (!value.width.has_value() || !value.height.has_value())
+            return;
         auto harmonyWidth = value.width.value().ParseToVp(width);
         auto harmonyHeight = value.height.value().ParseToVp(height);
-        if (!harmonyWidth.has_value() || !harmonyHeight.has_value()) return;
+        if (!harmonyWidth.has_value() || !harmonyHeight.has_value())
+            return;
 
         ArkUI_NumberValue arkUI_NumberValue[2] = {};
         ArkUI_AttributeItem item = {arkUI_NumberValue, 2};

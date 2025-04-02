@@ -80,7 +80,7 @@ namespace TaroCSSOM {
             current_page_dimension_[page_path] = instance;
         }
         auto current = current_page_dimension_[page_path];
-    
+
         if (current) {
             current->design_ratio_ = instance->design_ratio_;
             current->density_pixels_ = instance->density_pixels_;
@@ -92,7 +92,7 @@ namespace TaroCSSOM {
             current->density_dpi_ = instance->density_dpi_;
             current->orientation = instance->orientation;
             current->safeArea = instance->safeArea;
-        
+
             DimensionContext::UpdateCurrentContext(current);
         }
     }
@@ -128,7 +128,8 @@ namespace TaroCSSOM {
 
         std::string rulesPath = getStylePagePath(routerStr);
         // 在 rulesMapping_ 用 try_emplace 构建一个对象，如果已经有值了，try_emplace 就不会构建
-        if (rulesMapping_[rulesPath].size() > 0) return;
+        if (rulesMapping_[rulesPath].size() > 0)
+            return;
         rulesMapping_.try_emplace(rulesPath);
 
         // medias处理
@@ -203,7 +204,7 @@ namespace TaroCSSOM {
                 std::make_unique<CSSStyleDeclaration>();
             styleDeclaration->Init(
                 NapiGetter::GetPropertyFromNode(rule, "declarations"));
-        
+
             std::shared_ptr<CSSStyleRule> styleRule = std::make_shared<CSSStyleRule>(
                 combinator_list, std::move(styleDeclaration));
 
@@ -262,7 +263,8 @@ namespace TaroCSSOM {
     void CSSStyleSheet::setStylesheet(
         std::shared_ptr<TaroStylesheet::Stylesheet>& stylesheet,
         napi_value hmStyle) {
-        if (hmStyle == nullptr) return;
+        if (hmStyle == nullptr)
+            return;
 
         NapiGetter::ForEachInArray(hmStyle, [&](const napi_value& declarationArr, const uint32_t& _) {
             std::vector<napi_value> declaration =
@@ -567,7 +569,8 @@ namespace TaroCSSOM {
                 bool matchFlag = true;
 
                 for (auto combinator : rule->combinator_) {
-                    if (!matchFlag) break;
+                    if (!matchFlag)
+                        break;
                     switch (combinator.matchElement) {
                         // 普通选择器
                         case MatchElement::Subject: {

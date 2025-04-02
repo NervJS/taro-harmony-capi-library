@@ -45,7 +45,8 @@ namespace TaroCSSOM {
         };
 
         void Transition::assign(const AttributeBase<TransitionOption>& item) {
-            if (!item.has_value()) return;
+            if (!item.has_value())
+                return;
             if (!this->has_value()) {
                 this->set(item);
             } else {

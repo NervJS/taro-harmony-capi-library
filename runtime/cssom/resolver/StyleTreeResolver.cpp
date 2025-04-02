@@ -31,7 +31,7 @@ namespace TaroCSSOM {
                         TARO_LOG_DEBUG("StyleTreeResolver", "%{public}s", currentElement->class_name_.c_str());
                         if (currentElement->context_ == nullptr) {
                             TARO_LOG_ERROR("StyleTreeResolver", "context_ is null, %{public}s %{public}d %{public}d",
-                                currentElement->class_name_.c_str(), currentElement->tag_name_, currentElement->nid_);
+                                           currentElement->class_name_.c_str(), currentElement->tag_name_, currentElement->nid_);
                             continue;
                         }
 

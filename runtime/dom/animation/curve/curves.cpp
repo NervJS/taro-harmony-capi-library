@@ -24,7 +24,7 @@ namespace TaroAnimate {
     const std::shared_ptr<TaroStepsCurve> TaroCurves::STEP_END =
         std::make_shared<TaroStepsCurve>(1, TaroStepsCurvePosition::END);
 
-    std::shared_ptr<TaroCurve> TaroCurves::getCurve(const std::string &curve_expr) {
+    std::shared_ptr<TaroCurve> TaroCurves::getCurve(const std::string& curve_expr) {
         static std::unordered_map<std::string, std::shared_ptr<TaroCurve> >
             map_curves = {{"ease", TaroCurves::EASE},
                           {"linear", TaroCurves::LINEAR},
@@ -67,9 +67,9 @@ namespace TaroAnimate {
         return TaroCurves::EASE;
     }
 
-    bool TaroCurves::parseCurveParam(const std::string &curve_expr,
-                                     std::string &curve_name,
-                                     std::vector<std::string> &curve_params) {
+    bool TaroCurves::parseCurveParam(const std::string& curve_expr,
+                                     std::string& curve_name,
+                                     std::vector<std::string>& curve_params) {
         if (curve_expr.back() != ')') {
             return false;
         }
@@ -85,7 +85,7 @@ namespace TaroAnimate {
             return false;
         }
         TaroHelper::StringUtils::split(curve_params, params, ",");
-        for (auto &param : curve_params) {
+        for (auto& param : curve_params) {
             TaroUtils::removeHeadTailSpace(param);
         }
         curve_name = std::move(tim_func_name);
@@ -115,7 +115,7 @@ namespace TaroAnimate {
         }
         TaroStepsCurvePosition position = TaroStepsCurvePosition::END;
         if (curve_params.size() > 1) {
-            const std::string &back_str = curve_params.back();
+            const std::string& back_str = curve_params.back();
             if (back_str == "start") {
                 position = TaroStepsCurvePosition::START;
             } else if (back_str == "end") {

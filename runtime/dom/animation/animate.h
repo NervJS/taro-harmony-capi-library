@@ -17,7 +17,9 @@ namespace TaroAnimate {
         public:
         explicit TaroAnimate(std::weak_ptr<TaroDOM::TaroRenderNode> node, TaroAnimateType type,
                              std::shared_ptr<TaroAnimationPropsController> props_controller)
-            : animate_type_(type), node_owner_(node), props_controller_(props_controller) {}
+            : animate_type_(type),
+              node_owner_(node),
+              props_controller_(props_controller) {}
         virtual ~TaroAnimate() {}
 
         // vsync进行tick计算

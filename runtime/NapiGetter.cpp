@@ -19,22 +19,22 @@ NapiGetter NapiGetter::GetValue() {
     return GetValue(value_);
 }
 
-NapiGetter NapiGetter::GetValue(const napi_value &value) {
+NapiGetter NapiGetter::GetValue(const napi_value& value) {
     NapiGetter napi_getter(value);
     return napi_getter;
 }
 
-NapiGetter NapiGetter::GetProperty(const char *propertyName) {
+NapiGetter NapiGetter::GetProperty(const char* propertyName) {
     return GetProperty(value_, propertyName);
 }
 
-NapiGetter NapiGetter::GetProperty(const napi_value &node, const char *propertyName) {
+NapiGetter NapiGetter::GetProperty(const napi_value& node, const char* propertyName) {
     napi_value value = GetPropertyFromNode(node, propertyName);
     return NapiGetter::GetValue(value);
 }
 
-NapiGetter NapiGetter::GetPropertyWithPath(const napi_value &node,
-                                           const char *propertyPath) {
+NapiGetter NapiGetter::GetPropertyWithPath(const napi_value& node,
+                                           const char* propertyPath) {
     napi_value value = GetPropertyFromNodeWithPath(node, propertyPath);
     return NapiGetter::GetValue(value);
 }
@@ -43,7 +43,7 @@ std::vector<NapiGetter> NapiGetter::GetAllPropertyNames() {
     return GetAllPropertyNames(value_);
 };
 
-std::vector<NapiGetter> NapiGetter::GetAllPropertyNames(const napi_value &node) {
+std::vector<NapiGetter> NapiGetter::GetAllPropertyNames(const napi_value& node) {
     napi_value propertyNames = nullptr;
     std::vector<NapiGetter> nameVector;
     if (node == nullptr || GetValueTypeFromNode(node) != napi_object)
@@ -70,7 +70,7 @@ std::vector<NapiGetter> NapiGetter::GetAllPropertyNames(const napi_value &node) 
     return nameVector;
 }
 
-std::vector<napi_value> NapiGetter::GetVectorFromNode(const napi_value &node) {
+std::vector<napi_value> NapiGetter::GetVectorFromNode(const napi_value& node) {
     uint32_t length;
     napi_get_array_length(NativeNodeApi::env, node, &length);
     std::vector<napi_value> valueVector;
@@ -95,12 +95,12 @@ napi_valuetype NapiGetter::GetValueTypeFromNode(napi_value node) {
     return napiType;
 }
 
-napi_value NapiGetter::GetPropertyFromNode(const napi_value &node, const char *propertyName) {
+napi_value NapiGetter::GetPropertyFromNode(const napi_value& node, const char* propertyName) {
     napi_value value = nullptr;
     return GetPropertyFromNode(node, propertyName, value);
 }
 
-napi_value NapiGetter::GetPropertyFromNode(const napi_value &node, const char *propertyName, napi_value &nodeValue) {
+napi_value NapiGetter::GetPropertyFromNode(const napi_value& node, const char* propertyName, napi_value& nodeValue) {
     /* 更换为下面性能更优的方法
     napi_value nodeValue = nullptr;
     bool blsHasProperty;
@@ -109,7 +109,7 @@ napi_value NapiGetter::GetPropertyFromNode(const napi_value &node, const char *p
     }
     napi_get_named_property(NativeNodeApi::env, node, propertyName, &nodeValue);
     */
-    if(node == nullptr) {
+    if (node == nullptr) {
         return nullptr;
     }
 
@@ -125,12 +125,12 @@ napi_value NapiGetter::GetPropertyFromNode(const napi_value &node, const char *p
     return nodeValue;
 }
 
-napi_value NapiGetter::GetPropertyFromNodeWithPath(const napi_value &node,
-                                                   const char *propertyPath) {
+napi_value NapiGetter::GetPropertyFromNodeWithPath(const napi_value& node,
+                                                   const char* propertyPath) {
     napi_value nvCurrentNode = node;
     std::vector<std::string> vecProperties = StringUtils::split(propertyPath, ".");
     std::string strCurrentPath;
-    for (const std::string &propertyName : vecProperties) {
+    for (const std::string& propertyName : vecProperties) {
         if (!strCurrentPath.empty()) {
             strCurrentPath += ".";
         }
@@ -155,15 +155,15 @@ napi_value NapiGetter::GetPropertyFromNodeWithPath(const napi_value &node,
 }
 
 void NapiGetter::ForEachInArray(
-    std::function<void(const napi_value &, const uint32_t &)> callback) {
+    std::function<void(const napi_value&, const uint32_t&)> callback) {
     if (value_) {
         ForEachInArray(value_, callback);
     }
 }
 
 void NapiGetter::ForEachInArray(
-    const napi_value &node,
-    std::function<void(const napi_value &, const uint32_t &)> callback) {
+    const napi_value& node,
+    std::function<void(const napi_value&, const uint32_t&)> callback) {
     // 判断是否是 Array
     bool isArray = false;
     napi_status status =
@@ -186,7 +186,7 @@ napi_valuetype NapiGetter::GetType() const {
     return type;
 }
 
-void NapiGetter::GetType(napi_valuetype &type) const {
+void NapiGetter::GetType(napi_valuetype& type) const {
     if (value_ != nullptr) {
         napi_typeof(TaroRuntime::NativeNodeApi::env, value_, &type);
     }
@@ -209,7 +209,7 @@ Optional<bool> NapiGetter::Bool() {
     return optional;
 }
 
-bool NapiGetter::BoolOr(const bool &default_value) {
+bool NapiGetter::BoolOr(const bool& default_value) {
     if (value_) {
         Optional<bool> optional = Bool();
         return optional.has_value() ? optional.value() : default_value;
@@ -237,7 +237,7 @@ Optional<bool> NapiGetter::BoolNull() {
     return optional;
 }
 
-bool NapiGetter::BoolNullOr(const bool &default_value) {
+bool NapiGetter::BoolNullOr(const bool& default_value) {
     if (value_) {
         Optional<bool> optional = BoolNull();
         return optional.has_value() ? optional.value() : default_value;
@@ -285,7 +285,7 @@ TaroHelper::Optional<std::string_view> NapiGetter::StringView() {
     }
 }
 
-std::string NapiGetter::StringOr(std::string &default_value) {
+std::string NapiGetter::StringOr(std::string& default_value) {
     if (value_) {
         Optional<std::string> optional = String();
         return optional.has_value() ? optional.value() : default_value;
@@ -293,7 +293,7 @@ std::string NapiGetter::StringOr(std::string &default_value) {
     return default_value;
 }
 
-std::string NapiGetter::StringOr(const char *default_value) {
+std::string NapiGetter::StringOr(const char* default_value) {
     std::string string_default_value = default_value;
     if (value_) {
         Optional<std::string> optional = String();
@@ -315,7 +315,7 @@ Optional<int32_t> NapiGetter::Int32() {
     return optional;
 }
 
-int32_t NapiGetter::Int32Or(const int32_t &default_value) {
+int32_t NapiGetter::Int32Or(const int32_t& default_value) {
     if (value_) {
         Optional<int32_t> optional = Int32();
         return optional.has_value() ? optional.value() : default_value;
@@ -336,7 +336,7 @@ Optional<uint32_t> NapiGetter::UInt32() {
     return optional;
 }
 
-uint32_t NapiGetter::UInt32(const uint32_t &default_value) {
+uint32_t NapiGetter::UInt32(const uint32_t& default_value) {
     if (value_) {
         Optional<uint32_t> optional = UInt32();
         return optional.has_value() ? optional.value() : default_value;
@@ -361,7 +361,7 @@ Optional<double> NapiGetter::Double() {
     return optional;
 }
 
-double NapiGetter::Double(const double &default_value) {
+double NapiGetter::Double(const double& default_value) {
     if (value_) {
         Optional<double> optional = Double();
         return optional.has_value() ? optional.value() : default_value;
@@ -369,7 +369,7 @@ double NapiGetter::Double(const double &default_value) {
     return default_value;
 }
 
-double NapiGetter::DoubleOr(const double &default_value) {
+double NapiGetter::DoubleOr(const double& default_value) {
     if (value_) {
         Optional<double> optional = Double();
         return optional.has_value() ? optional.value() : default_value;

@@ -13,14 +13,14 @@ namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
         TaroElementChangedInSwiper::TaroElementChangedInSwiper(
-            const std::string &js_event_type, ArkUI_NodeEvent *event)
+            const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
             bubbles_ = false;
         }
 
         TaroElementChangedInSwiper::~TaroElementChangedInSwiper() {}
 
-        int TaroElementChangedInSwiper::parseHmEvent(ArkUI_NodeEvent *event)  {
+        int TaroElementChangedInSwiper::parseHmEvent(ArkUI_NodeEvent* event) {
             auto component_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (component_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get swiper element change event failed");
@@ -30,11 +30,11 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroElementChangedInSwiper::serializeFun(napi_value &ret_obj) {
+        int TaroElementChangedInSwiper::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
 
             // detail填充
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             NapiSetter::SetProperty(js_detail, "current", current_);
             NapiSetter::SetProperty(js_detail, "source", "not support");
             NapiSetter::SetProperty(ret_obj, "detail", js_detail);
@@ -42,11 +42,11 @@ namespace TaroDOM {
         }
 
         TaroEventTransitionInSwiper::TaroEventTransitionInSwiper(
-            const std::string &js_event_type, ArkUI_NodeEvent *event)
+            const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
         }
 
-        int TaroEventTransitionInSwiper::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventTransitionInSwiper::parseHmEvent(ArkUI_NodeEvent* event) {
             auto component_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (component_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get swiper transition event failed");
@@ -56,11 +56,11 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventTransitionInSwiper::serializeFun(napi_value &ret_obj) {
+        int TaroEventTransitionInSwiper::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
 
             // detail填充
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             if (auto swiperEl = std::dynamic_pointer_cast<TaroSwiper>(target_)) {
                 auto swiperNode = swiperEl->GetHeadRenderNode();
                 auto context = swiperNode->GetDimensionContext();

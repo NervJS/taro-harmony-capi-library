@@ -208,8 +208,6 @@ namespace TaroCSSOM {
             TaroRuntime::NativeNodeApi::getInstance()->setAttribute(node, attributeType, &item);
         }
 
-
-
         void HarmonyStyleSetter::setFloat(
             const ArkUI_NodeHandle& node, ArkUI_NodeAttributeType attributeType,
             const Optional<Dimension>&
@@ -282,8 +280,6 @@ namespace TaroCSSOM {
             TaroRuntime::NativeNodeApi::getInstance()->setAttribute(
                 node, attributeType, &item);
         }
-
-
 
         void HarmonyStyleSetter::setFloat(
             const ArkUI_NodeHandle& node, ArkUI_NodeAttributeType attributeType,

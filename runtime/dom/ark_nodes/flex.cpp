@@ -10,7 +10,7 @@ namespace TaroDOM {
         : TaroRenderNode(element) {}
     TaroFlexNode::~TaroFlexNode() {}
     void TaroFlexNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_FLEX));
     }
 } // namespace TaroDOM

@@ -109,7 +109,9 @@ inline bool IsNumber(const std::string& value) {
     if (value.empty()) {
         return false;
     }
-    return std::all_of(value.begin(), value.end(), [](char i) { return isdigit(i); });
+    return std::all_of(value.begin(), value.end(), [](char i) {
+        return isdigit(i);
+    });
 }
 
 inline void ReplaceSpace(std::string& data) {
@@ -484,31 +486,41 @@ inline bool ParseStringToArray(const std::string& input, std::vector<float>& out
 
 inline void StringSplitter(const std::string& source, char delimiter, std::vector<std::string>& out) {
     using Func = std::string (*)(const std::string&);
-    Func func = [](const std::string& value) { return value; };
+    Func func = [](const std::string& value) {
+        return value;
+    };
     StringSplitter(source, delimiter, func, out);
 }
 
 inline void StringSplitter(const std::string& source, char delimiter, std::vector<double>& out) {
     using Func = double (*)(const std::string&);
-    Func func = [](const std::string& value) { return StringToDouble(value); };
+    Func func = [](const std::string& value) {
+        return StringToDouble(value);
+    };
     StringSplitter(source, delimiter, func, out);
 }
 
 inline void StringSplitter(const std::string& source, char delimiter, std::vector<float>& out) {
     using Func = float (*)(const std::string&);
-    Func func = [](const std::string& value) { return StringToFloat(value); };
+    Func func = [](const std::string& value) {
+        return StringToFloat(value);
+    };
     StringSplitter(source, delimiter, func, out);
 }
 
 inline void StringSplitter(const std::string& source, char delimiter, std::vector<int>& out) {
     using Func = int32_t (*)(const std::string&);
-    Func func = [](const std::string& value) { return StringToInt(value); };
+    Func func = [](const std::string& value) {
+        return StringToInt(value);
+    };
     StringSplitter(source, delimiter, func, out);
 }
 
 inline void StringSplitter(const std::string& source, char delimiter, std::vector<Dimension>& out) {
     using Func = Dimension (*)(const std::string&);
-    Func func = [](const std::string& value) { return StringToDimension(value); };
+    Func func = [](const std::string& value) {
+        return StringToDimension(value);
+    };
     StringSplitter(source, delimiter, func, out);
 }
 

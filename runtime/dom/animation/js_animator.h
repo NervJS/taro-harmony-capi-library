@@ -45,11 +45,11 @@ namespace TaroAnimate {
 
         private:
         std::shared_ptr<TaroAnimation> createCurveAnimation(
-            CSSProperty::Type prop_type, const TaroAnimationPropValue &begin_value,
-            const TaroAnimationPropValue &end_value, std::shared_ptr<TaroCurve> curve,
-            const TaroAnimationPropSetFun &set_fun);
+            CSSProperty::Type prop_type, const TaroAnimationPropValue& begin_value,
+            const TaroAnimationPropValue& end_value, std::shared_ptr<TaroCurve> curve,
+            const TaroAnimationPropSetFun& set_fun);
 
-        void setTransformOrigin(const std::string &value);
+        void setTransformOrigin(const std::string& value);
 
         private:
         // 存储各step

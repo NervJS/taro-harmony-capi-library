@@ -10,16 +10,16 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroCheckboxEventChange : public TaroEventBase {
             public:
-            TaroCheckboxEventChange(const std::string &js_event_type, ArkUI_NodeEvent *event)
+            TaroCheckboxEventChange(const std::string& js_event_type, ArkUI_NodeEvent* event)
                 : TaroEventBase(
                       js_event_type, event) {
                 bubbles_ = false;
             }
             virtual ~TaroCheckboxEventChange() {}
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
             public:
             std::optional<std::string> value_;

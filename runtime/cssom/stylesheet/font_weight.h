@@ -18,9 +18,9 @@ class FontWeight : public AttributeBase<ArkUI_FontWeight> {
     public:
     FontWeight() = default;
 
-    FontWeight(const napi_value &);
+    FontWeight(const napi_value&);
 
-    void setValueFromNapi(const napi_value &);
+    void setValueFromNapi(const napi_value&);
 };
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet
 

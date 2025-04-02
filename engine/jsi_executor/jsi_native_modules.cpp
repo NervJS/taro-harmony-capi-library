@@ -10,7 +10,7 @@
 JSINativeModules::JSINativeModules(std::shared_ptr<ModuleRegistry> moduleRegistry)
     : m_moduleRegistry(std::move(moduleRegistry)) {}
 
-facebook::jsi::Value JSINativeModules::getModule(facebook::jsi::Runtime &rt, const facebook::jsi::PropNameID &name) {
+facebook::jsi::Value JSINativeModules::getModule(facebook::jsi::Runtime& rt, const facebook::jsi::PropNameID& name) {
     if (!m_moduleRegistry) {
         return nullptr;
     }
@@ -38,7 +38,7 @@ void JSINativeModules::reset() {
     m_objects.clear();
 }
 
-std::optional<facebook::jsi::Object> JSINativeModules::createModule(facebook::jsi::Runtime &rt, const std::string &name) {
+std::optional<facebook::jsi::Object> JSINativeModules::createModule(facebook::jsi::Runtime& rt, const std::string& name) {
     if (!m_genNativeModuleJS) {
         m_genNativeModuleJS = rt.global().getPropertyAsFunction(rt, "__fbGenNativeModule");
     }

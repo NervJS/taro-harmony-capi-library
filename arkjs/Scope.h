@@ -5,6 +5,7 @@
 #pragma once
 
 #include <js_native_api.h>
+
 #include "folly/lang/Exception.h"
 
 class NapiHandleScopeWrapper {
@@ -24,7 +25,6 @@ class NapiHandleScopeWrapper {
             folly::throw_exception(std::runtime_error("Failed to close handle scope"));
 #endif
         }
-
     }
 
     NapiHandleScopeWrapper(const NapiHandleScopeWrapper&) = delete;

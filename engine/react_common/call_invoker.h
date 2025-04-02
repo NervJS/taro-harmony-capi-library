@@ -18,12 +18,12 @@ using CallFunc = std::function<void()>;
  */
 class CallInvoker {
     public:
-    virtual void invokeAsync(CallFunc &&func) = 0;
-    virtual void invokeAsync(SchedulerPriority /*priority*/, CallFunc &&func) {
+    virtual void invokeAsync(CallFunc&& func) = 0;
+    virtual void invokeAsync(SchedulerPriority /*priority*/, CallFunc&& func) {
         // When call with priority is not implemented, fall back to a regular async
         // execution
         invokeAsync(std::move(func));
     }
-    virtual void invokeSync(CallFunc &&func) = 0;
+    virtual void invokeSync(CallFunc&& func) = 0;
     virtual ~CallInvoker() {}
 };

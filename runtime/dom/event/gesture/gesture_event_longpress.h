@@ -20,11 +20,11 @@ class GestureEventLongPress final : public GestureEventBase {
     int repeat_count = 0;
 };
 
-class GestureOperator_LongPress final : public GestureOperator{
-public:
+class GestureOperator_LongPress final : public GestureOperator {
+    public:
     GestureOperator_LongPress();
-    int addGesture(ArkUI_NodeHandle node_handle, GestureParam* param, void* recall_param) override ;
-    int removeGesture() override ;
+    int addGesture(ArkUI_NodeHandle node_handle, GestureParam* param, void* recall_param) override;
+    int removeGesture() override;
 };
 
 } // namespace TaroRuntime::TaroDOM::TaroEvent

@@ -15,12 +15,12 @@
 
 namespace TaroRuntime {
 
-double ExpressionEvaluator::evaluate(const std::string &expression, double base_value) {
+double ExpressionEvaluator::evaluate(const std::string& expression, double base_value) {
     std::string expr = preprocess_expression(expression, base_value);
     return evaluate_expression(expr);
 }
 
-void ExpressionEvaluator::run_test_case(const std::string &expression, double expected, double base_value) {
+void ExpressionEvaluator::run_test_case(const std::string& expression, double expected, double base_value) {
     size_t pos = expression.find("calc(");
     std::string expr = expression;
     if (pos != std::string::npos) {
@@ -35,7 +35,7 @@ void ExpressionEvaluator::run_test_case(const std::string &expression, double ex
             std::cerr << "Test failed for expression: " << expression
                       << ". Expected: " << expected << ", but got: " << result << std::endl;
         }
-    } catch (const std::exception &e) {
+    } catch (const std::exception& e) {
         std::cerr << "Error evaluating expression: " << expression
                   << ". Error: " << e.what() << std::endl;
     }
@@ -57,26 +57,28 @@ double ExpressionEvaluator::apply_operator(double left, double right, char op) {
 }
 
 int ExpressionEvaluator::precedence(char op) {
-    if (op == '+' || op == '-') return 1;
-    if (op == '*' || op == '/') return 2;
+    if (op == '+' || op == '-')
+        return 1;
+    if (op == '*' || op == '/')
+        return 2;
     return 0;
 }
 
-double ExpressionEvaluator::parsePercent(const std::string &value, double base_value) {
+double ExpressionEvaluator::parsePercent(const std::string& value, double base_value) {
     return base_value * std::stod(value) / 100.0;
 }
 
-double ExpressionEvaluator::parsePx(const std::string &value) {
+double ExpressionEvaluator::parsePx(const std::string& value) {
     return std::stod(value) * DimensionContext::GetCurrentContext()->design_ratio_;
 }
-double ExpressionEvaluator::parseVw(const std::string &value) {
+double ExpressionEvaluator::parseVw(const std::string& value) {
     return std::stod(value) * DimensionContext::GetCurrentContext()->device_width_ / 100;
 }
-double ExpressionEvaluator::parseVh(const std::string &value) {
+double ExpressionEvaluator::parseVh(const std::string& value) {
     return std::stod(value) * DimensionContext::GetCurrentContext()->device_height_ / 100;
 }
 
-std::string ExpressionEvaluator::replace_units(const std::string &expr, double base_value) {
+std::string ExpressionEvaluator::replace_units(const std::string& expr, double base_value) {
     std::string result;
     size_t i = 0;
 
@@ -112,7 +114,7 @@ std::string ExpressionEvaluator::replace_units(const std::string &expr, double b
     return result;
 }
 
-std::string ExpressionEvaluator::preprocess_expression(const std::string &expression, double base_value) {
+std::string ExpressionEvaluator::preprocess_expression(const std::string& expression, double base_value) {
     size_t pos = expression.find("calc(");
     std::string expr = expression;
     if (pos != std::string::npos) {
@@ -121,7 +123,7 @@ std::string ExpressionEvaluator::preprocess_expression(const std::string &expres
     return replace_units(expr, base_value);
 }
 
-double ExpressionEvaluator::evaluate_expression(const std::string &expr) {
+double ExpressionEvaluator::evaluate_expression(const std::string& expr) {
     std::stack<double> values;
     std::stack<char> ops;
     std::istringstream iss(expr);

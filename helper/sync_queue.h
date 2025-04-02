@@ -8,9 +8,9 @@
 #include <queue>
 
 namespace TaroHelper {
-template<typename T>
+template <typename T>
 class SyncQueue {
-public:
+    public:
     void enqueue(const T& item) {
         std::unique_lock<std::mutex> lock(mutex_);
         queue_.push(item);
@@ -19,15 +19,17 @@ public:
 
     T dequeue() {
         std::unique_lock<std::mutex> lock(mutex_);
-        cond_var_.wait(lock, [this] { return !queue_.empty(); }); // 等待队列非空
+        cond_var_.wait(lock, [this] {
+            return !queue_.empty();
+        }); // 等待队列非空
         T item = queue_.front();
         queue_.pop();
         return item;
     }
 
-private:
+    private:
     std::queue<T> queue_;
     std::mutex mutex_;
     std::condition_variable cond_var_;
 };
-}
+} // namespace TaroHelper

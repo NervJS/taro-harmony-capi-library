@@ -12,10 +12,10 @@ namespace TaroRuntime {
 namespace TaroCSSOM {
     namespace TaroStylesheet {
         ArkUI_FlexDirection getFlexDirection(
-            const std::shared_ptr<Stylesheet> &stylesheet) {
+            const std::shared_ptr<Stylesheet>& stylesheet) {
             // 根据direction判断使用row/column
-            TaroStylesheet::FlexDirection *flexDirection = &(stylesheet->flexDirection);
-            TaroStylesheet::Display *display = &(stylesheet->display);
+            TaroStylesheet::FlexDirection* flexDirection = &(stylesheet->flexDirection);
+            TaroStylesheet::Display* display = &(stylesheet->display);
 
             // 判别布局方向，决定使用什么布局
             ArkUI_FlexDirection flex_direction;
@@ -28,7 +28,7 @@ namespace TaroCSSOM {
             return flex_direction;
         }
 
-        TaroHelper::Optional<float> getFloat(TaroRuntime::NapiGetter &getter) {
+        TaroHelper::Optional<float> getFloat(TaroRuntime::NapiGetter& getter) {
             TaroHelper::Optional<float> res;
             napi_valuetype type;
             getter.GetType(type);

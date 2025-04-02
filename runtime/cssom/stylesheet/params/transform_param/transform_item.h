@@ -11,7 +11,6 @@
 #include "helper/Optional.h"
 #include "runtime/cssom/dimension/dimension.h"
 #include "runtime/cssom/stylesheet/types/TAngle.h"
-
 #include "runtime/cssom/stylesheet/utils.h"
 
 namespace TaroRuntime {
@@ -43,7 +42,8 @@ namespace TaroCSSOM {
             TransformMatrixItem()
                 : TransformItemBase(ETransformType::MATRIX) {};
             TransformMatrixItem(const TransformMatrixItem& other)
-                : TransformItemBase(ETransformType::MATRIX), matrix(other.matrix) {}
+                : TransformItemBase(ETransformType::MATRIX),
+                  matrix(other.matrix) {}
             std::vector<float> matrix;
 
             TaroHelper::Matrix4 toMatrix4() override {
@@ -66,8 +66,6 @@ namespace TaroCSSOM {
             Dimension y;
             Dimension z;
 
-
-            
             TaroHelper::Matrix4 toMatrix4() override {
                 float xf = x.ParseToVp().has_value() ? x.ParseToVp().value() : 0;
                 float yf = y.ParseToVp().has_value() ? y.ParseToVp().value() : 0;

@@ -474,7 +474,8 @@ bool ArkJS::isEqual(napi_value a, napi_value b) {
 }
 
 TaroNapiObjectBuilder::TaroNapiObjectBuilder(napi_env env, ArkJS arkJs)
-    : m_env(env), m_arkJs(arkJs) {
+    : m_env(env),
+      m_arkJs(arkJs) {
     napi_value obj;
     auto status = napi_create_object(env, &obj);
     maybeThrowFromStatus(env, status, "Failed to create an object");
@@ -485,7 +486,9 @@ TaroNapiObjectBuilder::TaroNapiObjectBuilder(
     napi_env env,
     ArkJS arkJs,
     napi_value object)
-    : m_env(env), m_arkJs(arkJs), m_object(object) {}
+    : m_env(env),
+      m_arkJs(arkJs),
+      m_object(object) {}
 
 TaroNapiObjectBuilder& TaroNapiObjectBuilder::addProperty(
     const char* name,
@@ -556,7 +559,8 @@ napi_value TaroNapiObjectBuilder::build() {
 }
 
 TaroNapiObject::TaroNapiObject(ArkJS arkJs, napi_value object)
-    : m_arkJs(arkJs), m_object(object) {}
+    : m_arkJs(arkJs),
+      m_object(object) {}
 
 napi_value TaroNapiObject::getProperty(std::string const& key) {
     return m_arkJs.getObjectProperty(m_object, key);
@@ -582,7 +586,8 @@ TaroNapiObjectBuilder ArkJS::getObjectBuilder(napi_value object) {
 }
 
 Promise::Promise(napi_env env, napi_value value)
-    : m_arkJs(ArkJS(env)), m_value(value) {}
+    : m_arkJs(ArkJS(env)),
+      m_value(value) {}
 
 Promise& Promise::then(
     std::function<void(std::vector<folly::dynamic>)>&& callback) {

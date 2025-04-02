@@ -16,7 +16,7 @@ namespace TaroRuntime {
 namespace TaroCSSOM {
     namespace TaroStylesheet {
 
-        Transform::Transform(const napi_value &napiValue) {
+        Transform::Transform(const napi_value& napiValue) {
             setValueFromNapi(napiValue);
         }
 
@@ -28,7 +28,7 @@ namespace TaroCSSOM {
         void Transform::setValueFromStringView(std::string_view str) {
             std::cmatch matches;
             std::vector<TransformFunction> funcs;
-            const char *searchStart;
+            const char* searchStart;
 
             searchStart = str.begin();
             while (std::regex_search(searchStart, str.end(), matches, std::regex(R"((matrix(?:3d)?|skew(?:X|Y)?|perspective|(?:rotate|translate|scale)(?:3d|X|Y|Z)?)\((.*?)\))"))) {
@@ -42,18 +42,20 @@ namespace TaroCSSOM {
                 searchStart = matches[0].second;
             }
 
-            if (funcs.empty()) return;
+            if (funcs.empty())
+                return;
 
             std::vector<std::shared_ptr<TransformItemBase>> transformItemBaseList;
 
-            for (auto &func : funcs) {
-                if (func.params.empty()) continue;
+            for (auto& func : funcs) {
+                if (func.params.empty())
+                    continue;
 
                 // matrix, matrix3d
                 if ((func.name == "matrix" && func.params.size() == 6) || (func.name == "matrix3d" && func.params.size() == 16)) {
                     std::vector<float> floatArr(func.params.size());
                     // 字符串转浮点数
-                    std::transform(func.params.begin(), func.params.end(), floatArr.begin(), [](auto &sv) {
+                    std::transform(func.params.begin(), func.params.end(), floatArr.begin(), [](auto& sv) {
                         return std::stof(std::string(sv));
                     });
                     std::shared_ptr<TransformMatrixItem> item;
@@ -71,8 +73,10 @@ namespace TaroCSSOM {
                         item->z = Dimension(func.params[0]);
                     else {
                         item->x = Dimension(func.params[0]);
-                        if (func.params.size() > 1) item->y = Dimension(func.params[1]);
-                        if (func.params.size() > 2) item->z = Dimension(func.params[2]);
+                        if (func.params.size() > 1)
+                            item->y = Dimension(func.params[1]);
+                        if (func.params.size() > 2)
+                            item->z = Dimension(func.params[2]);
                     }
                     transformItemBaseList.push_back(std::move(item));
                     continue;
@@ -87,9 +91,12 @@ namespace TaroCSSOM {
                         item->z = std::stof(std::string(func.params[0]));
                     else {
                         item->x = std::stof(std::string(func.params[0]));
-                        if (func.params.size() == 1 && func.name == "scale") item->y = std::stof(std::string(func.params[0]));
-                        if (func.params.size() > 1) item->y = std::stof(std::string(func.params[1]));
-                        if (func.params.size() > 2) item->z = std::stof(std::string(func.params[2]));
+                        if (func.params.size() == 1 && func.name == "scale")
+                            item->y = std::stof(std::string(func.params[0]));
+                        if (func.params.size() > 1)
+                            item->y = std::stof(std::string(func.params[1]));
+                        if (func.params.size() > 2)
+                            item->z = std::stof(std::string(func.params[2]));
                     }
                     transformItemBaseList.push_back(std::move(item));
                     continue;
@@ -143,7 +150,7 @@ namespace TaroCSSOM {
             this->set(option);
         }
 
-        std::shared_ptr<TransformItemBase> Transform::parseTransformItem(ETransformType type, const napi_value &elem) {
+        std::shared_ptr<TransformItemBase> Transform::parseTransformItem(ETransformType type, const napi_value& elem) {
             switch (type) {
                 case ETransformType::MATRIX: {
                     const auto matrixValue =
@@ -151,7 +158,7 @@ namespace TaroCSSOM {
                     if (matrixValue != nullptr) {
                         std::vector<float> matrix;
                         TaroRuntime::NapiGetter::ForEachInArray(
-                            matrixValue, [&](const napi_value &e, const uint32_t &i) {
+                            matrixValue, [&](const napi_value& e, const uint32_t& i) {
                                 NapiGetter getter(e);
                                 float matrixItem =
                                     getter.Double((i % 5 == 0) ? 1.0f : 0.0f);
@@ -177,7 +184,6 @@ namespace TaroCSSOM {
                         item->x = Dimension::FromString(xGetter.StringOr(""));
                     } else {
                         item->x = Dimension{xGetter.Double(0), DimensionUnit::DESIGN_PX};
-                       
                     }
 
                     if (yGetter.GetType() == napi_string) {
@@ -237,21 +243,23 @@ namespace TaroCSSOM {
             return nullptr;
         }
 
-        void Transform::setValueFromNapi(const napi_value &napiValue) {
+        void Transform::setValueFromNapi(const napi_value& napiValue) {
             napi_valuetype type =
                 TaroRuntime::NapiGetter::GetValueTypeFromNode(napiValue);
 
-            if (type != napi_object) return;
+            if (type != napi_object)
+                return;
 
             // TODO: 这里可以拿一下 array 的长度，先给 vector 分配一下，避免重复申请内存
             std::vector<std::shared_ptr<TransformItemBase>> transformItemBaseList;
 
             TaroRuntime::NapiGetter::ForEachInArray(
-                napiValue, [&](const napi_value &elem, const uint32_t &index) {
+                napiValue, [&](const napi_value& elem, const uint32_t& index) {
                     const auto typeValue =
                         TaroRuntime::NapiGetter::GetProperty(elem, "type").Int32();
 
-                    if (!typeValue.has_value()) return;
+                    if (!typeValue.has_value())
+                        return;
 
                     ETransformType type = static_cast<ETransformType>(typeValue.value());
                     auto item = parseTransformItem(type, elem);
@@ -265,27 +273,33 @@ namespace TaroCSSOM {
             this->set(option);
         }
 
-        void Transform::assign(const AttributeBase<TransformParam> &item) {
-            if (item.has_value()) this->set(item);
+        void Transform::assign(const AttributeBase<TransformParam>& item) {
+            if (item.has_value())
+                this->set(item);
         }
 
         bool Transform::isEqual(
-            const TaroHelper::Optional<TransformParam> &otherVec) const {
-            if (this->has_value() != otherVec.has_value()) return false;
+            const TaroHelper::Optional<TransformParam>& otherVec) const {
+            if (this->has_value() != otherVec.has_value())
+                return false;
 
-            if (!this->has_value()) return true;
+            if (!this->has_value())
+                return true;
 
-            const std::vector<std::shared_ptr<TransformItemBase>> &current =
+            const std::vector<std::shared_ptr<TransformItemBase>>& current =
                 this->value().data;
-            const std::vector<std::shared_ptr<TransformItemBase>> &other =
+            const std::vector<std::shared_ptr<TransformItemBase>>& other =
                 otherVec.value().data;
 
-            if (current.size() != other.size()) return false;
+            if (current.size() != other.size())
+                return false;
 
             return std::equal(
                 current.begin(), current.end(), other.begin(),
                 [](std::shared_ptr<TransformItemBase> a,
-                   std::shared_ptr<TransformItemBase> b) { return a == b; });
+                   std::shared_ptr<TransformItemBase> b) {
+                    return a == b;
+                });
         }
 
     } // namespace TaroStylesheet

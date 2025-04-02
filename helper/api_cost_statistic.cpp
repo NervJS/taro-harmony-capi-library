@@ -8,7 +8,9 @@
 
 namespace TaroHelper {
 FunctionTimeCost::FunctionTimeCost(const std::string& func_name, napi_env env, napi_callback_info info)
-    : func_name_(func_name), env_(env), info_(info) {
+    : func_name_(func_name),
+      env_(env),
+      info_(info) {
     timer_.Start();
 }
 FunctionTimeCost::~FunctionTimeCost() {
@@ -34,7 +36,6 @@ void TimeCostStatistic::record(const std::string& key, uint32_t cost) {
     }
     std::get<0>(iter->second) += cost;
     std::get<1>(iter->second)++;
-    
 }
 
 void TimeCostStatistic::record(int32_t prop_name) {
@@ -52,18 +53,18 @@ void TimeCostStatistic::printCostInfo() {
     uint32_t total_cost = 0;
     uint32_t total_count = 0;
     for (const auto& elem : cost_stats_) {
-        TARO_LOG_ERROR("TimeCost", "Fun:%{public}s : cost:%{public}d us, count:%{public}d max:%{public}d us", 
-            elem.first.c_str(), std::get<0>(elem.second), std::get<1>(elem.second), std::get<2>(elem.second));
+        TARO_LOG_ERROR("TimeCost", "Fun:%{public}s : cost:%{public}d us, count:%{public}d max:%{public}d us",
+                       elem.first.c_str(), std::get<0>(elem.second), std::get<1>(elem.second), std::get<2>(elem.second));
         total_cost += std::get<0>(elem.second);
         total_count += std::get<1>(elem.second);
     }
     cost_stats_.clear();
     for (const auto& elem : prop_stats_) {
-        TARO_LOG_ERROR("TimeCost", "Prop stat:%{public}d count:%{public}d", 
-            elem.first, elem.second);
+        TARO_LOG_ERROR("TimeCost", "Prop stat:%{public}d count:%{public}d",
+                       elem.first, elem.second);
     }
     prop_stats_.clear();
     TARO_LOG_ERROR("TimeCost", "Function total cost:%{public}d us, count:%{public}d", total_cost, total_count);
 }
 
-}
+} // namespace TaroHelper

@@ -8,16 +8,16 @@
 #include "helper/string.h"
 #include "runtime/NapiGetter.h"
 
-
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 
-BackgroundSize::BackgroundSize(const napi_value &napiValue) {
+BackgroundSize::BackgroundSize(const napi_value& napiValue) {
     setValueFromNapi(napiValue);
 }
 
 void BackgroundSize::setValueFromStringView(std::string_view str) {
     auto values = TaroHelper::string::splitBySpace(str);
-    if (values.empty() || values.size() > 2) return;
+    if (values.empty() || values.size() > 2)
+        return;
 
     bool isContain = values.size() == 1 && values[0] == "contain";
     bool isCover = values.size() == 1 && values[0] == "cover";
@@ -30,8 +30,8 @@ void BackgroundSize::setValueFromStringView(std::string_view str) {
     }
 
     for (size_t i = 0; i < values.size(); ++i) {
-        auto &iter = values[i];
-        auto &target = i == 0 ? param_.width : param_.height;
+        auto& iter = values[i];
+        auto& target = i == 0 ? param_.width : param_.height;
         target.set(Dimension::FromString(iter));
     }
 
@@ -39,7 +39,7 @@ void BackgroundSize::setValueFromStringView(std::string_view str) {
     this->set(param_);
 }
 
-void BackgroundSize::setValueFromNapi(const napi_value &napiValue) {
+void BackgroundSize::setValueFromNapi(const napi_value& napiValue) {
     napi_valuetype type;
     NapiGetter getter(napiValue);
     getter.GetType(type);
@@ -57,7 +57,6 @@ void BackgroundSize::setValueFromNapi(const napi_value &napiValue) {
         if (type == napi_number) {
             auto getterValue = widthGetter.Double();
             if (getterValue.has_value()) {
-
                 param_.width.set(Dimension{getterValue.value(), DimensionUnit::DESIGN_PX});
             }
         } else if (type == napi_string) {

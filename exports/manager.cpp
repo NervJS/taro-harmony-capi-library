@@ -116,18 +116,19 @@ napi_value Manager::UpdateEnvRule(napi_env env, napi_callback_info info) {
     inst->UpdateCurrentPageDimension(TaroRuntime::NapiGetter::GetValue(args[0]).StringOr(""));
 
     int32_t nid = TaroRuntime::NapiGetter::GetValue(args[2]).Int32Or(0);
-     TaroRuntime::Render* render = TaroRuntime::Render::GetInstance();
+    TaroRuntime::Render* render = TaroRuntime::Render::GetInstance();
     auto root = render->GetTaroPageById(nid);
 
     std::stack<std::shared_ptr<TaroRuntime::TaroDOM::TaroElement>> stack;
     stack.push(root);
-    if (!root) return nullptr;
+    if (!root)
+        return nullptr;
     while (!stack.empty()) {
         auto parent = stack.top();
         stack.pop();
 
         bool shouleMatch = false;
-        for (auto rule: parent->rule_list_) {
+        for (auto rule : parent->rule_list_) {
             if (rule->has_env) {
                 shouleMatch = true;
                 break;
@@ -174,7 +175,8 @@ napi_value Manager::UpdateStylesheet(napi_env env, napi_callback_info info) {
 
     std::stack<std::shared_ptr<TaroRuntime::TaroDOM::TaroElement>> stack;
     stack.push(root);
-    if (!root) return nullptr;
+    if (!root)
+        return nullptr;
     while (!stack.empty()) {
         auto parent = stack.top();
         stack.pop();

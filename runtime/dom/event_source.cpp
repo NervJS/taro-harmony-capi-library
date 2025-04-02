@@ -13,7 +13,7 @@ namespace TaroDOM {
 
     void EventSource::RemoveNodeTree(std::shared_ptr<TaroNode> child) {
         erase(child->nid_);
-        for (auto &item : child->child_nodes_) {
+        for (auto& item : child->child_nodes_) {
             RemoveNodeTree(item);
         }
     }

@@ -21,9 +21,9 @@ namespace TaroAnimate {
         void enable(uint32_t xid);
         void disable();
         // 禁用拷贝构造函数
-        TaroFrameTrigger(const TaroFrameTrigger &) = delete;
+        TaroFrameTrigger(const TaroFrameTrigger&) = delete;
         // 禁用赋值运算符
-        TaroFrameTrigger &operator=(const TaroFrameTrigger &) = delete;
+        TaroFrameTrigger& operator=(const TaroFrameTrigger&) = delete;
 
         private:
         uint32_t id_ = 0;

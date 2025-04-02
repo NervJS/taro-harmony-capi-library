@@ -153,7 +153,7 @@ namespace TaroDOM {
     }
 
     // 分配ID给需要显示的Item，用于ReloadAllItems场景的元素diff，注意:要保证id唯一性!!
-    void TaroNodeAdapter::onNewItemIdCreated(ArkUI_NodeAdapterEvent *event) {
+    void TaroNodeAdapter::onNewItemIdCreated(ArkUI_NodeAdapterEvent* event) {
         auto index = OH_ArkUI_NodeAdapterEvent_GetItemIndex(event);
         if (index >= dataSource_.size()) {
             TARO_LOG_DEBUG("TaroNodeAdapter", "There is no more data to display");
@@ -171,7 +171,7 @@ namespace TaroDOM {
         OH_ArkUI_NodeAdapterEvent_SetNodeId(event, id);
     }
 
-    void TaroNodeAdapter::setRenderNode(std::shared_ptr<TaroRenderNode> &renderNode) {
+    void TaroNodeAdapter::setRenderNode(std::shared_ptr<TaroRenderNode>& renderNode) {
         renderNode_ = renderNode;
     }
 
@@ -179,8 +179,8 @@ namespace TaroDOM {
         return dataSource_.size();
     }
 
-    void TaroNodeAdapter::initArkUINode(std::shared_ptr<TaroElement> &newElement,
-                                        std::shared_ptr<TaroElement> &reuseElement) {
+    void TaroNodeAdapter::initArkUINode(std::shared_ptr<TaroElement>& newElement,
+                                        std::shared_ptr<TaroElement>& reuseElement) {
         newElement->is_reused_ = false;
         newElement->PreBuild();
         newElement->Build(reuseElement);
@@ -188,7 +188,7 @@ namespace TaroDOM {
         reuseElement->is_reused_ = true;
     }
 
-    void TaroNodeAdapter::buildNewNode(std::shared_ptr<TaroElement> &newElement) {
+    void TaroNodeAdapter::buildNewNode(std::shared_ptr<TaroElement>& newElement) {
         std::stack<std::shared_ptr<TaroDOM::TaroElement>> stack;
         stack.push(newElement);
 
@@ -218,8 +218,8 @@ namespace TaroDOM {
         }
     }
 
-    void TaroNodeAdapter::destroyUnusedNode(std::shared_ptr<TaroElement> &newParent,
-                                            std::shared_ptr<TaroElement> &reuseElement) {
+    void TaroNodeAdapter::destroyUnusedNode(std::shared_ptr<TaroElement>& newParent,
+                                            std::shared_ptr<TaroElement>& reuseElement) {
         auto reuseParent = reuseElement->GetParentNode();
         if (reuseParent == nullptr) {
             return;
@@ -237,9 +237,9 @@ namespace TaroDOM {
         reuseElement->ClearStateFlag(STATE_FLAG::IMMEDIATE_ATTACH_TO_TREE);
     }
 
-    void TaroNodeAdapter::initChildNode(std::vector<std::shared_ptr<TaroNode>> &newNode,
-                                        std::shared_ptr<TaroElement> &newParent,
-                                        std::vector<std::shared_ptr<TaroNode>> &reuseNode) {
+    void TaroNodeAdapter::initChildNode(std::vector<std::shared_ptr<TaroNode>>& newNode,
+                                        std::shared_ptr<TaroElement>& newParent,
+                                        std::vector<std::shared_ptr<TaroNode>>& reuseNode) {
         int newIndex = newNode.size();
         int oldIndex = reuseNode.size();
         int index = 0;
@@ -261,13 +261,13 @@ namespace TaroDOM {
     }
 
     // DFS初始化子组件
-    void TaroNodeAdapter::initRenderNode(std::shared_ptr<TaroElement> &newElement,
-                                         std::shared_ptr<TaroElement> &reuseElement) {
+    void TaroNodeAdapter::initRenderNode(std::shared_ptr<TaroElement>& newElement,
+                                         std::shared_ptr<TaroElement>& reuseElement) {
         if (reuseElement == newElement) {
             return;
         }
         TARO_LOG_DEBUG("TaroNodeAdapter", "new tag name:%{public}s, old tag name:%{public}s",
-            newElement->GetNodeName().c_str(), reuseElement->GetNodeName().c_str());
+                       newElement->GetNodeName().c_str(), reuseElement->GetNodeName().c_str());
         if (newElement->Reusable(reuseElement)) {
             initArkUINode(newElement, reuseElement);
             initChildNode(newElement->child_nodes_, newElement, reuseElement->child_nodes_);
@@ -278,7 +278,7 @@ namespace TaroDOM {
         }
     }
 
-    bool TaroNodeAdapter::isInitializedElement(std::shared_ptr<TaroElement> &newElement) {
+    bool TaroNodeAdapter::isInitializedElement(std::shared_ptr<TaroElement>& newElement) {
         std::string reuseId = newElement->reuse_id_;
         auto node = newElement->GetHeadRenderNode();
         if (reuseId.empty() || node == nullptr) {
@@ -298,18 +298,18 @@ namespace TaroDOM {
         return false;
     }
 
-    void TaroNodeAdapter::appendToNewParent(std::shared_ptr<TaroElement> &newElement) {
+    void TaroNodeAdapter::appendToNewParent(std::shared_ptr<TaroElement>& newElement) {
         auto newParent = newElement->GetParentNode();
         if (newParent != nullptr) {
             if (!newParent->lazy_node) {
                 NativeNodeApi::getInstance()->addChild(newParent->GetHeadRenderNode()->GetArkUINodeHandle(),
-                    newElement->GetHeadRenderNode()->GetArkUINodeHandle());
+                                                       newElement->GetHeadRenderNode()->GetArkUINodeHandle());
             }
         }
     }
 
-    void TaroNodeAdapter::removeFromReuseParent(std::shared_ptr<TaroElement> &newElement,
-                                                std::shared_ptr<TaroElement> &reuseElement) {
+    void TaroNodeAdapter::removeFromReuseParent(std::shared_ptr<TaroElement>& newElement,
+                                                std::shared_ptr<TaroElement>& reuseElement) {
         auto oldParent = reuseElement->GetParentNode();
         if (oldParent != nullptr) {
             if (!oldParent->lazy_node) {
@@ -320,7 +320,7 @@ namespace TaroDOM {
                         newElement->GetHeadRenderNode()->GetArkUINodeHandle());
                 }
                 NativeNodeApi::getInstance()->removeChild(oldParent->GetHeadRenderNode()->GetArkUINodeHandle(),
-                    reuseElement->GetHeadRenderNode()->GetArkUINodeHandle());
+                                                          reuseElement->GetHeadRenderNode()->GetArkUINodeHandle());
                 if (isReused) {
                     reuseElement->GetHeadRenderNode()->SetArkUINodeHandle(nullptr);
                 }
@@ -328,7 +328,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroNodeAdapter::recycleManager(std::shared_ptr<TaroElement> &taroElement, bool need_match_style) {
+    void TaroNodeAdapter::recycleManager(std::shared_ptr<TaroElement>& taroElement, bool need_match_style) {
         std::stack<std::shared_ptr<TaroDOM::TaroElement>> stack;
         stack.push(taroElement);
         while (!stack.empty()) {
@@ -388,7 +388,7 @@ namespace TaroDOM {
     }
 
     // 需要新的Item显示在可见区域。创建/复用节点
-    void TaroNodeAdapter::onNewItemAttached(ArkUI_NodeAdapterEvent *event) {
+    void TaroNodeAdapter::onNewItemAttached(ArkUI_NodeAdapterEvent* event) {
         auto index = OH_ArkUI_NodeAdapterEvent_GetItemIndex(event);
         if (index >= dataSource_.size()) {
             TARO_LOG_ERROR("TaroNodeAdapter", "There is no more data to display");
@@ -463,7 +463,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroNodeAdapter::onItemDeleted(ArkUI_NodeAdapterEvent *event) {
+    void TaroNodeAdapter::onItemDeleted(ArkUI_NodeAdapterEvent* event) {
         auto item = OH_ArkUI_NodeAdapterEvent_GetRemovedNode(event);
         auto renderNode = items_[item];
         if (renderNode == nullptr) {
@@ -514,14 +514,14 @@ namespace TaroDOM {
         }
     }
 
-    void TaroNodeAdapter::onStaticAdapterEvent(ArkUI_NodeAdapterEvent *event) {
-        auto nodeAdapter = reinterpret_cast<TaroNodeAdapter *>(OH_ArkUI_NodeAdapterEvent_GetUserData(event));
+    void TaroNodeAdapter::onStaticAdapterEvent(ArkUI_NodeAdapterEvent* event) {
+        auto nodeAdapter = reinterpret_cast<TaroNodeAdapter*>(OH_ArkUI_NodeAdapterEvent_GetUserData(event));
         if (nodeAdapter != nullptr) {
             nodeAdapter->onAdapterEvent(event);
         }
     }
 
-    void TaroNodeAdapter::onAdapterEvent(ArkUI_NodeAdapterEvent *event) {
+    void TaroNodeAdapter::onAdapterEvent(ArkUI_NodeAdapterEvent* event) {
         // 获取adapter事件类型
         auto type = OH_ArkUI_NodeAdapterEvent_GetType(event);
         switch (type) {
@@ -579,14 +579,15 @@ namespace TaroDOM {
         auto current = render_shared->parent_ref_.lock();
         while (current) {
             // 如果找到脏节点 dirtyFlagNode_，则退出
-            if (current == dirtyFlagNode_) return;
+            if (current == dirtyFlagNode_)
+                return;
             // 否则清理脏节点标记
             TaroYGNodeClearDirtyLocal(current->ygNodeRef);
             current = current->parent_ref_.lock();
         }
     }
 
-    void TaroNodeAdapter::updateStyle(bool need_match_style, std::shared_ptr<TaroElement> &taroElement) {
+    void TaroNodeAdapter::updateStyle(bool need_match_style, std::shared_ptr<TaroElement>& taroElement) {
         if (!need_match_style) {
             return;
         }
@@ -608,7 +609,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroNodeAdapter::clearRemovedData(std::shared_ptr<TaroRenderNode> &renderNode) {
+    void TaroNodeAdapter::clearRemovedData(std::shared_ptr<TaroRenderNode>& renderNode) {
         auto handle = renderNode->GetArkUINodeHandle();
         auto it = items_.find(handle);
         if (it != items_.end()) {

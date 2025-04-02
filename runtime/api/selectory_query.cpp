@@ -127,7 +127,8 @@ SelectorQuery::getElementById(std::shared_ptr<TaroDOM::TaroElement>& element, co
 std::forward_list<std::weak_ptr<TaroDOM::TaroNode>>
 SelectorQuery::getElementsByClassName(std::shared_ptr<TaroDOM::TaroElement>& element, const std::string& class_name) {
     TIMER_US_FUNCTION();
-    if (element == nullptr) return {};
+    if (element == nullptr)
+        return {};
     std::forward_list<std::weak_ptr<TaroDOM::TaroNode>> result;
     auto it = result.before_begin();
 
@@ -156,7 +157,8 @@ SelectorQuery::getElementsByClassName(std::shared_ptr<TaroDOM::TaroElement>& ele
 std::forward_list<std::weak_ptr<TaroDOM::TaroNode>>
 SelectorQuery::getElementsByTagName(std::shared_ptr<TaroDOM::TaroElement>& element, const std::string& tag_name) {
     TIMER_US_FUNCTION();
-    if (element == nullptr) return {};
+    if (element == nullptr)
+        return {};
     std::forward_list<std::weak_ptr<TaroDOM::TaroNode>> result;
     auto it = result.before_begin();
 
@@ -209,7 +211,8 @@ SelectorQuery::findTaroNodeWithSelectors(std::shared_ptr<TaroDOM::TaroNode>& nod
                                          std::vector<std::pair<char, std::string>>& selectors,
                                          bool is_select_all) {
     TIMER_US_FUNCTION();
-    if (selectors.empty()) return {};
+    if (selectors.empty())
+        return {};
 
     if (auto element = std::static_pointer_cast<TaroDOM::TaroElement>(node)) {
         auto result = findTaroNodeWithSelector(node, selectors[0].first, selectors[0].second, is_select_all);

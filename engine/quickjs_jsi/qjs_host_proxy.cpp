@@ -11,18 +11,20 @@
 #include "jsi_qjs_value_converter.h"
 
 HostObjectProxy::HostObjectProxy(
-    QuickJSRuntime &runtime,
-    JSContext *ctx,
+    QuickJSRuntime& runtime,
+    JSContext* ctx,
     std::shared_ptr<facebook::jsi::HostObject> hostObject)
-    : runtime_(runtime), ctx_(ctx), hostObject_(hostObject) {}
+    : runtime_(runtime),
+      ctx_(ctx),
+      hostObject_(hostObject) {}
 
 static JSClassID weakRefId_;
 static JSClassID weakClassId_;
 static JSClassID arrayBufferClassId_;
 static JSClassID nativeStateClassId_;
 
-void weakClassFinalizer(JSRuntime *rt, JSValue val) {
-    HostObjectProxy *hostObjectProxy = static_cast<HostObjectProxy *>(JS_GetOpaque(val, weakClassId_));
+void weakClassFinalizer(JSRuntime* rt, JSValue val) {
+    HostObjectProxy* hostObjectProxy = static_cast<HostObjectProxy*>(JS_GetOpaque(val, weakClassId_));
     if (hostObjectProxy->hostObject_.use_count() == 1) {
         hostObjectProxy->hostObject_.reset();
     }
@@ -30,12 +32,12 @@ void weakClassFinalizer(JSRuntime *rt, JSValue val) {
     delete hostObjectProxy;
 }
 
-void nativeStateFinalizer(JSRuntime *rt, JSValue val) {
-    delete reinterpret_cast<std::shared_ptr<facebook::jsi::NativeState> *>(JS_GetOpaque(val, nativeStateClassId_));
+void nativeStateFinalizer(JSRuntime* rt, JSValue val) {
+    delete reinterpret_cast<std::shared_ptr<facebook::jsi::NativeState>*>(JS_GetOpaque(val, nativeStateClassId_));
 }
 
-void arrayBufferFinalizer(JSRuntime *rt, JSValue val) {
-    delete static_cast<std::shared_ptr<facebook::jsi::MutableBuffer> *>(JS_GetOpaque(val, arrayBufferClassId_));
+void arrayBufferFinalizer(JSRuntime* rt, JSValue val) {
+    delete static_cast<std::shared_ptr<facebook::jsi::MutableBuffer>*>(JS_GetOpaque(val, arrayBufferClassId_));
 }
 
 static JSClassExoticMethods exoticMethods = {
@@ -62,21 +64,21 @@ static JSClassDef nativeStateClass_ = {
     .class_name = "nativeStateClass",
     .finalizer = nativeStateFinalizer};
 
-JSClassID HostObjectProxy::initHostObjectClass(JSRuntime *runtime) {
+JSClassID HostObjectProxy::initHostObjectClass(JSRuntime* runtime) {
     weakClassId_ = JS_NewClassID(&weakClassId_);
     JS_NewClass(runtime, weakClassId_, &weakClass_);
 
     return weakClassId_;
 }
 
-JSClassID HostObjectProxy::initArrayBufferClass(JSRuntime *runtime) {
+JSClassID HostObjectProxy::initArrayBufferClass(JSRuntime* runtime) {
     arrayBufferClassId_ = JS_NewClassID(&arrayBufferClassId_);
     JS_NewClass(runtime, arrayBufferClassId_, &arrayBufferClass_);
 
     return arrayBufferClassId_;
 }
 
-JSClassID HostObjectProxy::initHostNativeStateObjectClass(JSRuntime *runtime) {
+JSClassID HostObjectProxy::initHostNativeStateObjectClass(JSRuntime* runtime) {
     nativeStateClassId_ = JS_NewClassID(&nativeStateClassId_);
     JS_NewClass(runtime, nativeStateClassId_, &nativeStateClass_);
 
@@ -95,19 +97,19 @@ std::shared_ptr<facebook::jsi::HostObject> HostObjectProxy::GetHostObject() {
     return hostObject_;
 }
 
-JSValue HostObjectProxy::Getter(JSContext *ctx, JSValueConst this_val, JSAtom atom, JSValueConst value) {
-    HostObjectProxy *hostObjectProxy = static_cast<HostObjectProxy *>(JS_GetOpaque(this_val, weakClassId_));
+JSValue HostObjectProxy::Getter(JSContext* ctx, JSValueConst this_val, JSAtom atom, JSValueConst value) {
+    HostObjectProxy* hostObjectProxy = static_cast<HostObjectProxy*>(JS_GetOpaque(this_val, weakClassId_));
     assert(hostObjectProxy);
 
-    auto &runtime = hostObjectProxy->runtime_;
+    auto& runtime = hostObjectProxy->runtime_;
     facebook::jsi::PropNameID sym = QJSJSIValueConverter::ToJSIPropNameID(runtime, atom);
     facebook::jsi::Value ret;
     try {
         ret = hostObjectProxy->hostObject_->get(runtime, sym);
-    } catch (const facebook::jsi::JSError &error) {
+    } catch (const facebook::jsi::JSError& error) {
         JS_Throw(ctx, QJSJSIValueConverter::ToQJSValue(runtime, error.value()));
         return JS_EXCEPTION;
-    } catch (const std::exception &ex) {
+    } catch (const std::exception& ex) {
         auto excValue =
             runtime.global()
                 .getPropertyAsFunction(runtime, "Error")
@@ -134,23 +136,23 @@ JSValue HostObjectProxy::Getter(JSContext *ctx, JSValueConst this_val, JSAtom at
 }
 
 int HostObjectProxy::Setter(
-    JSContext *ctx,
+    JSContext* ctx,
     JSValueConst this_val,
     JSAtom atom,
     JSValueConst value,
     JSValueConst receiver,
     int flags) {
-    HostObjectProxy *hostObjectProxy = static_cast<HostObjectProxy *>(JS_GetOpaque(this_val, weakClassId_));
+    HostObjectProxy* hostObjectProxy = static_cast<HostObjectProxy*>(JS_GetOpaque(this_val, weakClassId_));
 
     assert(hostObjectProxy);
-    auto &runtime = hostObjectProxy->runtime_;
+    auto& runtime = hostObjectProxy->runtime_;
     facebook::jsi::PropNameID sym = QJSJSIValueConverter::ToJSIPropNameID(runtime, atom);
     try {
         hostObjectProxy->hostObject_->set(runtime, sym, QJSJSIValueConverter::ToJSIValue(runtime, value));
-    } catch (const facebook::jsi::JSError &error) {
+    } catch (const facebook::jsi::JSError& error) {
         JS_Throw(ctx, QJSJSIValueConverter::ToQJSValue(runtime, error.value()));
         return -1;
-    } catch (const std::exception &ex) {
+    } catch (const std::exception& ex) {
         auto excValue =
             runtime.global()
                 .getPropertyAsFunction(runtime, "Error")
@@ -176,12 +178,12 @@ int HostObjectProxy::Setter(
     return 0;
 }
 
-int HostObjectProxy::Enumerator(JSContext *ctx, JSPropertyEnum **ptab, uint32_t *plen, JSValueConst this_val) {
-    HostObjectProxy *hostObjectProxy = static_cast<HostObjectProxy *>(JS_GetOpaque(this_val, weakClassId_));
+int HostObjectProxy::Enumerator(JSContext* ctx, JSPropertyEnum** ptab, uint32_t* plen, JSValueConst this_val) {
+    HostObjectProxy* hostObjectProxy = static_cast<HostObjectProxy*>(JS_GetOpaque(this_val, weakClassId_));
 
-    auto &runtime = hostObjectProxy->runtime_;
+    auto& runtime = hostObjectProxy->runtime_;
     auto names = hostObjectProxy->hostObject_->getPropertyNames(runtime);
-    *ptab = static_cast<JSPropertyEnum *>(js_malloc(ctx, names.size() * sizeof(JSPropertyEnum)));
+    *ptab = static_cast<JSPropertyEnum*>(js_malloc(ctx, names.size() * sizeof(JSPropertyEnum)));
 
     if (*ptab == nullptr) {
         return -1; // 内存分配失败,返回异常
@@ -208,14 +210,14 @@ static JSClassDef weakFunctionClass_ = {
 };
 
 HostFunctionProxy::HostFunctionProxy(
-    QuickJSRuntime &runtime,
-    JSContext *ctx,
-    facebook::jsi::HostFunctionType &&hostFunction)
+    QuickJSRuntime& runtime,
+    JSContext* ctx,
+    facebook::jsi::HostFunctionType&& hostFunction)
     : runtime_(runtime),
       ctx_(ctx),
       hostFunction_(std::move(hostFunction)) {}
 
-JSClassID HostFunctionProxy::initHostFunctionClass(JSRuntime *runtime) {
+JSClassID HostFunctionProxy::initHostFunctionClass(JSRuntime* runtime) {
     weakClassFunctionId_ = JS_NewClassID(&weakClassFunctionId_);
     JS_NewClass(runtime, weakClassFunctionId_, &weakFunctionClass_);
 
@@ -230,30 +232,30 @@ void HostFunctionProxy::BindFinalizer() {
     weakHandle_ = object;
 }
 
-facebook::jsi::HostFunctionType &HostFunctionProxy::GetHostFunction() {
+facebook::jsi::HostFunctionType& HostFunctionProxy::GetHostFunction() {
     return hostFunction_;
 }
 
-void HostFunctionProxy::Finalizer(JSRuntime *rt, JSValue val) {
-    HostFunctionProxy *hostFunctionProxy = static_cast<HostFunctionProxy *>(JS_GetOpaque(val, weakClassFunctionId_));
+void HostFunctionProxy::Finalizer(JSRuntime* rt, JSValue val) {
+    HostFunctionProxy* hostFunctionProxy = static_cast<HostFunctionProxy*>(JS_GetOpaque(val, weakClassFunctionId_));
     JS_FreeValueRT(rt, hostFunctionProxy->weakHandle_);
     delete hostFunctionProxy;
 }
 
-JSValue HostFunctionProxy::FunctionCallback(JSContext *ctx, JSValueConst func_obj, JSValueConst this_val, int argc, JSValueConst *argv, int flags) {
-    HostFunctionProxy *hostFunctionProxy = (HostFunctionProxy *)JS_GetOpaque(func_obj, weakClassFunctionId_);
+JSValue HostFunctionProxy::FunctionCallback(JSContext* ctx, JSValueConst func_obj, JSValueConst this_val, int argc, JSValueConst* argv, int flags) {
+    HostFunctionProxy* hostFunctionProxy = (HostFunctionProxy*)JS_GetOpaque(func_obj, weakClassFunctionId_);
     if (!hostFunctionProxy) {
         JS_ThrowTypeError(ctx, "Invalid HostFunctionProxy");
         return JS_EXCEPTION;
     }
 
-    auto &runtime = hostFunctionProxy->runtime_;
+    auto& runtime = hostFunctionProxy->runtime_;
 
     // 将QuickJS的参数转换为JSI的值
     const unsigned maxStackArgCount = 8;
     facebook::jsi::Value stackArgs[maxStackArgCount];
     std::unique_ptr<facebook::jsi::Value[]> heapArgs;
-    facebook::jsi::Value *args;
+    facebook::jsi::Value* args;
     if (argc > maxStackArgCount) {
         heapArgs = std::make_unique<facebook::jsi::Value[]>(argc);
         for (int i = 0; i < argc; i++) {
@@ -275,10 +277,10 @@ JSValue HostFunctionProxy::FunctionCallback(JSContext *ctx, JSValueConst func_ob
         result = QJSJSIValueConverter::ToQJSValue(
             runtime,
             hostFunctionProxy->hostFunction_(runtime, thisVal, args, argc));
-    } catch (const facebook::jsi::JSError &error) {
+    } catch (const facebook::jsi::JSError& error) {
         JS_Throw(ctx, QJSJSIValueConverter::ToQJSValue(runtime, error.value()));
         return JS_EXCEPTION;
-    } catch (const std::exception &ex) {
+    } catch (const std::exception& ex) {
         std::string exceptionString("Exception in HostFunction: ");
         exceptionString += ex.what();
         JSValue errorConstructor = JS_GetPropertyStr(ctx, JS_GetGlobalObject(ctx), "Error");

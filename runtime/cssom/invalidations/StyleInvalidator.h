@@ -15,11 +15,11 @@ namespace TaroCSSOM {
         Invalidator() = default;
 
         // 标注节点样式更新
-        static void markElementUpdateStyle(const std::shared_ptr<TaroDOM::TaroElement> &, MatchElement);
+        static void markElementUpdateStyle(const std::shared_ptr<TaroDOM::TaroElement>&, MatchElement);
 
-        static bool invalidateIfNeeded(const std::shared_ptr<TaroDOM::TaroElement> &);
+        static bool invalidateIfNeeded(const std::shared_ptr<TaroDOM::TaroElement>&);
 
-        static void invalidateStyleForDescendants(const std::shared_ptr<TaroDOM::TaroElement> &);
+        static void invalidateStyleForDescendants(const std::shared_ptr<TaroDOM::TaroElement>&);
     };
 
 } // namespace TaroCSSOM

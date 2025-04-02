@@ -7,7 +7,7 @@
 
 #include <jsi/jsi.h>
 
-inline static void handleJSError(facebook::jsi::Runtime &runtime, const facebook::jsi::JSError &error, bool isFatal) {
+inline static void handleJSError(facebook::jsi::Runtime& runtime, const facebook::jsi::JSError& error, bool isFatal) {
     auto errorUtils = runtime.global().getProperty(runtime, "ErrorUtils");
     if (errorUtils.isUndefined() || !errorUtils.isObject() ||
         !errorUtils.getObject(runtime).hasProperty(runtime, "reportFatalError") ||

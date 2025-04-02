@@ -13,13 +13,13 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroEventScroll : public TaroEventBase {
             public:
-            TaroEventScroll(const std::string &js_event_type, ArkUI_NodeEvent *event);
+            TaroEventScroll(const std::string& js_event_type, ArkUI_NodeEvent* event);
 
             virtual ~TaroEventScroll() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
             public:
             float deltaX_ = 0;
@@ -28,13 +28,13 @@ namespace TaroDOM {
 
         class TaroEventDidScroll : public TaroEventBase {
             public:
-            TaroEventDidScroll(const std::string &js_event_type, ArkUI_NodeEvent *event);
+            TaroEventDidScroll(const std::string& js_event_type, ArkUI_NodeEvent* event);
 
             virtual ~TaroEventDidScroll() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            virtual int serializeFun(napi_value &ret_obj) override;
+            virtual int serializeFun(napi_value& ret_obj) override;
 
             public:
             float deltaX_ = 0;
@@ -44,13 +44,13 @@ namespace TaroDOM {
 
         class TaroEventDidWaterFlowScroll : public TaroEventBase {
             public:
-            TaroEventDidWaterFlowScroll(const std::string &js_event_type, ArkUI_NodeEvent *event);
+            TaroEventDidWaterFlowScroll(const std::string& js_event_type, ArkUI_NodeEvent* event);
 
             virtual ~TaroEventDidWaterFlowScroll() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            virtual int serializeFun(napi_value &ret_obj) override;
+            virtual int serializeFun(napi_value& ret_obj) override;
 
             public:
             float deltaY_ = 0;
@@ -59,13 +59,13 @@ namespace TaroDOM {
 
         class TaroEventLazyLoadScrollIndex : public TaroEventBase {
             public:
-            TaroEventLazyLoadScrollIndex(const std::string &js_event_type, ArkUI_NodeEvent *event);
+            TaroEventLazyLoadScrollIndex(const std::string& js_event_type, ArkUI_NodeEvent* event);
 
             virtual ~TaroEventLazyLoadScrollIndex() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            virtual int serializeFun(napi_value &ret_obj) override;
+            virtual int serializeFun(napi_value& ret_obj) override;
 
             public:
             int32_t startIndex_;

@@ -12,18 +12,18 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroSliderEventChange : public TaroEventBase {
             public:
-            TaroSliderEventChange(const std::string &js_event_type, ArkUI_NodeEvent *event)
+            TaroSliderEventChange(const std::string& js_event_type, ArkUI_NodeEvent* event)
                 : TaroEventBase(
                       js_event_type, event) {
                 bubbles_ = false;
             }
             virtual ~TaroSliderEventChange() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
-            const float &getValue();
+            const float& getValue();
 
             virtual bool realTrigger() override;
 
@@ -34,7 +34,7 @@ namespace TaroDOM {
 
         class TaroSliderEventChanging : public TaroSliderEventChange {
             public:
-            TaroSliderEventChanging(const std::string &js_event_type, ArkUI_NodeEvent *event)
+            TaroSliderEventChanging(const std::string& js_event_type, ArkUI_NodeEvent* event)
                 : TaroSliderEventChange(js_event_type, event) {
             }
             virtual ~TaroSliderEventChanging() = default;

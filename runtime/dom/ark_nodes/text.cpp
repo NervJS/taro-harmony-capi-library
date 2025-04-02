@@ -10,8 +10,8 @@
 #include <native_drawing/drawing_font_collection.h>
 #include <native_drawing/drawing_text_typography.h>
 
-#include "helper/string.h"
 #include "helper/ImageLoader.h"
+#include "helper/string.h"
 #include "runtime/NativeNodeApi.h"
 #include "runtime/TaroYogaApi.h"
 #include "runtime/cssom/CSSStyleSheet.h"
@@ -199,8 +199,10 @@ namespace TaroDOM {
     }
 
     void TaroTextNode::SetContent() {
-        if (!m_HasContent) return;
-        if (!m_isFirstRender && !m_IsNeedUpdate) return;
+        if (!m_HasContent)
+            return;
+        if (!m_isFirstRender && !m_IsNeedUpdate)
+            return;
 
         auto element = element_ref_.lock();
         if (element) {
@@ -249,7 +251,8 @@ namespace TaroDOM {
                         auto this_ = weakSelf.lock();
                         if (this_) {
                             auto element = this_->element_ref_.lock();
-                            if (!element) return;
+                            if (!element)
+                                return;
                             auto dimensionContext = this_->GetDimensionContext();
                             this_->m_ImagesLoaded = true;
                             std::vector<std::shared_ptr<TaroNode>> vec;
@@ -385,7 +388,8 @@ namespace TaroDOM {
                 float width = imageInfo->width;
                 float height = imageInfo->height;
                 auto node = m_ImageNodes[i];
-                if (!node) continue;
+                if (!node)
+                    continue;
                 ArkUI_NumberValue positionValue[] = {0.0, 0.0};
                 ArkUI_AttributeItem positionItem = {positionValue, 2};
                 positionValue[0].f32 = px2Vp(left) + imageInfo->offsetLeft;
@@ -413,7 +417,8 @@ namespace TaroDOM {
                             if (i < imageNodes.size() && i < imageInfos.size()) {
                                 const auto& imageNode = imageNodes[i];
                                 const auto& imageInfo = imageInfos[i];
-                                if (imageInfo->src != src) return;
+                                if (imageInfo->src != src)
+                                    return;
                                 ArkUI_AttributeItem srcItem;
                                 if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
                                     srcItem = {.object = info->result_DrawableDescriptor};
@@ -481,7 +486,6 @@ namespace TaroDOM {
                 }
                 SetMeasuredTextHeight(textCalcHeight);
                 if (m_MeasuredTextWidth < 0) {
-                    
                 }
                 TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setWidth(m_InnerTextNode, static_cast<double>(m_MeasuredTextWidth));
                 TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setHeight(m_InnerTextNode, static_cast<double>(m_MeasuredTextHeight));
@@ -497,9 +501,12 @@ namespace TaroDOM {
     void TaroTextNode::Layout() {
         SystraceSection s("Taro Layout:: Text Layout");
         TaroRenderNode::Layout();
-        if (!m_HasContent) return;
-        if (HasImages() && !HasImagesLoaded()) return;
-        if (!GetArkUINodeHandle()) return;
+        if (!m_HasContent)
+            return;
+        if (HasImages() && !HasImagesLoaded())
+            return;
+        if (!GetArkUINodeHandle())
+            return;
         SetSize();
         if (HasImages() && textStyled_->GetHasBeenLayout()) {
             PaintImages();
@@ -528,9 +535,12 @@ namespace TaroDOM {
     void TaroTextNode::Paint() {
         SystraceSection s("Taro Draw:: Text Draw");
         TaroRenderNode::Paint();
-        if (!m_HasContent) return;
-        if (!m_isFirstRender && !m_IsNeedUpdate) return;
-        if (HasImages() && !HasImagesLoaded()) return;
+        if (!m_HasContent)
+            return;
+        if (!m_isFirstRender && !m_IsNeedUpdate)
+            return;
+        if (HasImages() && !HasImagesLoaded())
+            return;
         SetSize();
         ProcessTextAlign();
         NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
@@ -558,7 +568,8 @@ namespace TaroDOM {
         NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         auto arkNode = GetArkUINodeHandle();
         auto totalChildCount = nativeNodeApi->getTotalChildCount(arkNode);
-        if (totalChildCount == 0) return;
+        if (totalChildCount == 0)
+            return;
         for (int32_t i = totalChildCount - 1; i >= 0; i--) {
             auto child = nativeNodeApi->getChildAt(arkNode, i);
             if (child) {
@@ -647,7 +658,8 @@ namespace TaroDOM {
     }
 
     std::shared_ptr<TextElementInfo> TaroTextNode::GetLastTextElementInfo(int32_t index) {
-        if (index == 0) return std::make_shared<TextElementInfo>();
+        if (index == 0)
+            return std::make_shared<TextElementInfo>();
         auto last = index - 1;
         if (last <= textElementInfos_.size() - 1) {
             return textElementInfos_[last];
@@ -697,7 +709,8 @@ namespace TaroDOM {
     }
 
     void TaroTextNode::GetAllTextElementInfos() {
-        if (textElementInfos_.size() > 0) return;
+        if (textElementInfos_.size() > 0)
+            return;
         auto element = element_ref_.lock();
         if (element) {
             auto childNodes = element->child_nodes_;

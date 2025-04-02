@@ -30,4 +30,4 @@ GestureOperatorPtr TaroGestureFactory::createGestureOperator(int type) {
     return iter->second.second();
 }
 
-}
+} // namespace TaroRuntime::TaroDOM::TaroEvent

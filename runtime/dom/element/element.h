@@ -82,7 +82,7 @@ namespace TaroDOM {
         virtual void SetAttributesToRenderNode();
         std::variant<bool, int, std::string, StylesheetRef, napi_value> GetAttribute(std::string name);
         virtual std::variant<bool, int, std::string, StylesheetRef, napi_value> GetAttribute(ATTRIBUTE_NAME name, napi_value result) override;
-        virtual int32_t GetCacheCount () {
+        virtual int32_t GetCacheCount() {
             return 0;
         }
 
@@ -117,7 +117,8 @@ namespace TaroDOM {
             return state_flags_.test(static_cast<size_t>(flag));
         }
         void SetStateFlag(STATE_FLAG flag) {
-            if (HasStateFlag(flag)) return;
+            if (HasStateFlag(flag))
+                return;
             TARO_LOG_DEBUG("CSSOM", "标脏： %{public}hhu  %{public}s", flag,
                            class_list_.value().c_str());
             state_flags_.set(static_cast<size_t>(flag));
@@ -162,21 +163,21 @@ namespace TaroDOM {
                    tag_name_ == TAG_NAME::CHECKBOX;
         }
 
-        std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> GetTextNodeStyleFromElement(const std::shared_ptr<TaroElement> &element);
+        std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> GetTextNodeStyleFromElement(const std::shared_ptr<TaroElement>& element);
 
         virtual void PreBuild();
         virtual void Build() = 0;
         virtual void PostBuild();
-        virtual void Build(std::shared_ptr<TaroElement> &reuse_element);
+        virtual void Build(std::shared_ptr<TaroElement>& reuse_element);
         // 判断reuse_element 是否可以被当前节点复用
-        virtual bool Reusable(std::shared_ptr<TaroElement> &reuse_element);
+        virtual bool Reusable(std::shared_ptr<TaroElement>& reuse_element);
 
         void MatchStylesheet();
 
         bool IsFixed();
 
         void updateListenEvent();
-        virtual void bindVisibleEvent(CallbackInfo &info_);
+        virtual void bindVisibleEvent(CallbackInfo& info_);
         virtual void unbindVisibleEvent();
         virtual void handleVisibilityInfo();
         void registerVisibleEvent();
@@ -211,8 +212,8 @@ namespace TaroDOM {
         bool is_inline_;
         void AppendOrInsertIntoParent();
         virtual void HandleAttributeChanged(
-            ATTRIBUTE_NAME name, const std::string &preValue,
-            const std::string &curValue) override;
+            ATTRIBUTE_NAME name, const std::string& preValue,
+            const std::string& curValue) override;
         void createJSAnimation();
         // 创建上下文
         void createContext();

@@ -10,7 +10,7 @@
 
 namespace TaroRuntime {
 namespace TaroDOM {
-    ClassList::ClassList(const std::string &class_name) {
+    ClassList::ClassList(const std::string& class_name) {
         if (class_name.empty()) {
             return;
         }
@@ -26,8 +26,8 @@ namespace TaroDOM {
         }
     }
 
-    bool ClassList::is_match(const ClassList &class_list) const {
-        for (const auto &class_name : class_list) {
+    bool ClassList::is_match(const ClassList& class_list) const {
+        for (const auto& class_name : class_list) {
             if (contains(class_name) == 0) {
                 return false;
             }
@@ -43,20 +43,20 @@ namespace TaroDOM {
         return size();
     }
 
-    void ClassList::add(const std::vector<std::string> &args) {
-        for (const auto &class_name : args) {
+    void ClassList::add(const std::vector<std::string>& args) {
+        for (const auto& class_name : args) {
             add(class_name);
         }
     }
 
-    int ClassList::add(const std::string &token) {
+    int ClassList::add(const std::string& token) {
         if (checkTokenIsValid(token) != 0) {
             if (contains(token) == 0) {
                 push_back(token);
                 if (auto el = element_ref_.lock()) {
                     auto className = TaroCSSOM::ClassNamePool::GetClassName(token);
                     for (auto rule : className->rules_) {
-                        for (auto &combinator : rule->combinator_) {
+                        for (auto& combinator : rule->combinator_) {
                             TaroCSSOM::Invalidator::markElementUpdateStyle(el, combinator.matchElement);
                         }
                     }
@@ -69,13 +69,13 @@ namespace TaroDOM {
         return 0;
     }
 
-    void ClassList::remove(const std::vector<std::string> &args) {
-        for (const auto &class_name : args) {
+    void ClassList::remove(const std::vector<std::string>& args) {
+        for (const auto& class_name : args) {
             remove(class_name);
         }
     }
 
-    int ClassList::remove(const std::string &token) {
+    int ClassList::remove(const std::string& token) {
         if (checkTokenIsValid(token) != 0) {
             auto it = std::find(begin(), end(), token);
             if (it != end()) {
@@ -83,7 +83,7 @@ namespace TaroDOM {
                 erase(it);
                 if (auto el = element_ref_.lock()) {
                     for (auto rule : className->rules_) {
-                        for (auto &combinator : rule->combinator_) {
+                        for (auto& combinator : rule->combinator_) {
                             TaroCSSOM::Invalidator::markElementUpdateStyle(el, combinator.matchElement);
                         }
                     }
@@ -96,7 +96,7 @@ namespace TaroDOM {
         return 0;
     }
 
-    int ClassList::contains(const std::string &token) const {
+    int ClassList::contains(const std::string& token) const {
         if (checkTokenIsValid(token) != 0) {
             return std::find(begin(), end(), token) != end() ? 1 : 0;
         } else {
@@ -105,11 +105,11 @@ namespace TaroDOM {
         return 0;
     }
 
-    int ClassList::toggle(const std::string &token) {
+    int ClassList::toggle(const std::string& token) {
         return toggle(token, contains(token) != 0);
     }
 
-    int ClassList::toggle(const std::string &token, bool force) {
+    int ClassList::toggle(const std::string& token, bool force) {
         if (checkTokenIsValid(token) != 0) {
             if (force) {
                 add(token);
@@ -124,7 +124,7 @@ namespace TaroDOM {
         return 0;
     }
 
-    int ClassList::replace(const std::string &token, const std::string &new_token) {
+    int ClassList::replace(const std::string& token, const std::string& new_token) {
         if (checkTokenIsValid(token) != 0 && checkTokenIsValid(new_token) != 0) {
             auto it = std::find(begin(), end(), token);
             if (it != end()) {
@@ -133,12 +133,12 @@ namespace TaroDOM {
                 auto newClass = TaroCSSOM::ClassNamePool::GetClassName(new_token);
                 if (auto el = element_ref_.lock()) {
                     for (auto rule : oddClass->rules_) {
-                        for (auto &combinator : rule->combinator_) {
+                        for (auto& combinator : rule->combinator_) {
                             TaroCSSOM::Invalidator::markElementUpdateStyle(el, combinator.matchElement);
                         }
                     }
                     for (auto rule : newClass->rules_) {
-                        for (auto &combinator : rule->combinator_) {
+                        for (auto& combinator : rule->combinator_) {
                             TaroCSSOM::Invalidator::markElementUpdateStyle(el, combinator.matchElement);
                         }
                     }
@@ -151,18 +151,18 @@ namespace TaroDOM {
         return 0;
     }
 
-    void ClassList::reset(const std::string &class_name) {
+    void ClassList::reset(const std::string& class_name) {
         std::vector<std::string> list = TaroHelper::StringUtils::split(
             TaroHelper::string::trim(class_name).data(),
             delimiter);
-        list.erase(std::remove_if(std::begin(list), std::end(list), [this](const std::string &str) {
+        list.erase(std::remove_if(std::begin(list), std::end(list), [this](const std::string& str) {
                        return checkTokenIsValid(str) == 0;
                    }),
                    std::end(list));
         reset(list);
     }
 
-    void ClassList::reset(const std::vector<std::string> &class_list) {
+    void ClassList::reset(const std::vector<std::string>& class_list) {
         std::vector<std::string> invalid_list;
         for (auto it = begin(); it != end();) {
             if (std::find(class_list.begin(), class_list.end(), *it) == class_list.end()) {
@@ -170,10 +170,10 @@ namespace TaroDOM {
             }
             ++it;
         }
-        for (const auto &token : invalid_list) {
+        for (const auto& token : invalid_list) {
             remove(token);
         }
-        for (const auto &token : class_list) {
+        for (const auto& token : class_list) {
             add(token);
         }
     }

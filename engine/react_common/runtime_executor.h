@@ -17,7 +17,7 @@
  * difficult to ensure that the Runtime is being accessed safely.
  */
 using RuntimeExecutor =
-    std::function<void(std::function<void(facebook::jsi::Runtime &runtime)> &&callback)>;
+    std::function<void(std::function<void(facebook::jsi::Runtime& runtime)>&& callback)>;
 
 /*
  * The caller can expect that the callback will be executed sometime later on an
@@ -30,8 +30,8 @@ using RuntimeExecutor =
  * is no synchronization.
  */
 inline static void executeAsynchronously(
-    RuntimeExecutor const &runtimeExecutor,
-    std::function<void(facebook::jsi::Runtime &runtime)> &&callback) noexcept {
+    RuntimeExecutor const& runtimeExecutor,
+    std::function<void(facebook::jsi::Runtime& runtime)>&& callback) noexcept {
     std::thread([callback = std::move(callback), runtimeExecutor]() mutable {
         runtimeExecutor(std::move(callback));
     }).detach();
@@ -45,13 +45,13 @@ inline static void executeAsynchronously(
  * `callback` will be executed.
  */
 inline static void executeSynchronously_CAN_DEADLOCK(
-    RuntimeExecutor const &runtimeExecutor,
-    std::function<void(facebook::jsi::Runtime &runtime)> &&callback) noexcept {
+    RuntimeExecutor const& runtimeExecutor,
+    std::function<void(facebook::jsi::Runtime& runtime)>&& callback) noexcept {
     std::mutex mutex;
     mutex.lock();
 
     runtimeExecutor(
-        [callback = std::move(callback), &mutex](facebook::jsi::Runtime &runtime) {
+        [callback = std::move(callback), &mutex](facebook::jsi::Runtime& runtime) {
             callback(runtime);
             mutex.unlock();
         });
@@ -67,8 +67,8 @@ inline static void executeSynchronously_CAN_DEADLOCK(
  * thread.
  */
 inline static void executeSynchronouslyOnSameThread_CAN_DEADLOCK(
-    RuntimeExecutor const &runtimeExecutor,
-    std::function<void(facebook::jsi::Runtime &runtime)> &&callback) noexcept {
+    RuntimeExecutor const& runtimeExecutor,
+    std::function<void(facebook::jsi::Runtime& runtime)>&& callback) noexcept {
     // Note: We need the third mutex to get back to the main thread before
     // the lambda is finished (because all mutexes are allocated on the stack).
 
@@ -80,11 +80,11 @@ inline static void executeSynchronouslyOnSameThread_CAN_DEADLOCK(
     mutex2.lock();
     mutex3.lock();
 
-    facebook::jsi::Runtime *runtimePtr;
+    facebook::jsi::Runtime* runtimePtr;
 
     auto threadId = std::this_thread::get_id();
 
-    runtimeExecutor([&](facebook::jsi::Runtime &runtime) {
+    runtimeExecutor([&](facebook::jsi::Runtime& runtime) {
         runtimePtr = &runtime;
 
         if (threadId == std::this_thread::get_id()) {
@@ -108,13 +108,15 @@ inline static void executeSynchronouslyOnSameThread_CAN_DEADLOCK(
 
 template <typename DataT>
 inline static DataT executeSynchronouslyOnSameThread_CAN_DEADLOCK(
-    RuntimeExecutor const &runtimeExecutor,
-    std::function<DataT(facebook::jsi::Runtime &runtime)> &&callback) noexcept {
+    RuntimeExecutor const& runtimeExecutor,
+    std::function<DataT(facebook::jsi::Runtime& runtime)>&& callback) noexcept {
     DataT data;
 
     executeSynchronouslyOnSameThread_CAN_DEADLOCK(
         runtimeExecutor,
-        [&](facebook::jsi::Runtime &runtime) { data = callback(runtime); });
+        [&](facebook::jsi::Runtime& runtime) {
+            data = callback(runtime);
+        });
 
     return data;
 }

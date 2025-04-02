@@ -149,8 +149,7 @@ std::map<std::string, ATTRIBUTE_NAME> ATTRIBUTE_NAME_MAP = {
     {"blockSize", ATTRIBUTE_NAME::BLOCK_SIZE},
 
     {"disableTouch", ATTRIBUTE_NAME::DISABLE_TOUCH},
-    {"disableProgrammaticAnimation", ATTRIBUTE_NAME::DISABLE_PROGRAMMATIC_ANIMATION}
-};
+    {"disableProgrammaticAnimation", ATTRIBUTE_NAME::DISABLE_PROGRAMMATIC_ANIMATION}};
 
 std::map<std::string, PROPERTY_NAME> PROPERTY_NAME_MAP = {
     {"clientTop", PROPERTY_NAME::CLIENT_TOP},

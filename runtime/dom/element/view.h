@@ -19,7 +19,7 @@ namespace TaroDOM {
         virtual ~TaroView() = default;
 
         void Build() override;
-        void Build(std::shared_ptr<TaroElement> &reuse_element) override;
+        void Build(std::shared_ptr<TaroElement>& reuse_element) override;
         void GetNodeAttributes() override;
         void SetAttributesToRenderNode() override;
         void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;

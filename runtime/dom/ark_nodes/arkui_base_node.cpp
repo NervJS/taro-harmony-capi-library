@@ -25,7 +25,7 @@ namespace TaroDOM {
         {TaroEdge::TaroEdgeRight, YGEdge::YGEdgeRight},
         {TaroEdge::TaroEdgeBottom, YGEdge::YGEdgeBottom}};
 
-    static YGEdge TaroEdge2YgEdgeMapping(const TaroEdge &edge) {
+    static YGEdge TaroEdge2YgEdgeMapping(const TaroEdge& edge) {
         auto iter = EDGE_MAPPING.find(edge);
         if (iter != EDGE_MAPPING.end()) {
             return iter->second;
@@ -38,7 +38,9 @@ namespace TaroDOM {
     }
 
     BaseRenderNode::BaseRenderNode()
-        : ygNodeRef(TaroYogaApi::getInstance()->createYogaNodeRef()), paintDiffer_(this), layoutDiffer_(this) {}
+        : ygNodeRef(TaroYogaApi::getInstance()->createYogaNodeRef()),
+          paintDiffer_(this),
+          layoutDiffer_(this) {}
 
     BaseRenderNode::~BaseRenderNode() {
         if (ygNodeRef) {
@@ -46,31 +48,35 @@ namespace TaroDOM {
         }
     }
 
-#define DIFF_STYLE_AND_SET(PROPERTY_ENUM, PROPERTY, SET_EXPR, SET_DEFAULT_EXPR)                                                     \
-    {                                                                                                                               \
-        if (oldStyleRef && oldStyleRef->PROPERTY.has_value()) {                                                                     \
-            if (style->PROPERTY.has_value()) {                                                                                      \
-                if (oldStyleRef->PROPERTY.value() != style->PROPERTY.value()) {                                                     \
-                    if (OnSetPropertyIntoNode(PROPERTY_ENUM, TaroChange::Modified, style)) SET_EXPR;                                \
-                }                                                                                                                   \
-            } else {                                                                                                                \
-                if (OnSetPropertyIntoNode(PROPERTY_ENUM, TaroChange::Modified, style)) SET_DEFAULT_EXPR;                            \
-            }                                                                                                                       \
-        } else {                                                                                                                    \
-            if (style->PROPERTY.has_value()) {                                                                                      \
-                if (OnSetPropertyIntoNode(PROPERTY_ENUM, !oldStyleRef ? TaroChange::Added : TaroChange::Modified, style)) SET_EXPR; \
-            } else {                                                                                                                \
-                SET_DEFAULT_EXPR;                                                                                                   \
-            }                                                                                                                       \
-        }                                                                                                                           \
+#define DIFF_STYLE_AND_SET(PROPERTY_ENUM, PROPERTY, SET_EXPR, SET_DEFAULT_EXPR)                                           \
+    {                                                                                                                     \
+        if (oldStyleRef && oldStyleRef->PROPERTY.has_value()) {                                                           \
+            if (style->PROPERTY.has_value()) {                                                                            \
+                if (oldStyleRef->PROPERTY.value() != style->PROPERTY.value()) {                                           \
+                    if (OnSetPropertyIntoNode(PROPERTY_ENUM, TaroChange::Modified, style))                                \
+                        SET_EXPR;                                                                                         \
+                }                                                                                                         \
+            } else {                                                                                                      \
+                if (OnSetPropertyIntoNode(PROPERTY_ENUM, TaroChange::Modified, style))                                    \
+                    SET_DEFAULT_EXPR;                                                                                     \
+            }                                                                                                             \
+        } else {                                                                                                          \
+            if (style->PROPERTY.has_value()) {                                                                            \
+                if (OnSetPropertyIntoNode(PROPERTY_ENUM, !oldStyleRef ? TaroChange::Added : TaroChange::Modified, style)) \
+                    SET_EXPR;                                                                                             \
+            } else {                                                                                                      \
+                SET_DEFAULT_EXPR;                                                                                         \
+            }                                                                                                             \
+        }                                                                                                                 \
     }
 
     void BaseRenderNode::SetNodeLayoutStyle(
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style,
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &oldStyleRef,
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &parentStyleRef) {
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style,
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& oldStyleRef,
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& parentStyleRef) {
         using namespace TaroCSSOM::TaroStylesheet;
-        if (!style) return;
+        if (!style)
+            return;
         // 设置yoga属性
         bool isFlex = false;
 
@@ -94,7 +100,7 @@ namespace TaroDOM {
             SetFlexWrap(ArkUI_FlexWrap::ARKUI_FLEX_WRAP_NO_WRAP);
         }
         if (parentStyleRef) {
-            const auto &parentDisplay = parentStyleRef->display;
+            const auto& parentDisplay = parentStyleRef->display;
             bool parentIsFlex = parentDisplay.has_value() && parentDisplay.value() == PropertyType::Display::Flex;
 
             // 模拟block拉满的逻辑
@@ -306,8 +312,8 @@ namespace TaroDOM {
     }
 
     void BaseRenderNode::SetNodeDrawStyle(
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style,
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &oldStyleRef) {
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style,
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& oldStyleRef) {
         // 绘制样式
         DIFF_STYLE_AND_SET(
             CSSProperty::BorderTopStyle,
@@ -438,8 +444,8 @@ namespace TaroDOM {
     }
 
     void BaseRenderNode::SetFontDrawStyle(
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style,
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &oldStyleRef) {
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style,
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& oldStyleRef) {
         DIFF_STYLE_AND_SET(
             CSSProperty::Color,
             color,
@@ -512,16 +518,18 @@ namespace TaroDOM {
             ResetTextOverflow());
     }
 
-    void BaseRenderNode::SetLayoutDirty(const bool &val) {
-        if (is_layout_dirty_ == val) return;
+    void BaseRenderNode::SetLayoutDirty(const bool& val) {
+        if (is_layout_dirty_ == val)
+            return;
         is_layout_dirty_ = val;
         // 启动监听下一个vsync时，进行排版布局
         if (is_layout_dirty_) {
             RegistryLayoutTaskOnNextVsync();
         }
     }
-    void BaseRenderNode::SetDrawDirty(const bool &val) {
-        if (is_draw_dirty_ == val) return;
+    void BaseRenderNode::SetDrawDirty(const bool& val) {
+        if (is_draw_dirty_ == val)
+            return;
         is_draw_dirty_ = val;
         // 启动监听下一个vsync，进行绘制
         if (is_draw_dirty_) {
@@ -566,14 +574,14 @@ namespace TaroDOM {
         }
     }
 
-    bool BaseRenderNode::OnSetPropertyIntoNode(const CSSProperty::Type &property,
-                                               const TaroChange &changeType,
-                                               const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style) {
+    bool BaseRenderNode::OnSetPropertyIntoNode(const CSSProperty::Type& property,
+                                               const TaroChange& changeType,
+                                               const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style) {
         // true: 设值到render node上
         return true;
     }
 
-    void BaseRenderNode::SetDisplay(const PropertyType::Display &val, const PropertyType::Display &oldVal) {
+    void BaseRenderNode::SetDisplay(const PropertyType::Display& val, const PropertyType::Display& oldVal) {
         if (val == PropertyType::Display::None) {
             YGNodeStyleSetDisplay(ygNodeRef, YGDisplayNone);
         } else {
@@ -587,7 +595,7 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetPosition(const PropertyType::Position &val) {
+    void BaseRenderNode::SetPosition(const PropertyType::Position& val) {
         switch (val) {
             case PropertyType::Position::Absolute:
             case PropertyType::Position::Sticky:
@@ -607,7 +615,7 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetOverflow(const PropertyType::Overflow &val) {
+    void BaseRenderNode::SetOverflow(const PropertyType::Overflow& val) {
         switch (val) {
             case PropertyType::Overflow::Hidden:
                 YGNodeStyleSetOverflow(ygNodeRef, YGOverflowHidden);
@@ -625,7 +633,7 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetAlignContent(const ArkUI_FlexAlignment &val) {
+    void BaseRenderNode::SetAlignContent(const ArkUI_FlexAlignment& val) {
         switch (val) {
             case ARKUI_FLEX_ALIGNMENT_START:
                 YGNodeStyleSetAlignContent(ygNodeRef, YGAlignFlexStart);
@@ -652,7 +660,7 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetAlignSelf(const ArkUI_ItemAlignment &val) {
+    void BaseRenderNode::SetAlignSelf(const ArkUI_ItemAlignment& val) {
         switch (val) {
             case ARKUI_ITEM_ALIGNMENT_START:
                 YGNodeStyleSetAlignSelf(ygNodeRef, YGAlign::YGAlignFlexStart);
@@ -676,12 +684,12 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetFlexGrow(const float &val) {
+    void BaseRenderNode::SetFlexGrow(const float& val) {
         YGNodeStyleSetFlexGrow(ygNodeRef, val);
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetFlexBasis(const Dimension &val) {
+    void BaseRenderNode::SetFlexBasis(const Dimension& val) {
         switch (val.Unit()) {
             case DimensionUnit::VP: {
                 if (val.Value() == 0.0f) {
@@ -713,12 +721,12 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetFlexShrink(const float &val) {
+    void BaseRenderNode::SetFlexShrink(const float& val) {
         YGNodeStyleSetFlexShrink(ygNodeRef, val);
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetFlexDirection(const ArkUI_FlexDirection &val) {
+    void BaseRenderNode::SetFlexDirection(const ArkUI_FlexDirection& val) {
         switch (val) {
             case ArkUI_FlexDirection::ARKUI_FLEX_DIRECTION_COLUMN:
                 YGNodeStyleSetFlexDirection(ygNodeRef, YGFlexDirectionColumn);
@@ -738,7 +746,7 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetAlignItems(const ArkUI_ItemAlignment &val) {
+    void BaseRenderNode::SetAlignItems(const ArkUI_ItemAlignment& val) {
         switch (val) {
             case ARKUI_ITEM_ALIGNMENT_AUTO:
                 YGNodeStyleSetAlignItems(ygNodeRef, YGAlign::YGAlignAuto);
@@ -765,7 +773,7 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetJustifyContent(const ArkUI_FlexAlignment &val) {
+    void BaseRenderNode::SetJustifyContent(const ArkUI_FlexAlignment& val) {
         switch (val) {
             case ARKUI_FLEX_ALIGNMENT_START:
                 YGNodeStyleSetJustifyContent(ygNodeRef, YGJustifyFlexStart);
@@ -792,7 +800,7 @@ namespace TaroDOM {
         CheckIfYGDirty();
     }
 
-    void BaseRenderNode::SetFlexWrap(const ArkUI_FlexWrap &val) {
+    void BaseRenderNode::SetFlexWrap(const ArkUI_FlexWrap& val) {
         switch (val) {
             case ARKUI_FLEX_WRAP_NO_WRAP:
                 YGNodeStyleSetFlexWrap(ygNodeRef, YGWrapNoWrap);
@@ -828,7 +836,7 @@ namespace TaroDOM {
             }                                                                                                                               \
             case DimensionUnit::CALC: {                                                                                                     \
                 auto context = GetDimensionContext();                                                                                       \
-                \
+                                                                                                                                            \
                 CALC_FUNCTION(ygNodeRef, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                      \
             }                                                                                                                               \
@@ -840,19 +848,19 @@ namespace TaroDOM {
         CheckIfYGDirty();                                                                                                                   \
     }
 
-    void BaseRenderNode::SetMinHeight(const Dimension &val) {
+    void BaseRenderNode::SetMinHeight(const Dimension& val) {
         SET_LENGTH_VALUE_PROPERTY(YGNodeStyleSetMinHeight, YGNodeStyleSetMinHeightPercent, YGNodeStyleSetMinHeightCalc);
     }
 
-    void BaseRenderNode::SetMaxHeight(const Dimension &val) {
+    void BaseRenderNode::SetMaxHeight(const Dimension& val) {
         SET_LENGTH_VALUE_PROPERTY(YGNodeStyleSetMaxHeight, YGNodeStyleSetMaxHeightPercent, YGNodeStyleSetMaxHeightCalc);
     }
 
-    void BaseRenderNode::SetMinWidth(const Dimension &val) {
+    void BaseRenderNode::SetMinWidth(const Dimension& val) {
         SET_LENGTH_VALUE_PROPERTY(YGNodeStyleSetMinWidth, YGNodeStyleSetMinWidthPercent, YGNodeStyleSetMinWidthCalc);
     }
 
-    void BaseRenderNode::SetMaxWidth(const Dimension &val) {
+    void BaseRenderNode::SetMaxWidth(const Dimension& val) {
         SET_LENGTH_VALUE_PROPERTY(YGNodeStyleSetMaxWidth, YGNodeStyleSetMaxWidthPercent, YGNodeStyleSetMaxWidthCalc);
     }
 
@@ -874,7 +882,7 @@ namespace TaroDOM {
             }                                                                                                                               \
             case DimensionUnit::CALC: {                                                                                                     \
                 auto context = GetDimensionContext();                                                                                       \
-                \
+                                                                                                                                            \
                 CALC_FUCNTION(ygNodeRef, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                      \
             }                                                                                                                               \
@@ -886,7 +894,7 @@ namespace TaroDOM {
         CheckIfYGDirty();                                                                                                                   \
     }
 
-    void BaseRenderNode::SetHeight(const Dimension &val, const Dimension &oldVal) {
+    void BaseRenderNode::SetHeight(const Dimension& val, const Dimension& oldVal) {
         // 高度从 0 切到非 0，需要找到带有自定义测量函数的子节点标脏
         if (oldVal.IsValid() && val.IsValid()) {
             if (oldVal.IsNonPositive() && val.IsNonZero()) {
@@ -896,7 +904,7 @@ namespace TaroDOM {
         SET_LENGTH_VALUE_PROPERTY_WITH_AUTO(YGNodeStyleSetHeight, YGNodeStyleSetHeightPercent, YGNodeStyleSetHeightCalc, YGNodeStyleSetHeightAuto);
     }
 
-    void BaseRenderNode::SetWidth(const Dimension &val) {
+    void BaseRenderNode::SetWidth(const Dimension& val) {
         SET_LENGTH_VALUE_PROPERTY_WITH_AUTO(YGNodeStyleSetWidth, YGNodeStyleSetWidthPercent, YGNodeStyleSetWidthCalc, YGNodeStyleSetWidthAuto);
     }
 
@@ -918,7 +926,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
             case DimensionUnit::CALC: {                                                                                                           \
                 auto context = GetDimensionContext();                                                                                             \
-                \
+                                                                                                                                                  \
                 CALC_FUNCTION(ygNodeRef, EDGE, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                            \
             }                                                                                                                                     \
@@ -930,7 +938,7 @@ namespace TaroDOM {
         CheckIfYGDirty();                                                                                                                         \
     }
 
-    void BaseRenderNode::SetPadding(const Dimension &val, const TaroEdge &edge) {
+    void BaseRenderNode::SetPadding(const Dimension& val, const TaroEdge& edge) {
         SET_LENGTH_VALUE_PROPERTY_WITH_EDGE(YGNodeStyleSetPadding, YGNodeStyleSetPaddingPercent, YGNodeStyleSetPaddingCalc, TaroEdge2YgEdgeMapping(edge));
     }
 
@@ -954,7 +962,7 @@ namespace TaroDOM {
         CheckIfYGDirty();                                             \
     }
 
-    void BaseRenderNode::SetBorder(const Dimension &val, const TaroEdge &edge) {
+    void BaseRenderNode::SetBorder(const Dimension& val, const TaroEdge& edge) {
         SET_LENGTH_VALUE_PROPERTY_WITH_BORDER_EDGE(YGNodeStyleSetBorder, TaroEdge2YgEdgeMapping(edge));
     }
 
@@ -977,7 +985,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
             case DimensionUnit::CALC: {                                                                                                           \
                 auto context = GetDimensionContext();                                                                                             \
-                \
+                                                                                                                                                  \
                 CALC_FUNCTION(ygNodeRef, EDGE, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                            \
             }                                                                                                                                     \
@@ -987,21 +995,19 @@ namespace TaroDOM {
             }                                                                                                                                     \
         }                                                                                                                                         \
         CheckIfYGDirty();                                                                                                                         \
-        \
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  \
     }
 
-    void BaseRenderNode::SetMargin(const Dimension &val, const TaroEdge &edge) {
+    void BaseRenderNode::SetMargin(const Dimension& val, const TaroEdge& edge) {
         SET_LENGTH_VALUE_PROPERTY_WITH_AUTO_EDGE(
             YGNodeStyleSetMargin, YGNodeStyleSetMarginPercent,
             YGNodeStyleSetMarginAuto, YGNodeStyleSetMarginCalc, TaroEdge2YgEdgeMapping(edge));
     }
 
-    void BaseRenderNode::SetPosition(const Dimension &val, const TaroEdge &edge) {
+    void BaseRenderNode::SetPosition(const Dimension& val, const TaroEdge& edge) {
         SET_LENGTH_VALUE_PROPERTY_WITH_EDGE(YGNodeStyleSetPosition, YGNodeStyleSetPositionPercent, YGNodeStyleSetPositionCalc, TaroEdge2YgEdgeMapping(edge));
     }
 
-    void BaseRenderNode::SetBackgroundImage(const TaroCSSOM::TaroStylesheet::BackgroundImageItem &val) {
+    void BaseRenderNode::SetBackgroundImage(const TaroCSSOM::TaroStylesheet::BackgroundImageItem& val) {
         SET_DRAW_STYLE(background_image_);
 
         // backgroundSize 和 backgroundPosition 为百分比的时候，值会根据image的尺寸更新，但是百分比这个值本身没变
@@ -1017,26 +1023,26 @@ namespace TaroDOM {
     void BaseRenderNode::ResetBackgroundImage() {
         RESET_DRAW_STYLE(background_image_);
     }
-    const Optional<TaroCSSOM::TaroStylesheet::BackgroundImageItem> &BaseRenderNode::GetBackgroundImage() const {
+    const Optional<TaroCSSOM::TaroStylesheet::BackgroundImageItem>& BaseRenderNode::GetBackgroundImage() const {
         GET_DRAW_STYLE(background_image_);
     }
 
-    const Optional<Dimension> &BaseRenderNode::GetBackgroundPositionX() const {
+    const Optional<Dimension>& BaseRenderNode::GetBackgroundPositionX() const {
         return paintDiffer_.paint_style_->background_position_.value[0];
     }
 
-    void BaseRenderNode::SetBackgroundPositionX(const Dimension &val) {
+    void BaseRenderNode::SetBackgroundPositionX(const Dimension& val) {
         SET_DRAW_STYLE_WITH_IDX(background_position_, 0);
     }
     void BaseRenderNode::ResetBackgroundPositionX() {
         RESET_DRAW_STYLE_WITH_IDX(background_position_, 0);
     }
 
-    const Optional<Dimension> &BaseRenderNode::GetBackgroundPositionY() const {
+    const Optional<Dimension>& BaseRenderNode::GetBackgroundPositionY() const {
         return paintDiffer_.paint_style_->background_position_.value[1];
     }
 
-    void BaseRenderNode::SetBackgroundPositionY(const Dimension &val) {
+    void BaseRenderNode::SetBackgroundPositionY(const Dimension& val) {
         SET_DRAW_STYLE_WITH_IDX(background_position_, 1);
     }
     void BaseRenderNode::ResetBackgroundPositionY() {
@@ -1072,7 +1078,7 @@ namespace TaroDOM {
     GENERATE_DRAW_LAYOUT_STYLE_FUNCTIONS(TextDecorationLineStyle, OH_Drawing_TextDecorationStyle, textDecorationStyle_)
     GENERATE_DRAW_LAYOUT_STYLE_FUNCTIONS(TextOverflow, ArkUI_TextOverflow, textOverflow_)
 
-    bool BaseRenderNode::CheckAndSetFontStyle(const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style) {
+    bool BaseRenderNode::CheckAndSetFontStyle(const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style) {
         bool isChanged = false;
         std::optional<uint32_t> defaultColor = std::nullopt;
         CHECK_AND_SET_FONT_STYLE(style->color, color_, defaultColor);
@@ -1105,7 +1111,7 @@ namespace TaroDOM {
         return isChanged;
     }
 
-    bool BaseRenderNode::CheckAndSetFontBgColorStyle(const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style) {
+    bool BaseRenderNode::CheckAndSetFontBgColorStyle(const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style) {
         bool isChanged = false;
         std::optional<uint32_t> defaultBackgroundColor = std::nullopt;
         CHECK_AND_SET_FONT_STYLE(style->backgroundColor, background_color_, defaultBackgroundColor);

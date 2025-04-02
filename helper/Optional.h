@@ -14,7 +14,8 @@ class Optional {
         : is_set(false) {}
 
     Optional(const T& value)
-        : data(value), is_set(true) {}
+        : data(value),
+          is_set(true) {}
 
     void set(const T& value) {
         data = value;

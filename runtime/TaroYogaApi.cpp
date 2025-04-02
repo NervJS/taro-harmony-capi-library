@@ -71,7 +71,8 @@ void TaroYogaApi::insertChildToParent(YGNodeRef parent, YGNodeRef child,
 }
 
 int YGNodeGetChildIndex(YGNodeRef parent, YGNodeRef child) {
-    if (!parent) return -1;
+    if (!parent)
+        return -1;
     int childCount = YGNodeGetChildCount(parent);
     for (int i = 0; i < childCount; i++) {
         if (YGNodeGetChild(parent, i) == child) {
@@ -221,7 +222,8 @@ void TaroYogaApi::markDirty(YGNodeRef ygNode) {
 }
 
 void TaroYogaApi::markDirtyNodesWithCustomMeasureFunction(const YGNodeRef root) {
-    if (root == nullptr) return;
+    if (root == nullptr)
+        return;
 
     std::stack<YGNodeRef> stack;
     stack.push(root);
@@ -241,7 +243,8 @@ void TaroYogaApi::markDirtyNodesWithCustomMeasureFunction(const YGNodeRef root) 
 }
 
 float TaroYogaApi::getParentNodeWidthNotZero(const YGNodeRef ygNode) {
-    if (ygNode == nullptr) return 0;
+    if (ygNode == nullptr)
+        return 0;
     YGNodeRef currentNode = ygNode;
     while (currentNode != nullptr) {
         float width = YGNodeLayoutGetWidth(currentNode);

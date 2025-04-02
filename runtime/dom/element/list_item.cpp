@@ -23,7 +23,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroListItem::Build(std::shared_ptr<TaroElement> &reuse_element) {
+    void TaroListItem::Build(std::shared_ptr<TaroElement>& reuse_element) {
         std::shared_ptr<TaroListItemNode> new_node = std::dynamic_pointer_cast<TaroListItemNode>(GetHeadRenderNode());
         auto element = std::static_pointer_cast<TaroElement>(shared_from_this());
         auto ark_handle = reuse_element->GetNodeHandle();

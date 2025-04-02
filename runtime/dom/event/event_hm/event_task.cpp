@@ -3,10 +3,11 @@
  */
 
 #include "event_task.h"
-#include "thread/TaskExecutor.h"
-#include "runtime/render.h"
+
 #include "helper/Time.h"
 #include "helper/api_cost_statistic.h"
+#include "runtime/render.h"
+#include "thread/TaskExecutor.h"
 
 namespace TaroRuntime::TaroDOM::TaroEvent {
 TaroEventTask* TaroEventTask::instance() {
@@ -22,9 +23,8 @@ void TaroEventTask::pushHmEvent(TaroEventBasePtr event) {
         task_keyframe_ = TaroRuntime::KeyframeVsync::getKeyFrameVsync("task_event");
         task_keyframe_->attachOneVsync(
             [this](uint64_t time, uint64_t id) {
-                    OnVsync(time, id);
-                }
-            );  
+                OnVsync(time, id);
+            });
     }
 }
 
@@ -37,7 +37,7 @@ void TaroEventTask::OnVsync(uint64_t time, uint64_t id) {
 
 void TaroEventTask::execEvent() {
     in_vsync_ = false;
-    while(!hm_event_queue_.empty()) {
+    while (!hm_event_queue_.empty()) {
         auto event = hm_event_queue_.front();
         hm_event_queue_.pop_front();
         uint64_t cost = TaroHelper::TaroTime::getCurrentUsTime() - event->time_mark_;
@@ -45,4 +45,4 @@ void TaroEventTask::execEvent() {
         event->target_->getEventEmitter()->triggerEvents(event);
     }
 }
-}  // namespace TaroRuntime::TaroDOM::TaroEvent
+} // namespace TaroRuntime::TaroDOM::TaroEvent

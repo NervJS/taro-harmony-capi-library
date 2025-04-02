@@ -14,7 +14,8 @@
 namespace TaroThread {
 
 NapiTaskRunner::NapiTaskRunner(napi_env env, ExceptionHandler exceptionHandler)
-    : env(env), exceptionHandler(std::move(exceptionHandler)) {
+    : env(env),
+      exceptionHandler(std::move(exceptionHandler)) {
     // NOTE: let's hope the JS runtime doesn't move between system threads...
     threadId = std::this_thread::get_id();
     auto loop = getLoop();

@@ -45,10 +45,14 @@ namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
  */
 void parsePadding(Stylesheet* ss, std::string_view value) {
     auto bound = parseBound(value);
-    if (!bound.top.empty()) ss->paddingTop.setValueFromStringView(bound.top);
-    if (!bound.right.empty()) ss->paddingRight.setValueFromStringView(bound.right);
-    if (!bound.bottom.empty()) ss->paddingBottom.setValueFromStringView(bound.bottom);
-    if (!bound.left.empty()) ss->paddingLeft.setValueFromStringView(bound.left);
+    if (!bound.top.empty())
+        ss->paddingTop.setValueFromStringView(bound.top);
+    if (!bound.right.empty())
+        ss->paddingRight.setValueFromStringView(bound.right);
+    if (!bound.bottom.empty())
+        ss->paddingBottom.setValueFromStringView(bound.bottom);
+    if (!bound.left.empty())
+        ss->paddingLeft.setValueFromStringView(bound.left);
 }
 
 /**
@@ -56,10 +60,14 @@ void parsePadding(Stylesheet* ss, std::string_view value) {
  */
 void parseMargin(Stylesheet* ss, std::string_view value) {
     auto bound = parseBound(value);
-    if (!bound.top.empty()) ss->marginTop.setValueFromStringView(bound.top);
-    if (!bound.right.empty()) ss->marginRight.setValueFromStringView(bound.right);
-    if (!bound.bottom.empty()) ss->marginBottom.setValueFromStringView(bound.bottom);
-    if (!bound.left.empty()) ss->marginLeft.setValueFromStringView(bound.left);
+    if (!bound.top.empty())
+        ss->marginTop.setValueFromStringView(bound.top);
+    if (!bound.right.empty())
+        ss->marginRight.setValueFromStringView(bound.right);
+    if (!bound.bottom.empty())
+        ss->marginBottom.setValueFromStringView(bound.bottom);
+    if (!bound.left.empty())
+        ss->marginLeft.setValueFromStringView(bound.left);
 }
 
 /**
@@ -69,20 +77,23 @@ void parseBorder(Stylesheet* ss, std::string_view value, uint8_t pos) {
     auto values = TaroHelper::string::splitBySpace(value);
     auto size = values.size();
 
-    if (size < 2) return;
+    if (size < 2)
+        return;
 
     // 寻找 border-style
     auto styleIter = std::find_if(values.begin(), values.end(), [&](auto& item) {
         return item == "solid" || item == "dashed" || item == "dotted";
     });
-    if (styleIter == values.end()) return;
+    if (styleIter == values.end())
+        return;
 
     size_t stylePos = std::distance(values.begin(), styleIter);
     size_t widthPos = size;
     size_t colorPos = size;
 
     for (size_t i = 0; i < size; ++i) {
-        if (i == stylePos) continue;
+        if (i == stylePos)
+            continue;
         if (colorPos != size) {
             widthPos = i;
             break;
@@ -99,33 +110,39 @@ void parseBorder(Stylesheet* ss, std::string_view value, uint8_t pos) {
         }
     }
 
-    if (widthPos == size) return;
+    if (widthPos == size)
+        return;
 
     switch (pos) {
         case 0:
             ss->borderTopStyle.setValueFromStringView(values[stylePos]);
             ss->borderTopWidth.setValueFromStringView(values[widthPos]);
-            if (colorPos != size) ss->borderTopColor.setValueFromStringView(values[colorPos]);
+            if (colorPos != size)
+                ss->borderTopColor.setValueFromStringView(values[colorPos]);
             break;
         case 1:
             ss->borderRightStyle.setValueFromStringView(values[stylePos]);
             ss->borderRightWidth.setValueFromStringView(values[widthPos]);
-            if (colorPos != size) ss->borderRightColor.setValueFromStringView(values[colorPos]);
+            if (colorPos != size)
+                ss->borderRightColor.setValueFromStringView(values[colorPos]);
             break;
         case 2:
             ss->borderBottomStyle.setValueFromStringView(values[stylePos]);
             ss->borderBottomWidth.setValueFromStringView(values[widthPos]);
-            if (colorPos != size) ss->borderBottomColor.setValueFromStringView(values[colorPos]);
+            if (colorPos != size)
+                ss->borderBottomColor.setValueFromStringView(values[colorPos]);
             break;
         case 3:
             ss->borderLeftStyle.setValueFromStringView(values[stylePos]);
             ss->borderLeftWidth.setValueFromStringView(values[widthPos]);
-            if (colorPos != size) ss->borderLeftColor.setValueFromStringView(values[colorPos]);
+            if (colorPos != size)
+                ss->borderLeftColor.setValueFromStringView(values[colorPos]);
             break;
         case 4:
             parseBorderStyle(ss, values[stylePos]);
             parseBorderWidth(ss, values[widthPos]);
-            if (colorPos != size) parseBorderColor(ss, values[colorPos]);
+            if (colorPos != size)
+                parseBorderColor(ss, values[colorPos]);
             break;
         default:
             break;
@@ -137,10 +154,14 @@ void parseBorder(Stylesheet* ss, std::string_view value, uint8_t pos) {
  */
 void parseBorderWidth(Stylesheet* ss, std::string_view value) {
     auto bound = parseBound(value);
-    if (!bound.top.empty()) ss->borderTopWidth.setValueFromStringView(bound.top);
-    if (!bound.right.empty()) ss->borderRightWidth.setValueFromStringView(bound.right);
-    if (!bound.bottom.empty()) ss->borderBottomWidth.setValueFromStringView(bound.bottom);
-    if (!bound.left.empty()) ss->borderLeftWidth.setValueFromStringView(bound.left);
+    if (!bound.top.empty())
+        ss->borderTopWidth.setValueFromStringView(bound.top);
+    if (!bound.right.empty())
+        ss->borderRightWidth.setValueFromStringView(bound.right);
+    if (!bound.bottom.empty())
+        ss->borderBottomWidth.setValueFromStringView(bound.bottom);
+    if (!bound.left.empty())
+        ss->borderLeftWidth.setValueFromStringView(bound.left);
 }
 
 /**
@@ -148,10 +169,14 @@ void parseBorderWidth(Stylesheet* ss, std::string_view value) {
  */
 void parseBorderStyle(Stylesheet* ss, std::string_view value) {
     auto bound = parseBound(value);
-    if (!bound.top.empty()) ss->borderTopStyle.setValueFromStringView(bound.top);
-    if (!bound.right.empty()) ss->borderRightStyle.setValueFromStringView(bound.right);
-    if (!bound.bottom.empty()) ss->borderBottomStyle.setValueFromStringView(bound.bottom);
-    if (!bound.left.empty()) ss->borderLeftStyle.setValueFromStringView(bound.left);
+    if (!bound.top.empty())
+        ss->borderTopStyle.setValueFromStringView(bound.top);
+    if (!bound.right.empty())
+        ss->borderRightStyle.setValueFromStringView(bound.right);
+    if (!bound.bottom.empty())
+        ss->borderBottomStyle.setValueFromStringView(bound.bottom);
+    if (!bound.left.empty())
+        ss->borderLeftStyle.setValueFromStringView(bound.left);
 }
 
 /**
@@ -159,10 +184,14 @@ void parseBorderStyle(Stylesheet* ss, std::string_view value) {
  */
 void parseBorderColor(Stylesheet* ss, std::string_view value) {
     auto bound = parseBound(value);
-    if (!bound.top.empty()) ss->borderTopColor.setValueFromStringView(bound.top);
-    if (!bound.right.empty()) ss->borderRightColor.setValueFromStringView(bound.right);
-    if (!bound.bottom.empty()) ss->borderBottomColor.setValueFromStringView(bound.bottom);
-    if (!bound.left.empty()) ss->borderLeftColor.setValueFromStringView(bound.left);
+    if (!bound.top.empty())
+        ss->borderTopColor.setValueFromStringView(bound.top);
+    if (!bound.right.empty())
+        ss->borderRightColor.setValueFromStringView(bound.right);
+    if (!bound.bottom.empty())
+        ss->borderBottomColor.setValueFromStringView(bound.bottom);
+    if (!bound.left.empty())
+        ss->borderLeftColor.setValueFromStringView(bound.left);
 }
 
 /**
@@ -171,7 +200,8 @@ void parseBorderColor(Stylesheet* ss, std::string_view value) {
  */
 void parseBackgroundPosition(Stylesheet* ss, std::string_view value) {
     auto values = TaroHelper::string::splitBySpace(value);
-    if (values.empty() || values.size() > 4) return;
+    if (values.empty() || values.size() > 4)
+        return;
 
     bool reverse = values[0] == "top" || values[0] == "bottom";
 
@@ -229,7 +259,9 @@ void parseBackground(Stylesheet* ss, std::string_view value) {
         size_t end = start + matches[0].length();
         do {
             end = value.find(')', end) + 1;
-        } while (end != std::string_view::npos && std::any_of(colorRanges.begin(), colorRanges.end(), [&](TRange r) { return r.contains(end); }));
+        } while (end != std::string_view::npos && std::any_of(colorRanges.begin(), colorRanges.end(), [&](TRange r) {
+                     return r.contains(end);
+                 }));
 
         if (end != std::string_view::npos) {
             imageRange = TRange(start, end);
@@ -296,8 +328,10 @@ void parseBackground(Stylesheet* ss, std::string_view value) {
     // background-position
     if (!positionRanges.empty()) {
         auto it = std::find_if(positionRanges.begin(), positionRanges.end(), [&](auto item) {
-            if (sizeRange.width() && item.end > sizeRange.start) return false;   // position 不能在 size 之后
-            if (imageRange.width() && item.intersects(imageRange)) return false; // 排除背景图片干扰
+            if (sizeRange.width() && item.end > sizeRange.start)
+                return false; // position 不能在 size 之后
+            if (imageRange.width() && item.intersects(imageRange))
+                return false; // 排除背景图片干扰
             return true;
         });
         if (it != positionRanges.end()) {
@@ -361,7 +395,8 @@ void parseFlex(Stylesheet* ss, std::string_view value) {
  */
 void parseFlexFlow(Stylesheet* ss, std::string_view value) {
     auto values = TaroHelper::string::splitBySpace(value);
-    if (values.empty() || values.size() > 2) return;
+    if (values.empty() || values.size() > 2)
+        return;
 
     bool firstItemIsWrapType = values[0] == "nowrap" || values[0] == "wrap" || values[0] == "wrap-reverse";
 
@@ -387,20 +422,23 @@ void parseTextDecoration(Stylesheet* ss, std::string_view value) {
     auto values = TaroHelper::string::splitBySpace(value);
     auto size = values.size();
 
-    if (values.empty() || size > 3) return;
+    if (values.empty() || size > 3)
+        return;
 
     // 寻找 text-decoration-line
     auto lineIter = std::find_if(values.begin(), values.end(), [&](auto& item) {
         return item == "none" || item == "underline" || item == "overline" || item == "line-through";
     });
-    if (lineIter == values.end() || *lineIter == "none") return;
+    if (lineIter == values.end() || *lineIter == "none")
+        return;
 
     size_t linePos = std::distance(values.begin(), lineIter);
     size_t stylePos = size;
     size_t colorPos = size;
 
     for (size_t i = 0; i < size; ++i) {
-        if (i == linePos) continue;
+        if (i == linePos)
+            continue;
         if (colorPos != size) {
             stylePos = i;
             break;
@@ -418,8 +456,10 @@ void parseTextDecoration(Stylesheet* ss, std::string_view value) {
     }
 
     ss->textDecorationLine.setValueFromStringView(values[linePos]);
-    if (colorPos != size) ss->textDecorationColor.setValueFromStringView(values[colorPos]);
-    if (stylePos != size) ss->textDecorationStyle.setValueFromStringView(values[stylePos]);
+    if (colorPos != size)
+        ss->textDecorationColor.setValueFromStringView(values[colorPos]);
+    if (stylePos != size)
+        ss->textDecorationStyle.setValueFromStringView(values[stylePos]);
 }
 
 /**
@@ -434,10 +474,14 @@ void parseBorderRadius(Stylesheet* ss, std::string_view value) {
 
     // 混合值的规则类似 padding 等属性
     auto bound = parseBound(value);
-    if (!bound.top.empty()) ss->borderTopLeftRadius.setValueFromStringView(bound.top);
-    if (!bound.right.empty()) ss->borderTopRightRadius.setValueFromStringView(bound.right);
-    if (!bound.bottom.empty()) ss->borderBottomRightRadius.setValueFromStringView(bound.bottom);
-    if (!bound.left.empty()) ss->borderBottomLeftRadius.setValueFromStringView(bound.left);
+    if (!bound.top.empty())
+        ss->borderTopLeftRadius.setValueFromStringView(bound.top);
+    if (!bound.right.empty())
+        ss->borderTopRightRadius.setValueFromStringView(bound.right);
+    if (!bound.bottom.empty())
+        ss->borderBottomRightRadius.setValueFromStringView(bound.bottom);
+    if (!bound.left.empty())
+        ss->borderBottomLeftRadius.setValueFromStringView(bound.left);
 }
 
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet

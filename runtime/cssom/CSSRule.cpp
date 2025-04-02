@@ -13,7 +13,7 @@ namespace TaroCSSOM {
 
     std::unordered_map<std::string, std::shared_ptr<ClassName>> ClassNamePool::pool_;
 
-    std::shared_ptr<ClassName> ClassNamePool::GetClassName(const std::string &str) {
+    std::shared_ptr<ClassName> ClassNamePool::GetClassName(const std::string& str) {
         auto it = pool_.find(str);
         if (it != pool_.end()) {
             return it->second;
@@ -24,7 +24,7 @@ namespace TaroCSSOM {
         }
     }
 
-    void ClassNamePool::SetClassName(const std::string &str) {
+    void ClassNamePool::SetClassName(const std::string& str) {
         auto it = pool_.find(str);
         if (it == pool_.end()) {
             auto new_shared_str = std::make_shared<ClassName>(str);

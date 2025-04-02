@@ -10,7 +10,7 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        int TaroRadioEventChange::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroRadioEventChange::parseHmEvent(ArkUI_NodeEvent* event) {
             auto ptr_ev_string = OH_ArkUI_NodeEvent_GetStringAsyncEvent(event);
             if (ptr_ev_string != nullptr && ptr_ev_string->pStr != nullptr) {
                 value_ = ptr_ev_string->pStr;
@@ -18,7 +18,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroRadioEventChange::serializeFun(napi_value &ret_obj) {
+        int TaroRadioEventChange::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
 
             napi_value js_detail = detail();

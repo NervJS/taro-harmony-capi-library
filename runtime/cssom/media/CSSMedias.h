@@ -13,7 +13,7 @@ namespace TaroCSSOM {
 
     class CSSMedia {
         public:
-        int init(const napi_value &config);
+        int init(const napi_value& config);
 
         uint32_t id() const {
             return id_;
@@ -37,7 +37,7 @@ namespace TaroCSSOM {
 
     class CSSMedias {
         public:
-        int init(const napi_value &config);
+        int init(const napi_value& config);
 
         const CSSMediaPtr getMedia(int32_t) const;
 

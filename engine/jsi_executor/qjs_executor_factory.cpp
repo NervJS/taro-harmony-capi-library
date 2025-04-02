@@ -38,5 +38,5 @@ QuickJSExecutorFactory::createJSExecutor(std::shared_ptr<ExecutorDelegate> deleg
 
 QuickJSExecutor::QuickJSExecutor(std::shared_ptr<facebook::jsi::Runtime> runtime, std::shared_ptr<ExecutorDelegate> delegate,
                                  std::shared_ptr<MessageQueueThread> jsQueue,
-                                 const JSIScopedTimeoutInvoker &timeoutInvoker, RuntimeInstaller runtimeInstaller)
+                                 const JSIScopedTimeoutInvoker& timeoutInvoker, RuntimeInstaller runtimeInstaller)
     : JSIExecutor(runtime, delegate, timeoutInvoker, runtimeInstaller) {}

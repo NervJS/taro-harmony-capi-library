@@ -12,12 +12,12 @@ namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
         TaroPickerChangeEvent::TaroPickerChangeEvent(
-            const std::string &js_event_type, ArkUI_NodeEvent *event)
+            const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
             bubbles_ = false;
         }
 
-        int TaroPickerChangeEvent::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroPickerChangeEvent::parseHmEvent(ArkUI_NodeEvent* event) {
             auto component_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (component_event == nullptr) {
                 return -1;
@@ -27,9 +27,9 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroPickerChangeEvent::serializeFun(napi_value &ret_obj) {
+        int TaroPickerChangeEvent::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             NapiSetter::SetProperty(js_detail, "value", currentSelector);
             NapiSetter::SetProperty(ret_obj, "detail", js_detail);
             return 0;

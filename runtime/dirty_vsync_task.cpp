@@ -36,8 +36,7 @@ void DirtyTaskPipeline::RequestNextFrame() {
             dirtyKeyFrame_->attachOneVsync(
                 [this](uint64_t time, uint64_t id) {
                     OnVsync(time, id);
-                }
-            );
+                });
         }
     }
 }
@@ -145,8 +144,7 @@ void DirtyTaskPipeline::FlushLayout() {
                     if (
                         std::dynamic_pointer_cast<TaroDOM::TaroWaterFlowNode>(parent) ||
                         std::dynamic_pointer_cast<TaroDOM::TaroListNode>(parent) ||
-                        std::dynamic_pointer_cast<TaroDOM::TaroSwiperNode>(parent)
-                    ) {
+                        std::dynamic_pointer_cast<TaroDOM::TaroSwiperNode>(parent)) {
                         isLocalMeasure = true;
                     }
                 }
@@ -240,11 +238,11 @@ void DirtyTaskPipeline::FlushFinish() {
     if (requestNext) {
         RequestNextFrame();
     }
-//     while (!nextTickTasks_.empty()) {
-//         std::function<void()>& callback_func = nextTickTasks_.front();
-//         callback_func();
-//         nextTickTasks_.pop_front();
-//     }
+    //     while (!nextTickTasks_.empty()) {
+    //         std::function<void()>& callback_func = nextTickTasks_.front();
+    //         callback_func();
+    //         nextTickTasks_.pop_front();
+    //     }
 }
 
 void DirtyTaskPipeline::CleanAllTasks() {

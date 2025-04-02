@@ -19,7 +19,7 @@ void TaroInstance::initialize() {
     auto config = std::make_unique<QuickJSRuntimeConfig>();
     auto jsExecutorFactory = std::make_shared<QuickJSExecutorFactory>(
         // 执行 jsi runtime 相关初始化逻辑，在执行 js 代码前，比如添加 log 和 trace 等功能
-        [](facebook::jsi::Runtime &rt) {
+        [](facebook::jsi::Runtime& rt) {
             bindNativeLogger(rt, nativeLogger);
         },
         JSIExecutor::defaultTimeoutInvoker,
@@ -63,29 +63,29 @@ std::shared_ptr<TaroThread::TaskExecutor> TaroInstance::getTaskExecutor() {
 };
 
 void TaroInstance::loadScript(
-    std::vector<uint8_t> &&bundle,
+    std::vector<uint8_t>&& bundle,
     std::string const sourceURL,
-    std::function<void(const std::string)> &&onFinish) {
+    std::function<void(const std::string)>&& onFinish) {
     std::weak_ptr<TaroInstance> weakThis = shared_from_this();
     this->taskExecutor->runTask(TaroThread::TaskThread::JS,
-        [weakThis, bundle = std::move(bundle), sourceURL, onFinish = std::move(onFinish)]() mutable {
-        if (auto self = weakThis.lock()) {
-            std::unique_ptr<JSBigBufferString> jsBundle;
-            jsBundle = std::make_unique<JSBigBufferString>(bundle.size());
-            memcpy(jsBundle->data(), bundle.data(), bundle.size());
-            try {
-                self->loadScriptFromString(std::move(jsBundle), sourceURL, true);
-                onFinish("");
-            } catch (std::exception const &e) {
-                try {
-                    std::rethrow_if_nested(e);
-                    onFinish(e.what());
-                } catch (const std::exception &nested) {
-                    onFinish(e.what() + std::string("\n") + nested.what());
-                }
-            }
-        }
-    });
+                                [weakThis, bundle = std::move(bundle), sourceURL, onFinish = std::move(onFinish)]() mutable {
+                                    if (auto self = weakThis.lock()) {
+                                        std::unique_ptr<JSBigBufferString> jsBundle;
+                                        jsBundle = std::make_unique<JSBigBufferString>(bundle.size());
+                                        memcpy(jsBundle->data(), bundle.data(), bundle.size());
+                                        try {
+                                            self->loadScriptFromString(std::move(jsBundle), sourceURL, true);
+                                            onFinish("");
+                                        } catch (std::exception const& e) {
+                                            try {
+                                                std::rethrow_if_nested(e);
+                                                onFinish(e.what());
+                                            } catch (const std::exception& nested) {
+                                                onFinish(e.what() + std::string("\n") + nested.what());
+                                            }
+                                        }
+                                    }
+                                });
 }
 
 void TaroInstance::loadScriptFromString(std::unique_ptr<const JSBigString> string, std::string sourceURL,
@@ -100,7 +100,9 @@ void TaroInstance::loadScriptFromString(std::unique_ptr<const JSBigString> strin
 
 void TaroInstance::loadBundleSync(std::unique_ptr<const JSBigString> string, std::string sourceURL) {
     std::unique_lock<std::mutex> lock(m_syncMutex);
-    m_syncCV.wait(lock, [this] { return m_syncReady; });
+    m_syncCV.wait(lock, [this] {
+        return m_syncReady;
+    });
 
     SystraceSection s("Instance::loadBundleSync", "sourceURL", sourceURL);
     nativeToJsBridge_->loadBundleSync(std::move(string), std::move(sourceURL));
@@ -123,12 +125,12 @@ void TaroInstance::JSCallInvoker::setNativeToJsBridgeAndFlushCalls(std::weak_ptr
     }
 }
 
-void TaroInstance::JSCallInvoker::invokeSync(std::function<void()> &&work) {
+void TaroInstance::JSCallInvoker::invokeSync(std::function<void()>&& work) {
     // TODO: Replace JS Callinvoker with RuntimeExecutor.
     throw std::runtime_error("Synchronous native -> JS calls are currently not supported.");
 }
 
-void TaroInstance::JSCallInvoker::invokeAsync(std::function<void()> &&work) {
+void TaroInstance::JSCallInvoker::invokeAsync(std::function<void()>&& work) {
     std::lock_guard<std::mutex> guard(m_mutex);
     /**
      * Why is is necessary to queue up async work?
@@ -152,9 +154,9 @@ void TaroInstance::JSCallInvoker::invokeAsync(std::function<void()> &&work) {
     scheduleAsync(std::move(work));
 }
 
-void TaroInstance::JSCallInvoker::scheduleAsync(std::function<void()> &&work) {
+void TaroInstance::JSCallInvoker::scheduleAsync(std::function<void()>&& work) {
     if (auto strongNativeToJsBridge = m_nativeToJsBridge.lock()) {
-        strongNativeToJsBridge->runOnExecutorQueue([work = std::move(work)](JSExecutor *executor) {
+        strongNativeToJsBridge->runOnExecutorQueue([work = std::move(work)](JSExecutor* executor) {
             work();
             executor->flush();
         });

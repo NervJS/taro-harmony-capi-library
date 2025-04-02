@@ -19,11 +19,11 @@ class GestureEventTap final : public GestureEventBase {
     public:
 };
 
-class GestureOperator_Tap final : public GestureOperator{
-public:
+class GestureOperator_Tap final : public GestureOperator {
+    public:
     GestureOperator_Tap();
-    int addGesture(ArkUI_NodeHandle node_handle, GestureParam* param, void* recall_param) override ;
-    int removeGesture() override ;
+    int addGesture(ArkUI_NodeHandle node_handle, GestureParam* param, void* recall_param) override;
+    int removeGesture() override;
 };
 
 } // namespace TaroRuntime::TaroDOM::TaroEvent

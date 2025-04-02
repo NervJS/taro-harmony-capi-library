@@ -7,8 +7,9 @@
 #include <cstdint>
 #include <unordered_map>
 #include <napi/native_api.h>
-#include "visible_info.h"
+
 #include "runtime/dom/element/element.h"
+#include "visible_info.h"
 
 class VisibleEventListener {
     public:
@@ -26,11 +27,12 @@ class VisibleEventListener {
     }
 
     static void callVisibilityFunc(const CallbackInfo& callback_info, const VisibilityInfo& info) {
-        if (!callback_info.registerd) return;
+        if (!callback_info.registerd)
+            return;
         // 触发回调
         napi_value callback;
         napi_get_reference_value(TaroRuntime::NativeNodeApi::env,
-                                    callback_info.callback_ref, &callback);
+                                 callback_info.callback_ref, &callback);
 
         // 创建参数对象
         napi_value args[1];
@@ -38,34 +40,34 @@ class VisibleEventListener {
 
         // 设置 intersectionRatio 属性
         SetNamedProperty(TaroRuntime::NativeNodeApi::env, args[0],
-                            "intersectionRatio", info.intersectionRatio);
+                         "intersectionRatio", info.intersectionRatio);
 
         // 创建 intersectionRect 对象
         napi_value intersection_rect;
         napi_create_object(TaroRuntime::NativeNodeApi::env,
-                            &intersection_rect);
+                           &intersection_rect);
         SetRectProperties(TaroRuntime::NativeNodeApi::env, intersection_rect,
-                            "", info.rect.intersectionRect);
+                          "", info.rect.intersectionRect);
         SetRectPropertiesWithWidthHeight(TaroRuntime::NativeNodeApi::env,
-                                            intersection_rect, "",
-                                            info.rect.intersectionRect);
+                                         intersection_rect, "",
+                                         info.rect.intersectionRect);
 
         // 创建 boundingClientRect 对象
         napi_value bounding_client_rect;
         napi_create_object(TaroRuntime::NativeNodeApi::env,
-                            &bounding_client_rect);
+                           &bounding_client_rect);
         SetRectProperties(TaroRuntime::NativeNodeApi::env,
-                            bounding_client_rect, "",
-                            info.rect.boundingClientRect);
+                          bounding_client_rect, "",
+                          info.rect.boundingClientRect);
         SetRectPropertiesWithWidthHeight(TaroRuntime::NativeNodeApi::env,
-                                            bounding_client_rect, "",
-                                            info.rect.boundingClientRect);
+                                         bounding_client_rect, "",
+                                         info.rect.boundingClientRect);
 
         // 创建 relativeRect 对象
         napi_value relative_rect;
         napi_create_object(TaroRuntime::NativeNodeApi::env, &relative_rect);
         SetRectProperties(TaroRuntime::NativeNodeApi::env, relative_rect, "",
-                            info.rect.relativeRect);
+                          info.rect.relativeRect);
 
         // 设置 intersectionRect、boundingClientRect 和 relativeRect 属性
         napi_set_named_property(TaroRuntime::NativeNodeApi::env, args[0],
@@ -77,7 +79,7 @@ class VisibleEventListener {
 
         napi_value result;
         napi_call_function(TaroRuntime::NativeNodeApi::env, nullptr, callback,
-                            1, args, &result);
+                           1, args, &result);
     }
 
     static bool checkThresholds(std::unordered_map<float, bool>& thresholds,
@@ -94,14 +96,18 @@ class VisibleEventListener {
             float threshold = pair.first;
             if (compareDecimalPlaces(
                     threshold, intersectionRatio,
-                    [](int num1, int num2) { return num1 < num2; }) &&
+                    [](int num1, int num2) {
+                        return num1 < num2;
+                    }) &&
                 !pair.second) {
                 // 将值设为 true
                 pair.second = true;
                 result = true;
             } else if (compareDecimalPlaces(
                            threshold, intersectionRatio,
-                           [](int num1, int num2) { return num1 >= num2; }) &&
+                           [](int num1, int num2) {
+                               return num1 >= num2;
+                           }) &&
                        pair.second) {
                 pair.second = false;
                 result = true;
@@ -113,20 +119,20 @@ class VisibleEventListener {
 
     void Disconnect(std::shared_ptr<TaroRuntime::TaroDOM::TaroElement>& element);
     int32_t Register(std::shared_ptr<TaroRuntime::TaroDOM::TaroElement>& element,
-                      ViewportMargin margin,
-                      std::unordered_map<float, bool> thresholds,
-                      float initialRatio, napi_ref callback_ref);
+                     ViewportMargin margin,
+                     std::unordered_map<float, bool> thresholds,
+                     float initialRatio, napi_ref callback_ref);
     VisibilityInfo CalculateNodeVisibility(std::shared_ptr<TaroRuntime::TaroDOM::TaroElement> element,
-        const CallbackInfo& callback_info) const;
+                                           const CallbackInfo& callback_info) const;
 
     VisibilityInfo CalculateNodeVisibility(const ArkUI_NodeComponentEvent* compEvent,
-        const CallbackInfo& callback_info) const;
+                                           const CallbackInfo& callback_info) const;
 
     private:
     void SetViewport(CallbackInfo& callback_info);
     void SetMargin(CallbackInfo& callback_info, ViewportMargin& margin);
     static void updateVisibilityInfo(const CallbackInfo& callback_info,
-        float node_left, float node_top,
-        float node_width, float node_height,
-        VisibilityInfo& visibilityInfo);
+                                     float node_left, float node_top,
+                                     float node_width, float node_height,
+                                     VisibilityInfo& visibilityInfo);
 };

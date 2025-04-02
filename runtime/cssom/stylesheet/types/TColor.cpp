@@ -14,9 +14,12 @@
  * 解析十六进制字符为整数
  */
 static int hexCharToInt(char c) {
-    if (c >= '0' && c <= '9') return c - '0';
-    if (c >= 'A' && c <= 'F') return 10 + (c - 'A');
-    if (c >= 'a' && c <= 'f') return 10 + (c - 'a');
+    if (c >= '0' && c <= '9')
+        return c - '0';
+    if (c >= 'A' && c <= 'F')
+        return 10 + (c - 'A');
+    if (c >= 'a' && c <= 'f')
+        return 10 + (c - 'a');
     return 0;
 }
 
@@ -259,7 +262,8 @@ namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 void TColor::setValue(std::string_view str) {
     try {
         str = TaroHelper::string::trim(str);
-        if (str.size() == 0) return;
+        if (str.size() == 0)
+            return;
         if (str[0] == '#') {
             if (auto hexColor = hex2Int(str); hexColor.has_value()) {
                 setValue(hexColor.value());

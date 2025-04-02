@@ -23,7 +23,8 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     TaroScrollerContainer::TaroScrollerContainer(napi_value node)
-        : TaroElement(node), attributes_(std::make_unique<TaroScrollerContainerAttributes>()) {}
+        : TaroElement(node),
+          attributes_(std::make_unique<TaroScrollerContainerAttributes>()) {}
 
     bool TaroScrollerContainer::IsScrollX() {
         bool isScrollX = this->attributes_->scrollX.value_or(false);
@@ -76,7 +77,6 @@ namespace TaroDOM {
         }
     }
 
-
     void TaroScrollerContainer::SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) {
         TaroAttribute::SetAttribute(renderNode, name, value);
         switch (name) {
@@ -127,7 +127,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroScrollerContainer::GetScrollXAttribute(const napi_value &value) {
+    void TaroScrollerContainer::GetScrollXAttribute(const napi_value& value) {
         NapiGetter getter(value);
         TaroHelper::Optional<bool> scrollX = getter.BoolNull();
         if (scrollX.has_value()) {
@@ -160,7 +160,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroScrollerContainer::GetScrollLeftAttribute(const napi_value &value) {
+    void TaroScrollerContainer::GetScrollLeftAttribute(const napi_value& value) {
         NapiGetter getter(value);
         TaroHelper::Optional<double> scrollLeft = getter.Double();
         if (scrollLeft.has_value()) {
@@ -179,7 +179,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroScrollerContainer::GetScrollTopAttribute(const napi_value &value) {
+    void TaroScrollerContainer::GetScrollTopAttribute(const napi_value& value) {
         NapiGetter getter(value);
         TaroHelper::Optional<double> scrollTop = getter.Double();
         if (scrollTop.has_value()) {
@@ -198,7 +198,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroScrollerContainer::GetScrollYAttribute(const napi_value &value) {
+    void TaroScrollerContainer::GetScrollYAttribute(const napi_value& value) {
         NapiGetter getter(value);
         TaroHelper::Optional<bool> scrollY = getter.BoolNull();
         if (scrollY.has_value()) {
@@ -214,7 +214,7 @@ namespace TaroDOM {
         SetScrollDirection();
     }
 
-    void TaroScrollerContainer::GetShowScrollBarAttribute(const napi_value &value) {
+    void TaroScrollerContainer::GetShowScrollBarAttribute(const napi_value& value) {
         NapiGetter getter(value);
         TaroHelper::Optional<bool> showScrollbar = getter.BoolNull();
         if (showScrollbar.has_value()) {
@@ -253,7 +253,7 @@ namespace TaroDOM {
         SetScrollWithAnimation();
     }
 
-    void TaroScrollerContainer::GetScrollWithAnimation(const napi_value &value) {
+    void TaroScrollerContainer::GetScrollWithAnimation(const napi_value& value) {
         NapiGetter getter(value);
         auto withAnimation = getter.BoolNull();
         if (withAnimation.has_value()) {
@@ -267,7 +267,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroScrollerContainer::GetScrollAnimationDuration(const napi_value &value) {
+    void TaroScrollerContainer::GetScrollAnimationDuration(const napi_value& value) {
         NapiGetter getter(value);
         auto duration = getter.Int32();
         if (duration.has_value()) {
@@ -281,7 +281,7 @@ namespace TaroDOM {
         }
     }
 
-    bool TaroScrollerContainer::bindListenEvent(const std::string &event_name) {
+    bool TaroScrollerContainer::bindListenEvent(const std::string& event_name) {
         if (event_name == "click") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_CLICK, event_name);
         } else if (event_name == "touchstart") {
@@ -300,8 +300,8 @@ namespace TaroDOM {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_REACH_END_ON_SCROLL, event_name);
         } else if (event_name == "scroll") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_DID_SCROLL_ON_SCROLL, event_name,
-                                          [&](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
-                                              const ArkUI_AttributeItem *item = NativeNodeApi::getInstance()->getAttribute(GetHeadRenderNode()->GetArkUINodeHandle(), NODE_SCROLL_OFFSET);
+                                          [&](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
+                                              const ArkUI_AttributeItem* item = NativeNodeApi::getInstance()->getAttribute(GetHeadRenderNode()->GetArkUINodeHandle(), NODE_SCROLL_OFFSET);
                                               // detail填充
                                               auto scrollEvent = std::static_pointer_cast<TaroEvent::TaroEventDidScroll>(event);
                                               NapiSetter::SetProperty(scrollEvent->detail(), "scrollTop", item->value[1].f32);
@@ -316,8 +316,8 @@ namespace TaroDOM {
     }
 
     void TaroScrollerContainer::handleOnScroll() {
-        auto scroll_fun = [this](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value &) -> int {
-            const ArkUI_AttributeItem *item = NativeNodeApi::getInstance()->getAttribute(GetHeadRenderNode()->GetArkUINodeHandle(), NODE_SCROLL_OFFSET);
+        auto scroll_fun = [this](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
+            const ArkUI_AttributeItem* item = NativeNodeApi::getInstance()->getAttribute(GetHeadRenderNode()->GetArkUINodeHandle(), NODE_SCROLL_OFFSET);
             scrollLeft_ = item->value[0].f32;
             scrollTop_ = item->value[1].f32;
             return 0;

@@ -66,7 +66,7 @@ namespace TaroDOM {
         return nullptr;
     }
 
-    std::shared_ptr<TaroElement> TaroDocument::CreateElement(napi_value &node) {
+    std::shared_ptr<TaroElement> TaroDocument::CreateElement(napi_value& node) {
         TAG_NAME tag_name_ = TaroDOM::TaroElement::GetTagName(node);
         NODE_TYPE node_type_ = TaroDOM::TaroNode::GetNodeType(node);
         std::shared_ptr<TaroDOM::TaroElement> item;

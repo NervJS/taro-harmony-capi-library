@@ -10,7 +10,7 @@
 #define LOG_TAG "#Taro_ARK"
 #define LOG_PATTERN "__█ %{public}s"
 
-void nativeLogger(const std::string &message, unsigned int logLevel) {
+void nativeLogger(const std::string& message, unsigned int logLevel) {
     switch (logLevel) {
         case 0:
             TARO_LOG_DEBUG(LOG_TAG, LOG_PATTERN, message.c_str());

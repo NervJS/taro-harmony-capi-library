@@ -19,7 +19,7 @@ namespace TaroDOM {
     TaroListItemNode::~TaroListItemNode() {}
 
     void TaroListItemNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_LIST_ITEM));
     }
 

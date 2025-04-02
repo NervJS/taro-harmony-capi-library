@@ -4,10 +4,10 @@
 
 #include "gesture_event_pinch.h"
 
+#include "event_generator_gesture.h"
 #include "gesture_factory.h"
 #include "gesture_param.h"
 #include "runtime/NativeGestureApi.h"
-#include "event_generator_gesture.h"
 
 namespace TaroRuntime::TaroDOM::TaroEvent {
 void GestureEventPinch::serialize() {

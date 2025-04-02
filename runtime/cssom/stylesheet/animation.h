@@ -17,9 +17,9 @@
 
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 
-using KeyframeValue = std::variant<Dimension, double, std::shared_ptr<TransformParam> >;
+using KeyframeValue = std::variant<Dimension, double, std::shared_ptr<TransformParam>>;
 // 为 KeyframeValue 定义相等性比较操作
-inline bool operator==(const KeyframeValue &lhs, const KeyframeValue &rhs) {
+inline bool operator==(const KeyframeValue& lhs, const KeyframeValue& rhs) {
     if (lhs.index() != rhs.index()) {
         return false;
     }
@@ -35,7 +35,7 @@ inline bool operator==(const KeyframeValue &lhs, const KeyframeValue &rhs) {
     }
     return false;
 }
-inline bool operator!=(const KeyframeValue &lhs, const KeyframeValue &rhs) {
+inline bool operator!=(const KeyframeValue& lhs, const KeyframeValue& rhs) {
     return !(lhs == rhs);
 }
 
@@ -44,10 +44,10 @@ struct KeyFrame {
     std::vector<std::pair<CSSProperty::Type, KeyframeValue>> params;
 };
 // 为 KeyFrame 定义相等性比较操作
-inline bool operator==(const KeyFrame &lhs, const KeyFrame &rhs) {
+inline bool operator==(const KeyFrame& lhs, const KeyFrame& rhs) {
     return lhs.percent == rhs.percent && lhs.params == rhs.params;
 }
-inline bool operator!=(const KeyFrame &lhs, const KeyFrame &rhs) {
+inline bool operator!=(const KeyFrame& lhs, const KeyFrame& rhs) {
     return !(lhs == rhs);
 }
 
@@ -62,7 +62,7 @@ struct AnimationOption {
     std::string direction = "normal";
 };
 
-inline bool operator==(const AnimationOption &lhs, const AnimationOption &rhs) {
+inline bool operator==(const AnimationOption& lhs, const AnimationOption& rhs) {
     return lhs.duration == rhs.duration &&
            lhs.timingFunction == rhs.timingFunction &&
            lhs.delay == rhs.delay &&
@@ -72,27 +72,27 @@ inline bool operator==(const AnimationOption &lhs, const AnimationOption &rhs) {
            lhs.keyframes.size() == rhs.keyframes.size() &&
            lhs.name == rhs.name;
 }
-inline bool operator!=(const AnimationOption &lhs, const AnimationOption &rhs) {
+inline bool operator!=(const AnimationOption& lhs, const AnimationOption& rhs) {
     return !(lhs == rhs);
 }
 
 class Animation : public AttributeBase<AnimationOption> {
     public:
     Animation() = default;
-    Animation(const napi_value &);
-    void setValueFromNapi(const napi_value &value) override {};
+    Animation(const napi_value&);
+    void setValueFromNapi(const napi_value& value) override {};
     void setValueFromStringView(std::string_view value) override {};
-    void setNameFromNapi(const napi_value &);
-    void setKeyFramesFromNapi(const napi_value &);
-    void setDurationFromNapi(const napi_value &);
-    void setTimingFunctionFromNapi(const napi_value &);
-    void setFillModeFromNapi(const napi_value &);
-    void setDelayFromNapi(const napi_value &);
-    void setIterationCountFromNapi(const napi_value &);
-    void setIntoNode(ArkUI_NodeHandle &node);
-    static void staticSetValueToNode(const ArkUI_NodeHandle &node,
-                                     const AnimationOption &value);
-    static void staticResetValueToNode(const ArkUI_NodeHandle &node);
+    void setNameFromNapi(const napi_value&);
+    void setKeyFramesFromNapi(const napi_value&);
+    void setDurationFromNapi(const napi_value&);
+    void setTimingFunctionFromNapi(const napi_value&);
+    void setFillModeFromNapi(const napi_value&);
+    void setDelayFromNapi(const napi_value&);
+    void setIterationCountFromNapi(const napi_value&);
+    void setIntoNode(ArkUI_NodeHandle& node);
+    static void staticSetValueToNode(const ArkUI_NodeHandle& node,
+                                     const AnimationOption& value);
+    static void staticResetValueToNode(const ArkUI_NodeHandle& node);
 
     private:
     AnimationOption item_;

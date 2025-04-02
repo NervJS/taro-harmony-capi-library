@@ -11,7 +11,7 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        EventHelper *EventHelper::instance() {
+        EventHelper* EventHelper::instance() {
             static auto s_handler = new EventHelper;
             return s_handler;
         }
@@ -36,7 +36,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int EventHelper::createEventObj(const std::string &event_type, napi_value &obj_event) {
+        int EventHelper::createEventObj(const std::string& event_type, napi_value& obj_event) {
             ArkJS ark_js(NativeNodeApi::env);
             auto create_fun = ark_js.getReferenceValue(ref_create_event_);
             if (!create_fun) {
@@ -48,7 +48,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int EventHelper::createTaroEventObj(const std::string &event_type, napi_value node, napi_value &obj_event) {
+        int EventHelper::createTaroEventObj(const std::string& event_type, napi_value node, napi_value& obj_event) {
             ArkJS ark_js(NativeNodeApi::env);
             auto create_fun = ark_js.getReferenceValue(ref_create_taro_event_);
             if (!create_fun) {
@@ -60,7 +60,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int EventHelper::eventHandler(napi_value event, const std::string &event_type, napi_value node) {
+        int EventHelper::eventHandler(napi_value event, const std::string& event_type, napi_value node) {
             ArkJS ark_js(NativeNodeApi::env);
             auto handle_fun = ark_js.getReferenceValue(ref_event_handler_);
             if (!handle_fun) {

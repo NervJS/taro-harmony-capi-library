@@ -14,8 +14,11 @@ namespace TaroThread {
 ThreadTaskRunner::ThreadTaskRunner(
     std::string name,
     ExceptionHandler exceptionHandler)
-    : name(name), exceptionHandler(std::move(exceptionHandler)) {
-    thread = std::thread([this] { runLoop(); });
+    : name(name),
+      exceptionHandler(std::move(exceptionHandler)) {
+    thread = std::thread([this] {
+        runLoop();
+    });
     // 获取 handle 用于设置线程名字
 
     auto handle = thread.native_handle();
@@ -61,7 +64,9 @@ void ThreadTaskRunner::runSyncTask(Task&& task) {
     });
     cv.notify_all();
     // JS 线程调度完该任务后，会通过下面的条件变量释放调用线程，同步任务在 runLoop 中执行完会调用 notify_all 来释放下面的线程堵塞
-    cv.wait(lock, [this, &done] { return !running.load() || done.load(); });
+    cv.wait(lock, [this, &done] {
+        return !running.load() || done.load();
+    });
 }
 
 bool ThreadTaskRunner::isOnCurrentThread() const {
@@ -75,7 +80,9 @@ void ThreadTaskRunner::setExceptionHandler(ExceptionHandler handler) {
 void ThreadTaskRunner::runLoop() {
     while (running) {
         std::unique_lock<std::mutex> lock(mutex);
-        cv.wait(lock, [this] { return hasPendingTasks() || !running; });
+        cv.wait(lock, [this] {
+            return hasPendingTasks() || !running;
+        });
         if (!running) {
             return;
         }

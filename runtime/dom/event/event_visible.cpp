@@ -108,9 +108,11 @@ VisibilityInfo VisibleEventListener::CalculateNodeVisibility(
     const CallbackInfo& callback_info) const {
     VisibilityInfo visibilityInfo;
 
-    if (!element) return visibilityInfo;
+    if (!element)
+        return visibilityInfo;
     auto render_node = element->GetHeadRenderNode();
-    if (!render_node) return visibilityInfo;
+    if (!render_node)
+        return visibilityInfo;
 
     float node_width = render_node->layoutDiffer_.computed_style_.width;
     float node_height = render_node->layoutDiffer_.computed_style_.height;

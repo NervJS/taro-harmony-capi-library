@@ -14,7 +14,7 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     void TaroTextInputNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_TEXT_INPUT));
     }
 
@@ -59,27 +59,27 @@ namespace TaroDOM {
     }
 
     void TaroTextInputNode::SetInputType(ArkUI_TextInputType keyboardType) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value = {.i32 = keyboardType};
         ArkUI_AttributeItem item = {&value, 1};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_TEXT_INPUT_TYPE, &item);
     }
 
-    void TaroTextInputNode::SetTextContent(const std::string &value) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+    void TaroTextInputNode::SetTextContent(const std::string& value) {
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item = {.string = value.c_str()};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_TEXT_INPUT_TEXT, &item);
     }
 
     void TaroTextInputNode::SetConfirmType(ArkUI_EnterKeyType confirmType) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value = {.i32 = confirmType};
         ArkUI_AttributeItem item = {&value, 1};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_TEXT_INPUT_ENTER_KEY_TYPE, &item);
     }
 
     void TaroTextInputNode::SetMaxLength(int32_t maxLength) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value = {.i32 = maxLength};
         if (maxLength < 0) {
             // Note: 小于 0 不限制
@@ -91,7 +91,7 @@ namespace TaroDOM {
     }
 
     void TaroTextInputNode::SetAutoFocus(bool autoFocus) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value = {.i32 = static_cast<int32_t>(autoFocus)};
         ArkUI_AttributeItem item = {&value, 1};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_FOCUS_STATUS, &item);
@@ -103,14 +103,14 @@ namespace TaroDOM {
         NativeNodeApi::getInstance()->setAttribute(GetArkUINodeHandle(), NODE_TEXT_INPUT_ENABLE_KEYBOARD_ON_FOCUS, &item);
     }
 
-    void TaroTextInputNode::SetPlaceholder(const std::string &placeholder) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+    void TaroTextInputNode::SetPlaceholder(const std::string& placeholder) {
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item = {.string = placeholder.c_str()};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_TEXT_INPUT_PLACEHOLDER, &item);
     }
 
-    void TaroTextInputNode::SetPlaceholderStyle(const PlaceholderStyle &placeholderStyle) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+    void TaroTextInputNode::SetPlaceholderStyle(const PlaceholderStyle& placeholderStyle) {
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[3];
         std::string fontFamily = "HarmonyOS Sans";
         ArkUI_AttributeItem item = {value, 3, .string = fontFamily.c_str()};
@@ -138,7 +138,7 @@ namespace TaroDOM {
     }
 
     void TaroTextInputNode::SetPlaceholderTextColor(uint32_t color) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value = {.u32 = color};
         ArkUI_AttributeItem item = {&value, 1};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_TEXT_INPUT_PLACEHOLDER_COLOR, &item);
@@ -151,7 +151,7 @@ namespace TaroDOM {
     }
 
     void TaroTextInputNode::SetEditing(bool status) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value = {.i32 = static_cast<int>(status)};
         ArkUI_AttributeItem item = {&value, 1};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_TEXT_INPUT_EDITING, &item);

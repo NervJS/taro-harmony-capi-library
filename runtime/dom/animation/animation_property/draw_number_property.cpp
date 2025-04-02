@@ -15,10 +15,10 @@ namespace TaroAnimate {
 
     bool AnimationPropDrawNumber::getSystemPropValue(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                      CSSProperty::Type prop_type,
-                                                     TaroAnimationPropValue &prop_value) const {
+                                                     TaroAnimationPropValue& prop_value) const {
         switch (prop_type) {
             case CSSProperty::Type::Opacity: {
-                const auto &opacity_value = node->GetOpacity();
+                const auto& opacity_value = node->GetOpacity();
                 prop_value = static_cast<double>(opacity_value.value_or(1));
                 return true;
             } break;
@@ -31,9 +31,9 @@ namespace TaroAnimate {
     bool AnimationPropDrawNumber::getAnimationPropValue(
         std::shared_ptr<TaroDOM::TaroRenderNode> node,
         CSSProperty::Type prop_type,
-        const TaroCSSOM::TaroStylesheet::KeyframeValue &n_val,
-        const TaroAnimationPropValue &sys_value,
-        TaroAnimationPropValue &prop_value) const {
+        const TaroCSSOM::TaroStylesheet::KeyframeValue& n_val,
+        const TaroAnimationPropValue& sys_value,
+        TaroAnimationPropValue& prop_value) const {
         if (auto val = std::get_if<double>(&n_val)) {
             prop_value = *val;
             return true;
@@ -43,8 +43,8 @@ namespace TaroAnimate {
 
     void AnimationPropDrawNumber::setNodeProperty(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                   CSSProperty::Type prop_type,
-                                                  const TaroAnimationPropValue &prop_value) const {
-        const double *double_value = std::get_if<double>(&prop_value);
+                                                  const TaroAnimationPropValue& prop_value) const {
+        const double* double_value = std::get_if<double>(&prop_value);
         if (double_value == nullptr) {
             return;
         }
@@ -61,7 +61,7 @@ namespace TaroAnimate {
     // 设置动画初始值到节点
     void AnimationPropDrawNumber::setKeyframeToNode(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                     CSSProperty::Type prop_type,
-                                                    const TaroCSSOM::TaroStylesheet::KeyframeValue &keyframe) const {
+                                                    const TaroCSSOM::TaroStylesheet::KeyframeValue& keyframe) const {
         auto int_value = std::get_if<double>(&keyframe);
         if (int_value == nullptr) {
             return;

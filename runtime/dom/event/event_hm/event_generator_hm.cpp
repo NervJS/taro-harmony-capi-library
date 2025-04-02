@@ -142,7 +142,7 @@ void EventGenerator_HM::dispatchEvent(ArkUI_NodeEvent* event) {
             continue;
         }
         event_obj->parseHmEvent(event);
-        bool  with_native_bubble =elem_event.with_native_bubble_;
+        bool with_native_bubble = elem_event.with_native_bubble_;
         if (with_native_bubble) {
             event_obj->revertEventBubble();
         }

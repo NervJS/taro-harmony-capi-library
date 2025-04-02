@@ -11,11 +11,11 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        TaroEventScroll::TaroEventScroll(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroEventScroll::TaroEventScroll(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
         }
 
-        int TaroEventScroll::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventScroll::parseHmEvent(ArkUI_NodeEvent* event) {
             auto comp_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (comp_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get comp_event failed");
@@ -26,7 +26,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventScroll::serializeFun(napi_value &ret_obj) {
+        int TaroEventScroll::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
 
             // detail填充
@@ -42,11 +42,11 @@ namespace TaroDOM {
             return 0;
         }
 
-        TaroEventDidScroll::TaroEventDidScroll(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroEventDidScroll::TaroEventDidScroll(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
         }
 
-        int TaroEventDidScroll::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventDidScroll::parseHmEvent(ArkUI_NodeEvent* event) {
             auto comp_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (comp_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get comp_event failed");
@@ -58,9 +58,9 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventDidScroll::serializeFun(napi_value &ret_obj) {
+        int TaroEventDidScroll::serializeFun(napi_value& ret_obj) {
             // detail填充
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             // 表示距离上一次事件触发的X轴增量。
             NapiSetter::SetProperty(js_detail, "deltaX", deltaX_);
             // 表示距离上一次事件触发的Y轴增量。
@@ -71,11 +71,11 @@ namespace TaroDOM {
             return 0;
         }
 
-        TaroEventDidWaterFlowScroll::TaroEventDidWaterFlowScroll(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroEventDidWaterFlowScroll::TaroEventDidWaterFlowScroll(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
         }
 
-        int TaroEventDidWaterFlowScroll::parseHmEvent(ArkUI_NodeEvent *event)  {
+        int TaroEventDidWaterFlowScroll::parseHmEvent(ArkUI_NodeEvent* event) {
             auto comp_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (comp_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get comp_event failed");
@@ -86,20 +86,20 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventDidWaterFlowScroll::serializeFun(napi_value &ret_obj) {
+        int TaroEventDidWaterFlowScroll::serializeFun(napi_value& ret_obj) {
             // detail填充
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             // 表示距离上一次事件触发的Y轴增量。
             NapiSetter::SetProperty(js_detail, "deltaY", deltaY_);
             NapiSetter::SetProperty(ret_obj, "detail", js_detail);
             return 0;
         }
 
-        TaroEventLazyLoadScrollIndex::TaroEventLazyLoadScrollIndex(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroEventLazyLoadScrollIndex::TaroEventLazyLoadScrollIndex(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
         }
 
-        int TaroEventLazyLoadScrollIndex::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventLazyLoadScrollIndex::parseHmEvent(ArkUI_NodeEvent* event) {
             auto comp_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (comp_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get comp_event failed");
@@ -110,9 +110,9 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventLazyLoadScrollIndex::serializeFun(napi_value &ret_obj) {
+        int TaroEventLazyLoadScrollIndex::serializeFun(napi_value& ret_obj) {
             // detail填充
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             NapiSetter::SetProperty(ret_obj, "detail", js_detail);
             return 0;
         }

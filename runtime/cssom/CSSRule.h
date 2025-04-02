@@ -31,9 +31,9 @@ namespace TaroCSSOM {
     // ClassName 池
     class ClassNamePool {
         public:
-        static std::shared_ptr<ClassName> GetClassName(const std::string &str);
+        static std::shared_ptr<ClassName> GetClassName(const std::string& str);
 
-        static void SetClassName(const std::string &str);
+        static void SetClassName(const std::string& str);
 
         static std::unordered_map<std::string, std::shared_ptr<ClassName>> pool_;
     };

@@ -15,20 +15,20 @@ namespace TaroCSSOM {
 
             TaroHelper::Matrix4 toMatrix4();
 
-            bool operator==(const TransformParam &other) const;
-            bool operator!=(const TransformParam &other) const;
+            bool operator==(const TransformParam& other) const;
+            bool operator!=(const TransformParam& other) const;
 
-            static std::vector<std::shared_ptr<TransformItemBase>> staticMatrixToTransformItems(const TaroHelper::Matrix4 &m);
-            static TaroHelper::Matrix4 staticTransformItemsToMatrix4(const std::vector<std::shared_ptr<TransformItemBase>> &value);
-            static TaroHelper::Matrix4 staticTransformItemsToMatrix4(const std::vector<std::shared_ptr<TransformItemBase>> &value, float widthBase, float heightBase);
-            static TaroHelper::Matrix4 staticTransformItemsToMatrix4(const TransformParam &value);
-            static TaroHelper::Matrix4 staticTransformItemsToMatrix4(const TransformParam &option, float widthBase, float heightBase);
-            static std::shared_ptr<TransformItemBase> staticBlendTransformItem(const TransformItemBase &f, const TransformItemBase &t, const float &progress);
-            static TransformParam staticBlend(const TransformParam &, const TransformParam &, const float &);
+            static std::vector<std::shared_ptr<TransformItemBase>> staticMatrixToTransformItems(const TaroHelper::Matrix4& m);
+            static TaroHelper::Matrix4 staticTransformItemsToMatrix4(const std::vector<std::shared_ptr<TransformItemBase>>& value);
+            static TaroHelper::Matrix4 staticTransformItemsToMatrix4(const std::vector<std::shared_ptr<TransformItemBase>>& value, float widthBase, float heightBase);
+            static TaroHelper::Matrix4 staticTransformItemsToMatrix4(const TransformParam& value);
+            static TaroHelper::Matrix4 staticTransformItemsToMatrix4(const TransformParam& option, float widthBase, float heightBase);
+            static std::shared_ptr<TransformItemBase> staticBlendTransformItem(const TransformItemBase& f, const TransformItemBase& t, const float& progress);
+            static TransformParam staticBlend(const TransformParam&, const TransformParam&, const float&);
             static float staticBlendFloat(const float form, const float to, const float progress);
-            static TAngle staticBlendAngle(const TAngle &form, const TAngle &to, const float progress);
+            static TAngle staticBlendAngle(const TAngle& form, const TAngle& to, const float progress);
             static Dimension staticBlendTLength(const Dimension form, const Dimension to, const float progress);
-            static TransformParam staticTransformItemsPercent(const TransformParam &option, float widthBase, float heightBase);
+            static TransformParam staticTransformItemsPercent(const TransformParam& option, float widthBase, float heightBase);
             static std::shared_ptr<TransformParam> staticTransformSystemValue();
         };
     } // namespace TaroStylesheet

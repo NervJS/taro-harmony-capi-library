@@ -11,8 +11,8 @@
 #include "helper/string.h"
 #include "runtime/NapiGetter.h"
 #include "runtime/NativeNodeApi.h"
-#include "runtime/cssom/stylesheet/types/TColor.h"
 #include "runtime/cssom/dimension/dimension.h"
+#include "runtime/cssom/stylesheet/types/TColor.h"
 
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 
@@ -25,7 +25,8 @@ void BoxShadow::setValueFromStringView(std::string_view str) {
         auto values = TaroHelper::string::splitBySpace(str.substr(start, matches[0].length()));
         auto offsetX = Dimension(values[0]).ParseToVp();
         auto offsetY = Dimension(values[1]).ParseToVp();
-        if (!offsetX.has_value() || !offsetY.has_value()) return;
+        if (!offsetX.has_value() || !offsetY.has_value())
+            return;
         boxShadowItem.offsetX.set(offsetX.value());
         boxShadowItem.offsetY.set(offsetY.value());
         if (values.size() > 2) {
@@ -54,7 +55,7 @@ void BoxShadow::setValueFromStringView(std::string_view str) {
     this->set(boxShadowItem);
 }
 
-void BoxShadow::setValueFromNapi(const napi_value &napiValue) {
+void BoxShadow::setValueFromNapi(const napi_value& napiValue) {
     NapiGetter getter(napiValue);
     napi_valuetype type;
 

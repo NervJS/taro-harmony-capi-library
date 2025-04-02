@@ -12,8 +12,8 @@ namespace TaroRuntime {
 namespace TaroAnimate {
     class TaroAnimationConfig {
         public:
-        static TaroAnimationFillMode parseFillMode(const std::string &fill_mode);
-        static TaroAnimationDirection parseDirection(const std::string &direction);
+        static TaroAnimationFillMode parseFillMode(const std::string& fill_mode);
+        static TaroAnimationDirection parseDirection(const std::string& direction);
     };
 } // namespace TaroAnimate
 } // namespace TaroRuntime

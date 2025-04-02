@@ -16,7 +16,7 @@ namespace TaroRuntime {
 namespace TaroDOM {
     class TaroNode : public std::enable_shared_from_this<TaroNode> {
         public:
-        TaroNode(napi_value &node);
+        TaroNode(napi_value& node);
 
         virtual ~TaroNode();
 

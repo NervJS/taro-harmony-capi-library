@@ -36,22 +36,22 @@ namespace TaroDOM {
         void SetAttributesToRenderNode() override;
 
         void Build() override;
-        void Build(std::shared_ptr<TaroElement> &reuse_element) override;
+        void Build(std::shared_ptr<TaroElement>& reuse_element) override;
 
         // 实现Attribute，监听属性的变化
         void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;
 
-        void onPanStart(ArkUI_GestureEvent *event);
-        void onPanUpdate(ArkUI_GestureEvent *event);
-        void onPanEnd(ArkUI_GestureEvent *event);
+        void onPanStart(ArkUI_GestureEvent* event);
+        void onPanUpdate(ArkUI_GestureEvent* event);
+        void onPanEnd(ArkUI_GestureEvent* event);
 
-        void onPinchStart(ArkUI_GestureEvent *event);
-        void onPinchUpdate(ArkUI_GestureEvent *event);
-        void onPinchEnd(ArkUI_GestureEvent *event);
+        void onPinchStart(ArkUI_GestureEvent* event);
+        void onPinchUpdate(ArkUI_GestureEvent* event);
+        void onPinchEnd(ArkUI_GestureEvent* event);
 
         void callJSFunc(std::string eventType);
 
-        bool bindListenEvent(const std::string &event_name) override;
+        bool bindListenEvent(const std::string& event_name) override;
 
         private:
         std::unique_ptr<TaroMovableViewAttributes> attributes_;
@@ -73,8 +73,8 @@ namespace TaroDOM {
         float calcPosition(float position, float start, float end);
         void checkPositionBoundary();
         bool checkScaleValueInBounds(float currentScale);
-        void serializeForPan(napi_value &ret_obj);
-        void serializeForPinch(napi_value &ret_obj);
+        void serializeForPan(napi_value& ret_obj);
+        void serializeForPinch(napi_value& ret_obj);
     };
 
 } // namespace TaroDOM

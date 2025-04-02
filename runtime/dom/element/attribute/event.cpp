@@ -9,14 +9,14 @@
 
 namespace TaroRuntime {
 namespace TaroDOM {
-    TaroElementEvent::TaroElementEvent(TaroElement *taroElementRef) {
+    TaroElementEvent::TaroElementEvent(TaroElement* taroElementRef) {
         event_emitter_ = std::make_shared<TaroEvent::TaroEventEmitter>(taroElementRef);
     }
 
     TaroElementEvent::~TaroElementEvent() {
         event_emitter_ = nullptr;
         ArkJS arkJs(NativeNodeApi::env);
-        for (auto &listener : listeners_ref_) {
+        for (auto& listener : listeners_ref_) {
             while (listener.second.size() > 0) {
                 arkJs.deleteReference(listener.second.back());
                 listener.second.pop_back();
@@ -29,15 +29,15 @@ namespace TaroDOM {
         return event_emitter_;
     }
 
-    int TaroElementEvent::addNodeEventListener(napi_value &js_event_name, napi_value &js_event_handler) {
+    int TaroElementEvent::addNodeEventListener(napi_value& js_event_name, napi_value& js_event_handler) {
         ArkJS arkJs(NativeNodeApi::env);
         std::string eventName = arkJs.getString(js_event_name);
         return addNodeEventListener(eventName, js_event_handler);
     }
 
-    int TaroElementEvent::addNodeEventListener(std::string &eventName, napi_value &js_event_handler) {
+    int TaroElementEvent::addNodeEventListener(std::string& eventName, napi_value& js_event_handler) {
         ArkJS arkJs(NativeNodeApi::env);
-        auto &listeners = listeners_ref_[eventName];
+        auto& listeners = listeners_ref_[eventName];
         if (js_event_handler && arkJs.getType(js_event_handler) == napi_function) {
             if (std::find_if(listeners.begin(), listeners.end(), [&](napi_ref ref) {
                     return arkJs.isEqual(arkJs.getReferenceValue(ref), js_event_handler);
@@ -54,15 +54,15 @@ namespace TaroDOM {
         return 0;
     }
 
-    int TaroElementEvent::removeNodeEventListener(napi_value &js_event_name, napi_value &js_event_handler) {
+    int TaroElementEvent::removeNodeEventListener(napi_value& js_event_name, napi_value& js_event_handler) {
         ArkJS arkJs(NativeNodeApi::env);
         std::string eventName = arkJs.getString(js_event_name);
         return removeNodeEventListener(eventName, js_event_handler);
     }
 
-    int TaroElementEvent::removeNodeEventListener(std::string &eventName, napi_value &js_event_handler) {
+    int TaroElementEvent::removeNodeEventListener(std::string& eventName, napi_value& js_event_handler) {
         ArkJS arkJs(NativeNodeApi::env);
-        auto &listeners = listeners_ref_[eventName];
+        auto& listeners = listeners_ref_[eventName];
         if (js_event_handler && arkJs.getType(js_event_handler) == napi_function) {
             auto it = std::remove_if(listeners.begin(), listeners.end(), [&](napi_ref ref) {
                 if (arkJs.isEqual(arkJs.getReferenceValue(ref), js_event_handler)) {
@@ -84,9 +84,9 @@ namespace TaroDOM {
         return 0;
     }
 
-    int TaroElementEvent::updateNodeEventListener(std::string &eventName, napi_value &oddListener, napi_value &newListener) {
+    int TaroElementEvent::updateNodeEventListener(std::string& eventName, napi_value& oddListener, napi_value& newListener) {
         ArkJS arkJs(NativeNodeApi::env);
-        auto &listeners = listeners_ref_[eventName];
+        auto& listeners = listeners_ref_[eventName];
         if (!arkJs.isEqual(oddListener, newListener)) {
             auto it = std::remove_if(listeners.begin(), listeners.end(), [&](napi_ref ref) {
                 if (arkJs.isEqual(arkJs.getReferenceValue(ref), oddListener)) {
@@ -108,7 +108,7 @@ namespace TaroDOM {
             return;
         }
         const auto listeners = iter->second;
-        for (const auto &listener : listeners) {
+        for (const auto& listener : listeners) {
             auto callback = ark_js.getReferenceValue(listener);
             TaroElementRef el = event->cur_target_;
             ark_js.call(callback, {event->GetNapiValue()}, el->GetNodeValue());

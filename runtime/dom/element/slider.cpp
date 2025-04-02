@@ -43,7 +43,9 @@ namespace TaroDOM {
                 attr->value.set(value);
                 SetValueAttribute();
             }
-            return 0; }, slider_->GetArkUINodeHandle());
+            return 0;
+        },
+                                                 slider_->GetArkUINodeHandle());
     }
 
     void TaroSlider::Build() {

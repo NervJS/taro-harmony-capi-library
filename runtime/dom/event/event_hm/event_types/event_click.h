@@ -11,15 +11,15 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroEventClick : public TaroEventBase {
             public:
-            TaroEventClick(const std::string &js_event_type, ArkUI_NodeEvent *event)
+            TaroEventClick(const std::string& js_event_type, ArkUI_NodeEvent* event)
                 : TaroEventBase(js_event_type,
                                 event) {}
 
             virtual ~TaroEventClick() {}
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
             public:
             float x_ = 0.0f;

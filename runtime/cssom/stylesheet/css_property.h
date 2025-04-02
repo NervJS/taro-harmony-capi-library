@@ -111,7 +111,7 @@ enum Type {
     Padding = 99,
     BorderRadius = 100,
     BoxOrient = 101,
-    PointerEvents=102
+    PointerEvents = 102
 };
 
 }

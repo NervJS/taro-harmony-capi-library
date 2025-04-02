@@ -11,15 +11,15 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        TaroEventTouch::TaroEventTouch(const std::string &js_event_type, ArkUI_NodeEvent *event)
-                : TaroEventBase(js_event_type, event) {
+        TaroEventTouch::TaroEventTouch(const std::string& js_event_type, ArkUI_NodeEvent* event)
+            : TaroEventBase(js_event_type, event) {
         }
 
         bool TaroEventTouch::realTrigger() {
             return hm_touch_type_ == event_touch_type;
         }
 
-        void TaroEventTouch::revertEventBubble () {
+        void TaroEventTouch::revertEventBubble() {
             auto event = getOriginEvent();
             auto input_event = OH_ArkUI_NodeEvent_GetInputEvent(event);
             if (input_event == nullptr) {
@@ -29,14 +29,14 @@ namespace TaroDOM {
             OH_ArkUI_PointerEvent_SetStopPropagation(input_event, false);
         }
 
-        int TaroEventTouch::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventTouch::parseHmEvent(ArkUI_NodeEvent* event) {
             auto input_event = OH_ArkUI_NodeEvent_GetInputEvent(event);
             if (input_event == nullptr) {
                 TARO_LOG_DEBUG("TaroEvent", "get touch_action failed");
                 return -1;
             }
             OH_ArkUI_PointerEvent_SetStopPropagation(input_event, true);
-            event_touch_type= OH_ArkUI_UIInputEvent_GetAction(input_event);
+            event_touch_type = OH_ArkUI_UIInputEvent_GetAction(input_event);
             client_x_ = OH_ArkUI_PointerEvent_GetX(input_event);
             client_y_ = OH_ArkUI_PointerEvent_GetY(input_event);
             page_x_ = OH_ArkUI_PointerEvent_GetWindowX(input_event);
@@ -46,7 +46,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroEventTouch::serializeFun(napi_value &ret_obj) {
+        int TaroEventTouch::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
             // TARO_LOG_DEBUG("TaroEvent", "touch: %{public}d", hm_touch_type_);
 

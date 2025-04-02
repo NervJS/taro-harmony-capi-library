@@ -9,30 +9,30 @@ namespace TaroDOM {
         : TaroRenderNode(element) {}
     TaroRadioNode::~TaroRadioNode() {}
     void TaroRadioNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_RADIO));
         setZeroMargin();
     }
-    void TaroRadioNode::setValue(const char *value) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+    void TaroRadioNode::setValue(const char* value) {
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item = {.string = value};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_RADIO_VALUE, &item);
     }
 
     void TaroRadioNode::setZeroMargin() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue numberValue[1] = {};
         numberValue->f32 = 0;
         ArkUI_AttributeItem item = {numberValue, 1};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_MARGIN, &item);
     }
-    void TaroRadioNode::setNodeGroup(const char *groupName) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+    void TaroRadioNode::setNodeGroup(const char* groupName) {
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item = {.string = groupName};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_RADIO_GROUP, &item);
     }
     void TaroRadioNode::setChecked(bool checked) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue numberValue[1] = {};
         int32_t isChecked = checked ? 1 : 0;
         numberValue[0].i32 = isChecked;
@@ -41,8 +41,8 @@ namespace TaroDOM {
     }
 
     void TaroRadioNode::ChangeChecked() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
-        const ArkUI_AttributeItem *item = nativeNodeApi->getAttribute(GetArkUINodeHandle(), NODE_RADIO_CHECKED);
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
+        const ArkUI_AttributeItem* item = nativeNodeApi->getAttribute(GetArkUINodeHandle(), NODE_RADIO_CHECKED);
         if (!item->value[0].i32) {
             setChecked(!item->value[0].i32);
         }
@@ -50,7 +50,7 @@ namespace TaroDOM {
 
     //  只需要设置底板颜色，其他是默认颜色
     void TaroRadioNode::setColor(uint32_t color) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue numberValue[3] = {};
         numberValue[0].u32 = color;
         numberValue[1].u32 = 0xFF182431; // 默认颜色

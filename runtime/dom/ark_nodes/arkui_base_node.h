@@ -19,19 +19,19 @@
 #include "runtime/cssom/stylesheet/params/transform_param//transform_param.h"
 #include "runtime/cssom/stylesheet/transform_origin.h"
 #include "runtime/cssom/stylesheet/utils.h"
-#include "runtime/dom/ark_nodes/differ/paint_differ.h"
 #include "runtime/dom/ark_nodes/differ/layout_differ.h"
+#include "runtime/dom/ark_nodes/differ/paint_differ.h"
 #include "yoga/YGConfig.h"
 
-#define DECLARE_DRAW_STYLE_WITH_IDX_FUNCTIONS(NAME, TYPE) \
-void Set##NAME(const TYPE &val, const TaroEdge &edge); \
-void Reset##NAME(const TaroEdge &edge); \
-const Optional<TYPE>& Get##NAME(const TaroEdge &edge) const;
+#define DECLARE_DRAW_STYLE_WITH_IDX_FUNCTIONS(NAME, TYPE)  \
+    void Set##NAME(const TYPE& val, const TaroEdge& edge); \
+    void Reset##NAME(const TaroEdge& edge);                \
+    const Optional<TYPE>& Get##NAME(const TaroEdge& edge) const;
 
 #define DECLARE_DRAW_STYLE_FUNCTIONS(NAME, TYPE) \
-void Set##NAME(const TYPE &val); \
-void Reset##NAME(); \
-const Optional<TYPE>& Get##NAME() const;
+    void Set##NAME(const TYPE& val);             \
+    void Reset##NAME();                          \
+    const Optional<TYPE>& Get##NAME() const;
 
 namespace TaroRuntime {
 namespace TaroDOM {
@@ -47,53 +47,53 @@ namespace TaroDOM {
         LayoutDiffer layoutDiffer_;
 
         void SetNodeLayoutStyle(
-            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style,
-            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &oldStyleRef,
-            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &parentStyleRef);
+            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style,
+            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& oldStyleRef,
+            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& parentStyleRef);
 
         void SetNodeDrawStyle(
-            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style,
-            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &oldStyleRef);
+            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style,
+            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& oldStyleRef);
 
         void SetFontDrawStyle(
-            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style,
-            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &oldStyleRef);
+            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style,
+            const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& oldStyleRef);
 
-        void SetLayoutDirty(const bool &val);
-        void SetDrawDirty(const bool &val);
+        void SetLayoutDirty(const bool& val);
+        void SetDrawDirty(const bool& val);
         bool GetLayoutDirty();
         bool GetDrawDirty();
         void RegistryLayoutTaskOnNextVsync();
         void RegistryDrawTaskOnNextVsync();
         void CheckIfYGDirty();
         // 钩子方法，每个值设置时，会经过该方法，返回true则设置，返回false则不设置
-        virtual bool OnSetPropertyIntoNode(const CSSProperty::Type &property,
-                                           const TaroChange &changeType,
-                                           const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &style);
+        virtual bool OnSetPropertyIntoNode(const CSSProperty::Type& property,
+                                           const TaroChange& changeType,
+                                           const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>& style);
 
         // Layout Properties
-        void SetDisplay(const PropertyType::Display &val, const PropertyType::Display &oldVal = PropertyType::Display::UnKnown);
-        void SetPosition(const PropertyType::Position &val);
-        void SetOverflow(const PropertyType::Overflow &val);
-        void SetAlignContent(const ArkUI_FlexAlignment &val);
-        void SetAlignSelf(const ArkUI_ItemAlignment &val);
-        void SetFlexGrow(const float &val);
-        void SetFlexBasis(const Dimension &val);
-        void SetFlexShrink(const float &val);
-        void SetFlexDirection(const ArkUI_FlexDirection &val);
-        void SetAlignItems(const ArkUI_ItemAlignment &val);
-        void SetJustifyContent(const ArkUI_FlexAlignment &val);
-        void SetFlexWrap(const ArkUI_FlexWrap &val);
-        void SetMinHeight(const Dimension &val);
-        void SetMinWidth(const Dimension &val);
-        void SetMaxHeight(const Dimension &val);
-        void SetMaxWidth(const Dimension &val);
-        void SetHeight(const Dimension &val, const Dimension &oldVal = Dimension{0, DimensionUnit::NONE});
-        void SetWidth(const Dimension &val);
-        void SetPadding(const Dimension &val, const TaroEdge &edge);
-        void SetBorder(const Dimension &val, const TaroEdge &edge);
-        void SetMargin(const Dimension &val, const TaroEdge &edge);
-        void SetPosition(const Dimension &val, const TaroEdge &edge);
+        void SetDisplay(const PropertyType::Display& val, const PropertyType::Display& oldVal = PropertyType::Display::UnKnown);
+        void SetPosition(const PropertyType::Position& val);
+        void SetOverflow(const PropertyType::Overflow& val);
+        void SetAlignContent(const ArkUI_FlexAlignment& val);
+        void SetAlignSelf(const ArkUI_ItemAlignment& val);
+        void SetFlexGrow(const float& val);
+        void SetFlexBasis(const Dimension& val);
+        void SetFlexShrink(const float& val);
+        void SetFlexDirection(const ArkUI_FlexDirection& val);
+        void SetAlignItems(const ArkUI_ItemAlignment& val);
+        void SetJustifyContent(const ArkUI_FlexAlignment& val);
+        void SetFlexWrap(const ArkUI_FlexWrap& val);
+        void SetMinHeight(const Dimension& val);
+        void SetMinWidth(const Dimension& val);
+        void SetMaxHeight(const Dimension& val);
+        void SetMaxWidth(const Dimension& val);
+        void SetHeight(const Dimension& val, const Dimension& oldVal = Dimension{0, DimensionUnit::NONE});
+        void SetWidth(const Dimension& val);
+        void SetPadding(const Dimension& val, const TaroEdge& edge);
+        void SetBorder(const Dimension& val, const TaroEdge& edge);
+        void SetMargin(const Dimension& val, const TaroEdge& edge);
+        void SetPosition(const Dimension& val, const TaroEdge& edge);
 
         // Draw Properties
         DECLARE_DRAW_STYLE_WITH_IDX_FUNCTIONS(BorderStyle, ArkUI_BorderStyle)
@@ -128,9 +128,9 @@ namespace TaroDOM {
         DECLARE_DRAW_STYLE_FUNCTIONS(TextOverflow, ArkUI_TextOverflow)
         DECLARE_DRAW_STYLE_FUNCTIONS(PointerEvents, PropertyType::PointerEvents)
 
-        bool CheckAndSetFontStyle(const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &);
-        bool CheckAndSetFontBgColorStyle(const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> &);
-        virtual void OnDisplayChange(const PropertyType::Display &val, const PropertyType::Display &oldVal) {};
+        bool CheckAndSetFontStyle(const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>&);
+        bool CheckAndSetFontBgColorStyle(const std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet>&);
+        virtual void OnDisplayChange(const PropertyType::Display& val, const PropertyType::Display& oldVal) {};
 
         DimensionContextRef GetDimensionContext();
 
@@ -139,7 +139,7 @@ namespace TaroDOM {
         bool is_draw_dirty_ = false;
 
         template <typename T>
-        void SetDrawPropertyDirty(DrawProperty<T> &drawProperty) {
+        void SetDrawPropertyDirty(DrawProperty<T>& drawProperty) {
             drawProperty.force_update = true;
             SetDrawDirty(true);
         }

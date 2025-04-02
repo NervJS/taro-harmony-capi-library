@@ -30,7 +30,8 @@ void HarmonyStyleSetter::setTransform(const ArkUI_NodeHandle& node, const Option
     }
 }
 void HarmonyStyleSetter::setTransform(const ArkUI_NodeHandle& node, const std::vector<float>& value) {
-    if (value.size() != 16) return;
+    if (value.size() != 16)
+        return;
 
     ArkUI_NumberValue arkUI_NumberValue[16] = {};
     std::transform(value.begin(), value.end(), arkUI_NumberValue, [](float v) {

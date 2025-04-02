@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <type_traits>
+
 #include "helper/scalar.h"
 
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
@@ -19,9 +20,11 @@ struct TRange {
     size_t end = EMPTY_INDEX;
 
     TRange()
-        : start(), end() {}
+        : start(),
+          end() {}
     TRange(size_t s, size_t e)
-        : start(s), end(e) {}
+        : start(s),
+          end(e) {}
 
     bool operator==(const TRange& other) const {
         return start == other.start && end == other.end;
@@ -30,7 +33,7 @@ struct TRange {
     size_t width() const {
         return end - start;
     }
-    
+
     bool empty() {
         return start == EMPTY_INDEX || end == EMPTY_INDEX;
     }

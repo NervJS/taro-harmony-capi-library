@@ -34,13 +34,13 @@ namespace TaroAnimate {
         int32_t startCSSAnimation();
 
         // 当属性变化时触发回调
-        bool onSetPropertyIntoNode(const CSSProperty::Type &property,
-                                   const TaroChange &changeType);
+        bool onSetPropertyIntoNode(const CSSProperty::Type& property,
+                                   const TaroChange& changeType);
 
         // 绑定js动画
-        int32_t bindJSAnimation(const napi_value &napi_val);
+        int32_t bindJSAnimation(const napi_value& napi_val);
 
-        int32_t bindJSAnimation(const TaroJsAnimationOptionRef &option);
+        int32_t bindJSAnimation(const TaroJsAnimationOptionRef& option);
 
         // 判断动画ID是否有效
         bool isValid(TaroAnimateType anim_type, int anim_id, uint64_t version);
@@ -58,13 +58,13 @@ namespace TaroAnimate {
 
         void enableTrigger();
 
-        int bindAnimation(const TaroCSSOM::TaroStylesheet::AnimationOption &optional);
+        int bindAnimation(const TaroCSSOM::TaroStylesheet::AnimationOption& optional);
 
-        int bindTransition(const TaroCSSOM::TaroStylesheet::TransitionParam &optional);
+        int bindTransition(const TaroCSSOM::TaroStylesheet::TransitionParam& optional);
 
         void cancelTransition(CSSProperty::Type prop_type);
 
-        void cancelAnimation(const std::string &name);
+        void cancelAnimation(const std::string& name);
 
         // 重新刷新动画，因为折叠屏等原因
         void reloadAnimation(TaroDOM::StylesheetRef style);
@@ -72,7 +72,7 @@ namespace TaroAnimate {
         //         bool isValidVersion() const;
 
         // style是否设置了display: none
-        bool needDisplay(const TaroCSSOM::TaroStylesheet::Display &display) const;
+        bool needDisplay(const TaroCSSOM::TaroStylesheet::Display& display) const;
 
         private:
         std::shared_ptr<TaroCSSAnimation> css_animation_ = nullptr;

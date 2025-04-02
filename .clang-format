@@ -2,34 +2,68 @@
 # clang-format -i --style=file <file>
 Language: Cpp
 BasedOnStyle: Google
+
+# 缩进和格式控制
 IndentWidth: 4
 ColumnLimit: 0
+TabWidth: 4
+UseTab: Never
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# 大括号和空格
 BreakBeforeBraces: Attach
-AllowShortFunctionsOnASingleLine: Empty
 SpacesBeforeTrailingComments: 1
 AlignTrailingComments: true
 SpaceBeforeParens: ControlStatements
+SpaceAfterTemplateKeyword: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeCpp11BracedList: false
+ReflowComments: true
+
+# 函数相关
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortLambdasOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: Yes
+
+# 对齐和缩进
 IndentCaseLabels: true
-PointerAlignment: Left
+NamespaceIndentation: Inner
 AccessModifierOffset: 0
-UseTab: Never
+PointerAlignment: Left
+ReferenceAlignment: Left
+DerivePointerAlignment: false
+EmptyLineBeforeAccessModifier: Always
+InsertNewlineAtEOF: true
+
+# 包含文件排序
 SortIncludes: true
+IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex: '^"{{fileBasenameNoExtension}}\.(h|hpp)"'
+  - Regex: '^"{{fileBasenameNoExtension}}\.(h|hpp)"$' # 当前目录的头文件
     Priority: 1
     SortPriority: 0
-  - Regex: '^<.*\.h>' # C 头文件
+  - Regex: '^<.*\.(h|hpp)>'                           # C 系统头文件
     Priority: 2
     SortPriority: 0
-  - Regex: "^<.*>" # C++ 标准库头文件
+  - Regex: '^<.*>'                                    # C++ 标准库头文件
     Priority: 2
     SortPriority: 1
-  - Regex: '^".*\.h"' # 项目头文件
+  - Regex: '^".*\.(h|hpp)"'                           # 项目头文件
     Priority: 3
     SortPriority: 0
-  - Regex: '^".*"' # 其他项目文件
+  - Regex: '.*'                                       # 其他头文件
     Priority: 4
     SortPriority: 0
-NamespaceIndentation: Inner
-KeepEmptyLinesAtTheStartOfBlocks: false
-MaxEmptyLinesToKeep: 1
+
+# 构造函数初始化列表格式
+BreakConstructorInitializers: BeforeColon
+ConstructorInitializerIndentWidth: 4
+PackConstructorInitializers: Never
+
+# 操作符换行
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: true

@@ -27,13 +27,13 @@ namespace TaroCSSOM {
     using TRules = std::unordered_map<std::string, std::vector<std::shared_ptr<CSSStyleRule>>>;
     class CSSStyleSheet {
         private:
-        std::unordered_map<std::string, TRules> rulesMapping_; // 路由和路由对应的页面样式规则的映射
+        std::unordered_map<std::string, TRules> rulesMapping_;                        // 路由和路由对应的页面样式规则的映射
         std::unordered_map<std::string, DimensionContextRef> current_page_dimension_; // 路由和对应的 dimension 上下文映射
         std::unordered_map<std::string, TaroStylesheet::CSSKeyframesPtr> keyframes_;
-    
+
         public:
-        static CSSStyleSheet *GetInstance() {
-            static CSSStyleSheet *css_style_sheet = new CSSStyleSheet();
+        static CSSStyleSheet* GetInstance() {
+            static CSSStyleSheet* css_style_sheet = new CSSStyleSheet();
             return css_style_sheet;
         }
 
@@ -41,47 +41,47 @@ namespace TaroCSSOM {
 
         virtual ~CSSStyleSheet();
 
-        void InitConfig(const napi_value &config);
-        void Init(const napi_value &router, const napi_value &styleRules, const napi_value &config);
+        void InitConfig(const napi_value& config);
+        void Init(const napi_value& router, const napi_value& styleRules, const napi_value& config);
         DimensionContextRef GetCurrentPageDimension(const std::string& page_path);
         void UpdateCurrentPageDimension(const std::string& page_path);
 
         static void setStylesheet(
-            std::shared_ptr<TaroStylesheet::Stylesheet> &style_ptr,
+            std::shared_ptr<TaroStylesheet::Stylesheet>& style_ptr,
             napi_value hmStyle);
 
         static void setAttribute(
-            napi_value hmStyle, char *name,
+            napi_value hmStyle, char* name,
             std::function<void(napi_valuetype, napi_value)> callback);
 
         // 合并层叠样式
         ElementStylesheets CombineCascadeStyle(
-            const std::shared_ptr<TaroDOM::TaroElement> &element,
-            std::vector<CSSStyleRuleRef> &);
+            const std::shared_ptr<TaroDOM::TaroElement>& element,
+            std::vector<CSSStyleRuleRef>&);
 
         // 嵌套样式匹配
         std::vector<CSSStyleRuleRef> MatchNestingSelector(
-            const std::shared_ptr<TaroDOM::TaroElement> &element,
-            const TaroDOM::ClassList &classList,
-            const std::string &router);
+            const std::shared_ptr<TaroDOM::TaroElement>& element,
+            const TaroDOM::ClassList& classList,
+            const std::string& router);
 
         // 根据classNames获取匹配到的最终styles
         ElementStylesheets getStylesheetByClassNames(
-            const std::shared_ptr<TaroDOM::TaroElement> &element,
-            const TaroDOM::ClassList &classList,
-            const std::string &router);
+            const std::shared_ptr<TaroDOM::TaroElement>& element,
+            const TaroDOM::ClassList& classList,
+            const std::string& router);
 
         // 拼接页面路由，在路由后面拼接视窗宽度，来识别不同视窗下的样式
         std::string getStylePagePath(std::string page_path);
 
         // 根据animation name获取keyframes信息
-        const TaroStylesheet::KeyframesInfoPtr getAnimKeyframes(const std::string &name, const std::string &router) const;
+        const TaroStylesheet::KeyframesInfoPtr getAnimKeyframes(const std::string& name, const std::string& router) const;
 
-        static TaroStylesheet::CSSKeyframesPtr getAnimKeyframesPtr(const std::string &router);
+        static TaroStylesheet::CSSKeyframesPtr getAnimKeyframesPtr(const std::string& router);
     };
 
     // 匹配解析nth-child的值
-    static std::array<int, 2> parseNthChild(const std::string &str) {
+    static std::array<int, 2> parseNthChild(const std::string& str) {
         std::array<int, 2> result = {0, 0}; // 初始化结果数组为 [0, 0]
 
         if (str == "odd") {
@@ -110,7 +110,7 @@ namespace TaroCSSOM {
                 } else {
                     try {
                         result[1] = std::stoi(str);
-                    } catch (const std::invalid_argument &) {
+                    } catch (const std::invalid_argument&) {
                         // 处理非法的 y 值
                         result[1] = 0;
                     }

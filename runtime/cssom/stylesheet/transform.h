@@ -19,14 +19,14 @@ namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 class Transform : public AttributeBase<TransformParam> {
     public:
     Transform() = default;
-    Transform(const napi_value &);
+    Transform(const napi_value&);
     void setValueFromStringView(std::string_view str) override;
-    void setValueFromNapi(const napi_value &) override;
-    void assign(const AttributeBase<TransformParam> &item) override;
+    void setValueFromNapi(const napi_value&) override;
+    void assign(const AttributeBase<TransformParam>& item) override;
 
-    bool isEqual(const TaroHelper::Optional<TransformParam> &other) const;
+    bool isEqual(const TaroHelper::Optional<TransformParam>& other) const;
 
-    static std::shared_ptr<TransformItemBase> parseTransformItem(ETransformType type, const napi_value &elem);
+    static std::shared_ptr<TransformItemBase> parseTransformItem(ETransformType type, const napi_value& elem);
 };
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet
 

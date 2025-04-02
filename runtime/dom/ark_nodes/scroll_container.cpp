@@ -3,6 +3,7 @@
  */
 
 #include "./scroll_container.h"
+
 #include "runtime/NativeNodeApi.h"
 
 namespace TaroRuntime {
@@ -19,14 +20,14 @@ namespace TaroDOM {
         NativeNodeApi::getInstance()->setAttribute(GetArkUINodeHandle(), NODE_SCROLL_ENABLE_SCROLL_INTERACTION, &item);
     }
 
-    void TaroScrollContainerNode::setScrollBarDisplay(const ArkUI_ScrollBarDisplayMode &mode) {
+    void TaroScrollContainerNode::setScrollBarDisplay(const ArkUI_ScrollBarDisplayMode& mode) {
         ArkUI_NumberValue value[] = {0};
         ArkUI_AttributeItem item = {value, 1};
         value[0].i32 = mode;
         NativeNodeApi::getInstance()->setAttribute(GetArkUINodeHandle(), NODE_SCROLL_BAR_DISPLAY_MODE, &item);
     }
 
-    void TaroScrollContainerNode::setScrollDirection(const ArkUI_ScrollDirection &direction) {
+    void TaroScrollContainerNode::setScrollDirection(const ArkUI_ScrollDirection& direction) {
         ArkUI_NumberValue value[] = {0};
         ArkUI_AttributeItem item = {value, 1};
         value[0].i32 = direction;
@@ -36,7 +37,7 @@ namespace TaroDOM {
     }
 
     void TaroScrollContainerNode::setEdgeEffect(ArkUI_EdgeEffect edgeEffect) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[2] = {0, 0};
         ArkUI_AttributeItem item = {value, 2};
         value[0].i32 = edgeEffect;
@@ -44,7 +45,7 @@ namespace TaroDOM {
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_SCROLL_EDGE_EFFECT, &item);
     };
 
-    void TaroScrollContainerNode::SetScrollOffset(const double &scrollLeft, const double &scrollTop, bool enableAnimation, int32_t duration) {
+    void TaroScrollContainerNode::SetScrollOffset(const double& scrollLeft, const double& scrollTop, bool enableAnimation, int32_t duration) {
         ArkUI_NumberValue value[6] = {0};
         ArkUI_AttributeItem item = {value, 6};
         value[0].f32 = scrollLeft;
@@ -57,7 +58,7 @@ namespace TaroDOM {
     }
 
     void TaroScrollContainerNode::setNestedMode(ArkUI_ScrollNestedMode downMode, ArkUI_ScrollNestedMode upMode) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[2] = {0, 0};
         value[0].i32 = downMode;
         value[1].i32 = upMode;
@@ -66,7 +67,7 @@ namespace TaroDOM {
     }
 
     void TaroScrollContainerNode::setFriction(double friction) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[1] = {0};
         ArkUI_AttributeItem item = {value, 1};
         value[0].f32 = friction;

@@ -10,11 +10,11 @@
 namespace TaroRuntime {
 namespace TaroCSSOM {
     namespace TaroStylesheet {
-        Overflow::Overflow(const napi_value &napiValue) {
+        Overflow::Overflow(const napi_value& napiValue) {
             setValueFromNapi(napiValue);
         }
 
-        void Overflow::setValueFromNapi(const napi_value &napiValue) {
+        void Overflow::setValueFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);

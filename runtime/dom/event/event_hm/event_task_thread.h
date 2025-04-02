@@ -9,20 +9,20 @@
 
 namespace TaroRuntime::TaroDOM::TaroEvent {
 class TaroEventTaskThread final {
-public:
+    public:
     TaroEventTaskThread() = default;
     ~TaroEventTaskThread() = default;
 
     static TaroEventTaskThread* instance();
-    
+
     int init();
 
     void pushHmEvent(const TaroEventBasePtr& event);
-    
+
     void execEvent();
 
-private:
+    private:
     TaroHelper::SyncQueue<TaroEventBasePtr> hm_event_queue_;
     bool has_init_ = false;
 };
-}  // namespace TaroRuntime::TaroDOM::TaroEvent
+} // namespace TaroRuntime::TaroDOM::TaroEvent

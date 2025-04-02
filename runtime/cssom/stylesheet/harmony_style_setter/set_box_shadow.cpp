@@ -25,7 +25,7 @@ void HarmonyStyleSetter::setBoxShadow(const ArkUI_NodeHandle& node, const BoxSha
         arkUI_NumberValue[2].f32 = vp2Px(value.offsetX.value().ParseToVp().value_or(0.0f));
     }
     if (value.offsetY.has_value()) {
-        arkUI_NumberValue[3].f32 =vp2Px(value.offsetY.value().ParseToVp().value_or(0.0f));
+        arkUI_NumberValue[3].f32 = vp2Px(value.offsetY.value().ParseToVp().value_or(0.0f));
     }
 
     if (value.color.has_value()) {

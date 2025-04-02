@@ -19,7 +19,7 @@
 class JSINativeModules {
     public:
     explicit JSINativeModules(std::shared_ptr<ModuleRegistry> moduleRegistry);
-    facebook::jsi::Value getModule(facebook::jsi::Runtime &rt, const facebook::jsi::PropNameID &name);
+    facebook::jsi::Value getModule(facebook::jsi::Runtime& rt, const facebook::jsi::PropNameID& name);
     void reset();
 
     private:
@@ -28,6 +28,6 @@ class JSINativeModules {
     std::unordered_map<std::string, facebook::jsi::Object> m_objects;
 
     std::optional<facebook::jsi::Object> createModule(
-        facebook::jsi::Runtime &rt,
-        const std::string &name);
+        facebook::jsi::Runtime& rt,
+        const std::string& name);
 };

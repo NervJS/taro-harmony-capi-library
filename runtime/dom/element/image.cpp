@@ -99,7 +99,8 @@ namespace TaroDOM {
         auto parentNode = GetParentNode();
         auto parentElement = std::dynamic_pointer_cast<TaroText>(parentNode);
         if (parentElement) {
-            if (!parentNode->HasRenderNode()) return;
+            if (!parentNode->HasRenderNode())
+                return;
             for (auto child : parentNode->child_nodes_) {
                 auto item = std::dynamic_pointer_cast<TaroDOM::TaroElement>(child);
                 if (!item->is_init_) {
@@ -115,7 +116,8 @@ namespace TaroDOM {
             renderNode->SetContent();
             return;
         }
-        if (!HasRenderNode()) return;
+        if (!HasRenderNode())
+            return;
         std::shared_ptr<TaroImageNode> render_image = std::static_pointer_cast<TaroImageNode>(GetHeadRenderNode());
 
         SetLazyLoadAttribute();
@@ -150,7 +152,7 @@ namespace TaroDOM {
                         // 获取图片解码的宽高尺寸信息，有缓存的情况下防止二次布局
                         std::weak_ptr<TaroImageNode> weak_render_image = render_image;
 
-                        if(src_string->find("gif") == std::string::npos) {
+                        if (src_string->find("gif") == std::string::npos) {
                             TaroHelper::loadImage({.url = *src_string}, [weak_render_image](const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo> result) mutable {
                                 auto res = std::get_if<TaroHelper::ResultImageInfo>(&result);
                                 auto render_image = weak_render_image.lock();
@@ -161,15 +163,14 @@ namespace TaroDOM {
                                 }
                             });
                         }
-
                     }
                 }
             } else {
                 // https://developers.weixin.qq.com/miniprogram/dev/component/image.html#Bug-Tip 这个tip的逻辑
-                if(!style_->width.has_value()) {
+                if (!style_->width.has_value()) {
                     render_image->SetWidth(Dimension{320, DimensionUnit::DESIGN_PX});
                 }
-                if(!style_->height.has_value()) {
+                if (!style_->height.has_value()) {
                     render_image->SetHeight(Dimension{240, DimensionUnit::DESIGN_PX});
                 }
             }
@@ -218,7 +219,7 @@ namespace TaroDOM {
             auto s = attributes_->src.value();
             bool clearRawSize = true;
             if (auto srcVal = std::get_if<std::string>(&s)) {
-                if (!old_src_.size() || *srcVal == old_src_) {  // 首次图片设置 / 前后链接一致
+                if (!old_src_.size() || *srcVal == old_src_) { // 首次图片设置 / 前后链接一致
                     clearRawSize = false;
                 }
                 render_image->setImageSrc(*srcVal, height, width, attributes_->lazyLoad.value_or(false));
@@ -258,7 +259,8 @@ namespace TaroDOM {
         TaroAttribute::SetAttribute(renderNode, name, value);
 
         // 没有初始化没有 attribute
-        if (!is_init_ || GetHeadRenderNode() == nullptr) return;
+        if (!is_init_ || GetHeadRenderNode() == nullptr)
+            return;
 
         switch (name) {
             case ATTRIBUTE_NAME::LAZY_LOAD:
@@ -276,9 +278,11 @@ namespace TaroDOM {
                         SetSrcAttribute();
                     } else {
                         auto renderNode = parentElement->GetHeadRenderNode();
-                        if (!renderNode) return;
+                        if (!renderNode)
+                            return;
                         auto textRenderNode = std::dynamic_pointer_cast<TaroTextNode>(renderNode);
-                        if (!textRenderNode) return;
+                        if (!textRenderNode)
+                            return;
                         if (attributes_->src.has_value()) {
                             textRenderNode->UpdateImage(nid_, attributes_->src.value());
                         } else {
@@ -311,9 +315,11 @@ namespace TaroDOM {
                         SetModeAttribute();
                     } else {
                         auto renderNode = parentElement->GetHeadRenderNode();
-                        if (!renderNode) return;
+                        if (!renderNode)
+                            return;
                         auto textRenderNode = std::dynamic_pointer_cast<TaroTextNode>(renderNode);
-                        if (!textRenderNode) return;
+                        if (!textRenderNode)
+                            return;
                         textRenderNode->SetLayoutDirty(true);
                         textRenderNode->SetDrawDirty(true);
                         textRenderNode->SetContent();
@@ -443,7 +449,7 @@ namespace TaroDOM {
             SetRenderNode(new_node);
             new_node->UpdateDifferOldStyleFromElement(reuse_element);
             reuse_element->GetHeadRenderNode()->SetArkUINodeHandle(nullptr);
-            NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
             nativeNodeApi->resetAttribute(ark_handle, NODE_IMAGE_SRC);
             return;
         }
@@ -459,7 +465,7 @@ namespace TaroDOM {
         }
         new_node->SetArkUINodeHandle(ark_handle);
         new_node->UpdateDifferOldStyleFromElement(reuse_element);
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         nativeNodeApi->resetAttribute(ark_handle, NODE_IMAGE_SRC);
         reuse_element->event_emitter_->clearNodeEvent(ark_handle);
         updateListenEvent();

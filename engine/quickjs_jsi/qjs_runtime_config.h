@@ -14,11 +14,11 @@ struct QuickJSRuntimeConfig {
     QuickJSRuntimeConfig() {}
     ~QuickJSRuntimeConfig() = default;
 
-    QuickJSRuntimeConfig(const QuickJSRuntimeConfig &rhs) = delete;
-    QuickJSRuntimeConfig &operator=(const QuickJSRuntimeConfig &rhs) = delete;
+    QuickJSRuntimeConfig(const QuickJSRuntimeConfig& rhs) = delete;
+    QuickJSRuntimeConfig& operator=(const QuickJSRuntimeConfig& rhs) = delete;
 
-    QuickJSRuntimeConfig(QuickJSRuntimeConfig &&rhs) = default;
-    QuickJSRuntimeConfig &operator=(QuickJSRuntimeConfig &&rhs) = default;
+    QuickJSRuntimeConfig(QuickJSRuntimeConfig&& rhs) = default;
+    QuickJSRuntimeConfig& operator=(QuickJSRuntimeConfig&& rhs) = default;
 
     // Olson timezone ID
     std::string timezoneId;

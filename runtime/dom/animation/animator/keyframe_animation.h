@@ -16,27 +16,28 @@ namespace TaroAnimate {
     template <typename T>
     class TaroKeyframeAnimation final : public TaroAnimation {
         public:
-        using ValueSetFun = std::function<void(const T &t)>;
+        using ValueSetFun = std::function<void(const T& t)>;
 
         public:
-        explicit TaroKeyframeAnimation(const T &sys_value,
-                                       const ValueSetFun &value_set_callback)
-            : sys_value_(sys_value), value_set_callback_(value_set_callback) {}
+        explicit TaroKeyframeAnimation(const T& sys_value,
+                                       const ValueSetFun& value_set_callback)
+            : sys_value_(sys_value),
+              value_set_callback_(value_set_callback) {}
         ~TaroKeyframeAnimation() = default;
 
         void addKeyframe(
-            const std::list<std::shared_ptr<TaroKeyframe<T>>> &keyframes) {
-            for (const auto &keyframe : keyframes) {
+            const std::list<std::shared_ptr<TaroKeyframe<T>>>& keyframes) {
+            for (const auto& keyframe : keyframes) {
                 AddKeyframe(keyframe);
             }
             // in order by time;
-            keyframes_.sort([](const std::shared_ptr<TaroKeyframe<T>> &a,
-                               const std::shared_ptr<TaroKeyframe<T>> &b) {
+            keyframes_.sort([](const std::shared_ptr<TaroKeyframe<T>>& a,
+                               const std::shared_ptr<TaroKeyframe<T>>& b) {
                 return a->GetKeyTime() < b->GetKeyTime();
             });
         }
 
-        void addKeyframe(const std::shared_ptr<TaroKeyframe<T>> &keyframe) {
+        void addKeyframe(const std::shared_ptr<TaroKeyframe<T>>& keyframe) {
             if (!keyframe) {
                 TARO_LOG_ERROR("TaroAnimation", "add key frame failed. empty keyframe.");
                 return;
@@ -62,7 +63,7 @@ namespace TaroAnimate {
         }
 
         void replaceKeyframe(
-            const std::shared_ptr<TaroKeyframe<T>> &keyframe_replace) {
+            const std::shared_ptr<TaroKeyframe<T>>& keyframe_replace) {
             if (!keyframe_replace) {
                 TARO_LOG_ERROR("TaroAnimation", "add key frame failed. empty keyframe.");
                 return;
@@ -72,7 +73,7 @@ namespace TaroAnimate {
                                "add key frame failed. invalid keyframe.");
                 return;
             }
-            for (auto &keyframe : keyframes_) {
+            for (auto& keyframe : keyframes_) {
                 if (TaroUtils::nearEqual(keyframe->getKeyTime(),
                                          keyframe_replace->getKeyTime())) {
                     keyframe = keyframe_replace;
@@ -80,12 +81,12 @@ namespace TaroAnimate {
             }
         }
 
-        void setCurve(const std::shared_ptr<TaroCurve> &curve) {
+        void setCurve(const std::shared_ptr<TaroCurve>& curve) {
             if (!curve) {
                 TARO_LOG_ERROR("TaroAnimation", "set curve failed. curve is null.");
                 return;
             }
-            for (auto &keyframe : keyframes_) {
+            for (auto& keyframe : keyframes_) {
                 keyframe->SetCurve(curve);
             }
         }
@@ -140,7 +141,7 @@ namespace TaroAnimate {
             }
             auto pre_keyframe = keyframes_.front();
             // Iteratively calculate the value between each keyframe.
-            for (const auto &keyframe : keyframes_) {
+            for (const auto& keyframe : keyframes_) {
                 if (key_time < keyframe->getKeyTime()) {
                     float pre_key_time = pre_keyframe->getKeyTime();
                     if (TaroUtils::nearEqual(keyframe->getKeyTime(), pre_key_time)) {

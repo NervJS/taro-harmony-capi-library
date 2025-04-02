@@ -14,9 +14,15 @@
 #define TIMER_FUNCTION() TIMER_SCOPE(__FUNCTION__, TaroHelper::TimeUnit::MS)
 #define TIMER_US_FUNCTION() TIMER_SCOPE(__FUNCTION__, TaroHelper::TimeUnit::US)
 #else
-#define TIMER_SCOPE(name, unit) do {} while(0)
-#define TIMER_FUNCTION() do {} while(0)
-#define TIMER_US_FUNCTION() do {} while(0)
+#define TIMER_SCOPE(name, unit) \
+    do {                        \
+    } while (0)
+#define TIMER_FUNCTION() \
+    do {                 \
+    } while (0)
+#define TIMER_US_FUNCTION() \
+    do {                    \
+    } while (0)
 #endif
 
 namespace TaroHelper {
@@ -84,7 +90,10 @@ class FunctionTimer {
 
     public:
     FunctionTimer(const char* name, TimeUnit unit = TimeUnit::MS)
-        : m_Name(name), m_Timer(TaroHelper::MsTimer()), m_Unit(unit), m_Stop(false) {
+        : m_Name(name),
+          m_Timer(TaroHelper::MsTimer()),
+          m_Unit(unit),
+          m_Stop(false) {
         m_Timer.Start();
     }
 

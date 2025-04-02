@@ -12,7 +12,7 @@ class QuickJSExecutorFactory : public JSExecutorFactory {
     public:
     explicit QuickJSExecutorFactory(
         JSIExecutor::RuntimeInstaller runtimeInstaller,
-        const JSIScopedTimeoutInvoker &timeoutInvoker,
+        const JSIScopedTimeoutInvoker& timeoutInvoker,
         std::unique_ptr<QuickJSRuntimeConfig> config)
         : runtimeInstaller_(runtimeInstaller),
           timeoutInvoker_(timeoutInvoker),
@@ -36,7 +36,7 @@ class QuickJSExecutor : public JSIExecutor {
         std::shared_ptr<facebook::jsi::Runtime> runtime,
         std::shared_ptr<ExecutorDelegate> delegate,
         std::shared_ptr<MessageQueueThread> jsQueue,
-        const JSIScopedTimeoutInvoker &timeoutInvoker,
+        const JSIScopedTimeoutInvoker& timeoutInvoker,
         RuntimeInstaller runtimeInstaller);
 
     private:

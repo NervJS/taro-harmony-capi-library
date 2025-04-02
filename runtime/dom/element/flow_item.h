@@ -17,7 +17,7 @@ namespace TaroDOM {
 
         void Build() override;
         void SetAttributesToRenderNode() override;
-        void Build(std::shared_ptr<TaroElement> &reuse_element) override;
+        void Build(std::shared_ptr<TaroElement>& reuse_element) override;
         // 实现Attribute，监听属性的变化
         void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;
     };

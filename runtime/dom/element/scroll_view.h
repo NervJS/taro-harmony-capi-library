@@ -17,7 +17,7 @@ namespace TaroDOM {
         ~TaroScrollView() = default;
 
         void Build() override;
-    
+
         protected:
         void SetScrollXAttribute() override;
         void SetScrollYAttribute() override;

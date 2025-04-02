@@ -16,7 +16,7 @@ namespace TaroAnimate {
 
     bool AnimationPropDrawColor::getSystemPropValue(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                     CSSProperty::Type prop_type,
-                                                    TaroAnimationPropValue &prop_value) const {
+                                                    TaroAnimationPropValue& prop_value) const {
         Optional<uint32_t> sys_value;
         switch (prop_type) {
             case CSSProperty::Type::BackgroundColor:
@@ -48,9 +48,9 @@ namespace TaroAnimate {
     bool AnimationPropDrawColor::getAnimationPropValue(
         std::shared_ptr<TaroDOM::TaroRenderNode> node,
         CSSProperty::Type prop_type,
-        const TaroCSSOM::TaroStylesheet::KeyframeValue &n_val,
-        const TaroAnimationPropValue &sys_value,
-        TaroAnimationPropValue &prop_value) const {
+        const TaroCSSOM::TaroStylesheet::KeyframeValue& n_val,
+        const TaroAnimationPropValue& sys_value,
+        TaroAnimationPropValue& prop_value) const {
         if (auto double_val = std::get_if<double>(&n_val)) {
             prop_value = *double_val;
             return true;
@@ -60,8 +60,8 @@ namespace TaroAnimate {
 
     void AnimationPropDrawColor::setNodeProperty(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                  CSSProperty::Type prop_type,
-                                                 const TaroAnimationPropValue &prop_value) const {
-        const double *double_value = std::get_if<double>(&prop_value);
+                                                 const TaroAnimationPropValue& prop_value) const {
+        const double* double_value = std::get_if<double>(&prop_value);
         if (double_value == nullptr) {
             return;
         }
@@ -70,7 +70,7 @@ namespace TaroAnimate {
 
     void AnimationPropDrawColor::setKeyframeToNode(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                    CSSProperty::Type prop_type,
-                                                   const TaroCSSOM::TaroStylesheet::KeyframeValue &keyframe) const {
+                                                   const TaroCSSOM::TaroStylesheet::KeyframeValue& keyframe) const {
         if (!node) {
             return;
         }
@@ -88,7 +88,7 @@ namespace TaroAnimate {
     }
 
     void AnimationPropDrawColor::setColorValue(CSSProperty::Type prop_type,
-                                               std::shared_ptr<TaroDOM::TaroRenderNode> &node,
+                                               std::shared_ptr<TaroDOM::TaroRenderNode>& node,
                                                uint32_t color_value) const {
         switch (prop_type) {
             case CSSProperty::Type::BackgroundColor:

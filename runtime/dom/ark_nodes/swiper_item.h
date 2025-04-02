@@ -17,7 +17,7 @@ class TaroSwiperItemNode : public TaroStackNode {
     void Build() override;
 
     void SetStyle(StylesheetRef style_ref) override;
-    
+
     void Measure() override;
 };
 

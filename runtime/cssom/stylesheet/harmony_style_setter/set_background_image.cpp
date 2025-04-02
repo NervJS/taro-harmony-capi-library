@@ -18,7 +18,8 @@ void HarmonyStyleSetter::setBackgroundImage(
     const ArkUI_NodeHandle& node,
     const Optional<BackgroundImageItem>& val,
     const Optional<ArkUI_ImageRepeat>& repeatVal) {
-    if (!val.has_value()) return;
+    if (!val.has_value())
+        return;
     auto value = val.value();
     auto repeatVale = repeatVal.has_value() ? repeatVal.value() : ARKUI_IMAGE_REPEAT_NONE;
     if (value.type == PIC) {
@@ -54,8 +55,8 @@ void HarmonyStyleSetter::setBackgroundImage(
             arkUI_NumberValue[3].i32 = repeatVale;
             TaroRuntime::NativeNodeApi::getInstance()->setAttribute(
                 node, NODE_RADIAL_GRADIENT, &item);
-//             setBackgroundImage(node, BackgroundImageItem::emptyImg);
-//             NativeNodeApi::getInstance()->resetAttribute(node, NODE_LINEAR_GRADIENT);
+            //             setBackgroundImage(node, BackgroundImageItem::emptyImg);
+            //             NativeNodeApi::getInstance()->resetAttribute(node, NODE_LINEAR_GRADIENT);
         } else if (value.type == LINEARGRADIENT) {
             ArkUI_NumberValue arkUI_NumberValue[3] = {};
             ArkUI_AttributeItem item = {.value = arkUI_NumberValue,

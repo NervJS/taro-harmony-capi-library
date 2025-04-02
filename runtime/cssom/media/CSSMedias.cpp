@@ -11,7 +11,7 @@
 namespace TaroRuntime {
 namespace TaroCSSOM {
 
-    int CSSMedia::init(const napi_value &config) {
+    int CSSMedia::init(const napi_value& config) {
         NapiGetter getter(config);
         if (getter.Type() != napi_object) {
             return -1;
@@ -29,7 +29,7 @@ namespace TaroCSSOM {
         // 转换为一个OR的表达式
         condition_ = std::make_shared<CSSMediaCondition>();
         condition_->setOperate(MediaOpType::OR);
-        napi_conditions.ForEachInArray([this](const napi_value &napi_val, const uint32_t &) {
+        napi_conditions.ForEachInArray([this](const napi_value& napi_val, const uint32_t&) {
             condition_->add_item(NapiGetter(napi_val));
         });
 
@@ -46,11 +46,11 @@ namespace TaroCSSOM {
         match_ = condition_->match();
     }
 
-    int CSSMedias::init(const napi_value &config) {
+    int CSSMedias::init(const napi_value& config) {
         if (config == nullptr) {
             return -1;
         }
-        NapiGetter::ForEachInArray(config, [this](const napi_value &napi_val, const uint32_t &) {
+        NapiGetter::ForEachInArray(config, [this](const napi_value& napi_val, const uint32_t&) {
             auto media = std::make_shared<CSSMedia>();
             int ret = media->init(napi_val);
             if (ret != 0 || media->id() <= 0) {

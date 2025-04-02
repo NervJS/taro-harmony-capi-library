@@ -13,12 +13,12 @@ namespace TaroDOM {
         TaroRadioNode(const TaroElementRef element);
         ~TaroRadioNode();
         void Build() override;
-        void setValue(const char *value);
+        void setValue(const char* value);
         void setChecked(bool checked);
         void ChangeChecked();
         void setColor(uint32_t color);
         void setZeroMargin();
-        void setNodeGroup(const char *groupName);
+        void setNodeGroup(const char* groupName);
 
         private:
         std::string name_;

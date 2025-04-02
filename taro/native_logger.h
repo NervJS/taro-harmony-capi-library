@@ -5,4 +5,4 @@
 #pragma once
 #include <string>
 
-void nativeLogger(const std::string &message, unsigned int logLevel);
+void nativeLogger(const std::string& message, unsigned int logLevel);

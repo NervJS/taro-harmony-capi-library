@@ -2,10 +2,12 @@
  * Copyright (c) 2018 O2Team. All Rights Reserved.
  */
 
+#include "FontFamilyManager.h"
+
 #include <cstdint>
 #include <native_drawing/drawing_font_collection.h>
 #include <native_drawing/drawing_register_font.h>
-#include "FontFamilyManager.h"
+
 #include "helper/TaroLog.h"
 namespace TaroRuntime {
 namespace TaroCSSOM {
@@ -83,5 +85,5 @@ namespace TaroCSSOM {
             m_CurrentRequestUrls.erase(it);
         }
     }
-}
-}
+} // namespace TaroCSSOM
+} // namespace TaroRuntime

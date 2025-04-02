@@ -17,7 +17,7 @@ class TaroClassLifeStatistic {
     static void markNew(const std::string& name);
     static void markDelete(const std::string& name);
     static void printUseInfo();
-    
+
     private:
     static bool needPrint(const std::string& name);
 

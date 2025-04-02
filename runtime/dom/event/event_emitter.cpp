@@ -13,13 +13,13 @@
 #include "runtime/dom/element/element.h"
 
 namespace TaroRuntime::TaroDOM::TaroEvent {
-TaroEventEmitter::TaroEventEmitter(TaroElement *node)
+TaroEventEmitter::TaroEventEmitter(TaroElement* node)
     : node_owner_(node) {}
 
 TaroEventEmitter::~TaroEventEmitter() {
 }
 
-int TaroEventEmitter::addEventListener(const std::string &js_event_type, EventListenParams *params, bool call_js) {
+int TaroEventEmitter::addEventListener(const std::string& js_event_type, EventListenParams* params, bool call_js) {
     EventGeneratorType gen_type = EventGeneratorType::UserDefine;
     auto node_handle = (!params || !params->node_handle_) ? node_owner_->GetNodeHandle() : params->node_handle_;
     if (node_handle == nullptr) {
@@ -66,12 +66,12 @@ int TaroEventEmitter::addEventListener(const std::string &js_event_type, EventLi
     return 0;
 }
 
-void TaroEventEmitter::removeEventListener(const std::string &js_event_type, bool call_js, const ArkUI_NodeHandle &node_handle) {
+void TaroEventEmitter::removeEventListener(const std::string& js_event_type, bool call_js, const ArkUI_NodeHandle& node_handle) {
     auto iter_listeners = listeners_.find(js_event_type);
     if (iter_listeners == listeners_.end() || iter_listeners->second == nullptr) {
         return;
     }
-    auto &listeners = iter_listeners->second->listeners_;
+    auto& listeners = iter_listeners->second->listeners_;
     for (auto iter = listeners.begin(); iter != listeners.end();) {
         if (iter->call_js_ != call_js || (node_handle != nullptr && iter->node_handle_ != node_handle)) {
             iter++;
@@ -82,7 +82,7 @@ void TaroEventEmitter::removeEventListener(const std::string &js_event_type, boo
         auto ev_node_handle = iter->node_handle_;
         iter = listeners.erase(iter);
         // 查找相同类型事件是否还存在
-        auto find_iter = std::find_if(listeners.begin(), listeners.end(), [event_type, gen_type, ev_node_handle](const EventListener &listener) {
+        auto find_iter = std::find_if(listeners.begin(), listeners.end(), [event_type, gen_type, ev_node_handle](const EventListener& listener) {
             return listener.gen_type_ == gen_type && listener.event_type_ == event_type && listener.node_handle_ == ev_node_handle;
         });
         if (find_iter != listeners.end()) {
@@ -107,7 +107,8 @@ int TaroEventEmitter::triggerEvents(TaroEventPtr event, bool with_native_bubble)
     event->cur_target_ = event->target_;
     dispatchEvents_First(event);
 
-    if (with_native_bubble) return 0;
+    if (with_native_bubble)
+        return 0;
 
     auto node = std::dynamic_pointer_cast<TaroElement>(node_owner_->GetParentNode());
     while (node) {
@@ -135,7 +136,7 @@ bool TaroEventEmitter::dispatchEvents_First(TaroEventPtr event) {
     // 此处做赋值，防止回调过程中listeners_发生改变
     auto listeners_ptr = listeners_iter->second;
     auto listeners = listeners_ptr->listeners_;
-    for (auto &listener : listeners) {
+    for (auto& listener : listeners) {
         // 不是定义的触发
         if (listener.gen_type_ != event->gen_type_ || listener.event_type_ != event->event_type || (event->node_handle_ && listener.node_handle_ != event->node_handle_)) {
             continue;
@@ -187,7 +188,7 @@ int TaroEventEmitter::dispatchEvents(TaroEventPtr event) {
     auto listeners = listeners_ptr->listeners_;
 
     // 触发监听
-    for (auto &elem : listeners) {
+    for (auto& elem : listeners) {
         if (!elem.call_js_) {
             continue;
         }
@@ -206,7 +207,7 @@ int TaroEventEmitter::dispatchEvents(TaroEventPtr event) {
     return 0;
 }
 
-int TaroEventEmitter::bindEvent(TaroElementRef element, const std::string &js_event_type) {
+int TaroEventEmitter::bindEvent(TaroElementRef element, const std::string& js_event_type) {
     bool bret = element->bindListenEvent(js_event_type);
     if (bret) {
         return 0;
@@ -222,7 +223,7 @@ int TaroEventEmitter::bindEvent(TaroElementRef element, const std::string &js_ev
     return 0;
 }
 
-bool TaroEventEmitter::getType(const std::string &js_event_type, EventGeneratorType &gen_type, int &event_type) {
+bool TaroEventEmitter::getType(const std::string& js_event_type, EventGeneratorType& gen_type, int& event_type) {
     static std::unordered_map<std::string, std::pair<EventGeneratorType, int> > s_map_gen = {
         {"click", {EventGeneratorType::Event, TARO_EVENT_TYPE_CLICK}}};
     auto iter = s_map_gen.find(js_event_type);
@@ -264,8 +265,8 @@ EventGeneratorPtr TaroEventEmitter::getGenerator(EventGeneratorType gen_type) {
     return nullptr;
 }
 
-int TaroEventEmitter::registerEvent(int event_type, const std::string &js_event_type,
-                                    const HMEventCallFun &node_event_fun, const ArkUI_NodeHandle &node_handle) {
+int TaroEventEmitter::registerEvent(int event_type, const std::string& js_event_type,
+                                    const HMEventCallFun& node_event_fun, const ArkUI_NodeHandle& node_handle) {
     EventListenParams params;
     params.event_type_ = event_type;
     if (node_event_fun) {
@@ -284,8 +285,8 @@ int TaroEventEmitter::registerEvent(int event_type, const std::string &js_event_
     return addEventListener(js_event_type, &params, true);
 }
 
-int TaroEventEmitter::registerEvent_NoCallBack(int event_type, const std::string &js_event_type,
-                                               const HMEventCallFun &node_event_fun, const ArkUI_NodeHandle &node_handle) {
+int TaroEventEmitter::registerEvent_NoCallBack(int event_type, const std::string& js_event_type,
+                                               const HMEventCallFun& node_event_fun, const ArkUI_NodeHandle& node_handle) {
     EventListenParams params;
     params.event_type_ = event_type;
     if (node_event_fun) {
@@ -304,7 +305,7 @@ int TaroEventEmitter::registerEvent_NoCallBack(int event_type, const std::string
     return addEventListener(js_event_type, &params, false);
 }
 
-int TaroEventEmitter::registerEvent_NoCallBackWithBubble(int event_type, const std::string &js_event_type, const HMEventCallFun &node_event_fun) {
+int TaroEventEmitter::registerEvent_NoCallBackWithBubble(int event_type, const std::string& js_event_type, const HMEventCallFun& node_event_fun) {
     EventListenParams params;
     params.event_type_ = event_type;
     if (node_event_fun) {
@@ -323,8 +324,8 @@ int TaroEventEmitter::registerEvent_NoCallBackWithBubble(int event_type, const s
     return addEventListener(js_event_type, &params, false);
 }
 
-int TaroEventEmitter::registerEvent_NoCallBack(int event_type, const std::string &js_event_type, void *args,
-                                               const HMEventCallFun &node_event_fun, const ArkUI_NodeHandle &node_handle) {
+int TaroEventEmitter::registerEvent_NoCallBack(int event_type, const std::string& js_event_type, void* args,
+                                               const HMEventCallFun& node_event_fun, const ArkUI_NodeHandle& node_handle) {
     EventListenParams params;
     params.event_type_ = event_type;
     if (node_event_fun) {
@@ -344,18 +345,18 @@ int TaroEventEmitter::registerEvent_NoCallBack(int event_type, const std::string
     return addEventListener(js_event_type, &params, false);
 }
 
-int TaroEventEmitter::unRegisterEventByName(const std::string &js_event_name, const ArkUI_NodeHandle &node_handle) {
+int TaroEventEmitter::unRegisterEventByName(const std::string& js_event_name, const ArkUI_NodeHandle& node_handle) {
     removeEventListener(js_event_name, true, node_handle);
     return 0;
 }
 
-int TaroEventEmitter::unRegisterEventByName_NoCallBack(const std::string &js_event_name,
-                                                       const ArkUI_NodeHandle &node_handle) {
+int TaroEventEmitter::unRegisterEventByName_NoCallBack(const std::string& js_event_name,
+                                                       const ArkUI_NodeHandle& node_handle) {
     removeEventListener(js_event_name, false, node_handle);
     return 0;
 }
 
-int TaroEventEmitter::registerEvent_Once(const std::string &js_event_type, napi_ref &callback_ref) {
+int TaroEventEmitter::registerEvent_Once(const std::string& js_event_type, napi_ref& callback_ref) {
     static std::unordered_map<std::string, int> event_map = {
         {"area_change", TARO_EVENT_TYPE_AREA_CHANGE},
         {"visible_area_change", TARO_EVENT_TYPE_VISIBLE_AREA_CHANGE}};
@@ -402,9 +403,9 @@ int TaroEventEmitter::registerEvent_Once(const std::string &js_event_type, napi_
     return 0;
 }
 
-void TaroEventEmitter::clearNodeEvent(const ArkUI_NodeHandle &node_handle) {
+void TaroEventEmitter::clearNodeEvent(const ArkUI_NodeHandle& node_handle) {
     for (auto iter = listeners_.begin(); iter != listeners_.end();) {
-        auto &listeners = iter->second->listeners_;
+        auto& listeners = iter->second->listeners_;
         for (auto listener_iter = listeners.begin(); listener_iter != listeners.end();) {
             if (listener_iter->node_handle_ == node_handle) {
                 auto generator = getGenerator(listener_iter->gen_type_);
@@ -423,8 +424,8 @@ void TaroEventEmitter::clearNodeEvent(const ArkUI_NodeHandle &node_handle) {
 }
 
 int TaroEventEmitter::registerEvent(EventGeneratorType gen_type, int event_type,
-                                    const std::string &js_event_type, const EventCallFun &node_event_fun,
-                                    const ArkUI_NodeHandle &node_handle, void *args) {
+                                    const std::string& js_event_type, const EventCallFun& node_event_fun,
+                                    const ArkUI_NodeHandle& node_handle, void* args) {
     EventListenParams params;
     params.event_type_ = event_type;
     params.event_fun_ = node_event_fun;
@@ -434,8 +435,8 @@ int TaroEventEmitter::registerEvent(EventGeneratorType gen_type, int event_type,
     return addEventListener(js_event_type, &params, true);
 }
 
-int TaroEventEmitter::registerEvent_NoCallBack(EventGeneratorType gen_type, int event_type, const std::string &js_event_type,
-                                               const EventCallFun &node_event_fun, const ArkUI_NodeHandle &node_handle, void *args) {
+int TaroEventEmitter::registerEvent_NoCallBack(EventGeneratorType gen_type, int event_type, const std::string& js_event_type,
+                                               const EventCallFun& node_event_fun, const ArkUI_NodeHandle& node_handle, void* args) {
     EventListenParams params;
     params.gen_type_ = gen_type;
     params.event_type_ = event_type;
@@ -446,11 +447,11 @@ int TaroEventEmitter::registerEvent_NoCallBack(EventGeneratorType gen_type, int 
     return addEventListener(js_event_type, &params, false);
 }
 
-bool TaroEventEmitter::isValid(EventListenersPtr listener, const EventListener &listen) {
+bool TaroEventEmitter::isValid(EventListenersPtr listener, const EventListener& listen) {
     if (!listener) {
         return false;
     }
-    for (const auto &elem : listener->listeners_) {
+    for (const auto& elem : listener->listeners_) {
         if (elem == listen) {
             return true;
         }

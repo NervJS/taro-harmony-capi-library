@@ -13,7 +13,7 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        TaroEventBase::TaroEventBase(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroEventBase::TaroEventBase(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : event_(event) {
             gen_type_ = EventGeneratorType::Event;
             js_event_type_ = js_event_type;
@@ -25,11 +25,11 @@ namespace TaroDOM {
             return true;
         }
 
-        int TaroEventBase::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventBase::parseHmEvent(ArkUI_NodeEvent* event) {
             return 0;
         }
 
-        int TaroEventBase::serializeFun(napi_value &ret_val) {
+        int TaroEventBase::serializeFun(napi_value& ret_val) {
             TARO_LOG_DEBUG("Event", "%{public}s", "EventRecallDataBase now");
             NapiSetter::SetProperty(ret_val, "type", js_event_type_);
 
@@ -45,7 +45,7 @@ namespace TaroDOM {
             return 0;
         }
 
-        napi_value &TaroEventBase::detail() {
+        napi_value& TaroEventBase::detail() {
             if (js_detail_ == nullptr) {
                 napi_create_object(NativeNodeApi::env, &js_detail_);
             }

@@ -21,7 +21,7 @@ namespace TaroDOM {
             using Base::SetValueToNode;
             void SetValueToNode(std::shared_ptr<TaroRenderNode> renderNode, const std::string value) override;
 
-            static constexpr const char *DEFAULT_VALUE = "";
+            static constexpr const char* DEFAULT_VALUE = "";
             static constexpr const std::string_view ATTR_NAME = "style";
         };
     } // namespace Attribute

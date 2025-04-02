@@ -25,8 +25,8 @@ namespace TaroCSSOM {
     };
 
     struct WeakPtrCompare {
-        bool operator()(const std::weak_ptr<TaroDOM::TaroElement> &lhs,
-                        const std::weak_ptr<TaroDOM::TaroElement> &rhs) const {
+        bool operator()(const std::weak_ptr<TaroDOM::TaroElement>& lhs,
+                        const std::weak_ptr<TaroDOM::TaroElement>& rhs) const {
             auto sp_lhs = lhs.lock();
             auto sp_rhs = rhs.lock();
             if (!sp_lhs || !sp_rhs) {
@@ -40,7 +40,7 @@ namespace TaroCSSOM {
         public:
         std::list<Combinator> combinator_;                 // 选择器链表
         std::unique_ptr<CSSStyleDeclaration> declaration_; // 样式申明
-        bool has_env = false; // 是否有环境变量
+        bool has_env = false;                              // 是否有环境变量
 
         CSSStyleRule(std::list<Combinator> combinator, std::unique_ptr<CSSStyleDeclaration> declaration);
 
@@ -49,10 +49,10 @@ namespace TaroCSSOM {
         void init();
 
         // 规则应用到样式上
-        const PseudoType &getPseudo();
-        void setPseudo(const PseudoType &);
-        const std::string &getPseudoValue();
-        void setPseudoValue(const std::string &);
+        const PseudoType& getPseudo();
+        void setPseudo(const PseudoType&);
+        const std::string& getPseudoValue();
+        void setPseudoValue(const std::string&);
 
         private:
         PseudoType pseudo_ = PseudoType::None;

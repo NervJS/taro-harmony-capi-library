@@ -60,7 +60,7 @@ namespace TaroDOM {
         OffsetResult GetCurrentOffset();
         void ScrollTo(ScrollToParams params);
 
-        virtual void Build() override ;
+        virtual void Build() override;
         virtual void SetAttributesToRenderNode() override;
         virtual void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;
         virtual bool bindListenEvent(const std::string&) override;
@@ -88,7 +88,7 @@ namespace TaroDOM {
 
         virtual void findParentType();
         TARO_SCROLL_PARENT_TYPE parentType_ = TARO_ELEMENT_MAX;
-    
+
         protected:
         PropertyType::Overflow overflowMode_ = PropertyType::Overflow::Visible;
     };

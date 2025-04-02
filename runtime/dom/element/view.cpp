@@ -91,7 +91,8 @@ namespace TaroDOM {
         TaroAttribute::SetAttribute(renderNode, name, value);
 
         // 没有初始化没有 attribute
-        if (!is_init_ || GetHeadRenderNode() == nullptr) return;
+        if (!is_init_ || GetHeadRenderNode() == nullptr)
+            return;
 
         switch (name) {
             case ATTRIBUTE_NAME::CATCH_MOVE:
@@ -180,7 +181,7 @@ namespace TaroDOM {
         event_emitter_->registerEvent_NoCallBackWithBubble(TaroEvent::TARO_EVENT_TYPE_TOUCH_END, "touchend", touch_end_fun);
     }
 
-    void TaroView::Build(std::shared_ptr<TaroElement> &reuse_element) {
+    void TaroView::Build(std::shared_ptr<TaroElement>& reuse_element) {
         std::shared_ptr<TaroStackNode> new_node = std::dynamic_pointer_cast<TaroStackNode>(GetHeadRenderNode());
         auto element = std::static_pointer_cast<TaroElement>(shared_from_this());
         auto ark_handle = reuse_element->GetNodeHandle();

@@ -46,7 +46,7 @@ namespace TaroAnimate {
     bool AnimationPropComputedStyle::getSystemPropValue(
         std::shared_ptr<TaroDOM::TaroRenderNode> node,
         CSSProperty::Type prop_type,
-        TaroAnimationPropValue &prop_value) const {
+        TaroAnimationPropValue& prop_value) const {
         std::string name = getComputedName(prop_type);
         if (name.empty()) {
             return false;
@@ -61,32 +61,35 @@ namespace TaroAnimate {
     bool AnimationPropComputedStyle::getAnimationPropValue(
         std::shared_ptr<TaroDOM::TaroRenderNode> node,
         CSSProperty::Type prop_type,
-        const TaroCSSOM::TaroStylesheet::KeyframeValue &n_val,
-        const TaroAnimationPropValue &sys_value,
-        TaroAnimationPropValue &prop_value) const {
+        const TaroCSSOM::TaroStylesheet::KeyframeValue& n_val,
+        const TaroAnimationPropValue& sys_value,
+        TaroAnimationPropValue& prop_value) const {
         if (auto val = std::get_if<Dimension>(&n_val)) {
             if (auto vpVal = val->ParseToVp(node->GetDimensionContext()); vpVal.has_value()) {
                 prop_value = vpVal.value();
                 return true;
             } else if (val->Unit() == DimensionUnit::PERCENT) {
-                if (val->Value() < 0.0f) return false;
+                if (val->Value() < 0.0f)
+                    return false;
                 auto parent_node = node->parent_ref_.lock();
-                if (parent_node == nullptr) return false;
+                if (parent_node == nullptr)
+                    return false;
 
                 std::string name = getComputedName(prop_type);
-                if (name.empty()) return false;
+                if (name.empty())
+                    return false;
                 switch (prop_type) {
                     // 参考父节点的height计算百分比
                     case CSSProperty::Type::Height: {
                         prop_value = (double)parent_node->GetComputedStyle("height") * val->Value();
                         break;
                     }
-                    case CSSProperty::Type::Top: 
+                    case CSSProperty::Type::Top:
                     case CSSProperty::Type::Bottom: {
                         auto positionType = node->style_ref_->position.value_or(PropertyType::Position::Static);
-                        if (positionType== PropertyType::Position::Relative) {
+                        if (positionType == PropertyType::Position::Relative) {
                             prop_value = (double)node->GetComputedStyle("height") * val->Value();
-                        } else if (positionType == PropertyType::Position::Absolute || positionType == PropertyType::Position::Fixed){
+                        } else if (positionType == PropertyType::Position::Absolute || positionType == PropertyType::Position::Fixed) {
                             // 最近的已定位元素
                             auto positionParent = parent_node;
                             while (positionParent) {
@@ -111,16 +114,16 @@ namespace TaroAnimate {
                     case CSSProperty::Type::PaddingTop:
                     case CSSProperty::Type::PaddingLeft:
                     case CSSProperty::Type::PaddingBottom:
-                    case CSSProperty::Type::PaddingRight:{
+                    case CSSProperty::Type::PaddingRight: {
                         prop_value = (double)parent_node->GetComputedStyle("width") * val->Value();
                         break;
                     }
-                    case CSSProperty::Type::Left: 
+                    case CSSProperty::Type::Left:
                     case CSSProperty::Type::Right: {
                         auto positionType = node->style_ref_->position.value_or(PropertyType::Position::Static);
-                        if (positionType== PropertyType::Position::Relative) {
+                        if (positionType == PropertyType::Position::Relative) {
                             prop_value = (double)node->GetComputedStyle("width") * val->Value();
-                        } else if (positionType == PropertyType::Position::Absolute || positionType == PropertyType::Position::Fixed){
+                        } else if (positionType == PropertyType::Position::Absolute || positionType == PropertyType::Position::Fixed) {
                             // 最近的已定位元素
                             auto positionParent = parent_node;
                             while (positionParent) {
@@ -150,11 +153,11 @@ namespace TaroAnimate {
     void AnimationPropComputedStyle::setNodeProperty(
         std::shared_ptr<TaroDOM::TaroRenderNode> node,
         CSSProperty::Type prop_type,
-        const TaroAnimationPropValue &prop_value) const {
+        const TaroAnimationPropValue& prop_value) const {
         if (!node) {
             return;
         }
-        const double *double_value = std::get_if<double>(&prop_value);
+        const double* double_value = std::get_if<double>(&prop_value);
         if (double_value == nullptr) {
             return;
         }
@@ -166,7 +169,7 @@ namespace TaroAnimate {
 
     void AnimationPropComputedStyle::setKeyframeToNode(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                        CSSProperty::Type prop_type,
-                                                       const TaroCSSOM::TaroStylesheet::KeyframeValue &keyframe) const {
+                                                       const TaroCSSOM::TaroStylesheet::KeyframeValue& keyframe) const {
         if (!node) {
             return;
         }
@@ -180,8 +183,8 @@ namespace TaroAnimate {
     }
 
     void AnimationPropComputedStyle::setLengthValue(CSSProperty::Type prop_type,
-                                                    std::shared_ptr<TaroDOM::TaroRenderNode> &node,
-                                                    const Dimension &length_value) const {
+                                                    std::shared_ptr<TaroDOM::TaroRenderNode>& node,
+                                                    const Dimension& length_value) const {
         switch (prop_type) {
             case CSSProperty::Type::Width:
                 node->SetWidth(length_value);

@@ -13,7 +13,8 @@ namespace TaroHelper {
 class BitVector {
     public:
     BitVector(size_t size)
-        : bits((size + 63) / 64), size_(size) {}
+        : bits((size + 63) / 64),
+          size_(size) {}
 
     void set(size_t index) {
         bits[index / 64] |= (1ULL << (index % 64));

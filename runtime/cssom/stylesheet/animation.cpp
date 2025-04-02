@@ -16,9 +16,9 @@ namespace TaroRuntime {
 namespace TaroCSSOM {
     namespace TaroStylesheet {
 
-        Animation::Animation(const napi_value &napiValue) {}
+        Animation::Animation(const napi_value& napiValue) {}
 
-        void Animation::setNameFromNapi(const napi_value &napiValue) {
+        void Animation::setNameFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);
@@ -32,27 +32,31 @@ namespace TaroCSSOM {
             }
         }
 
-        void Animation::setKeyFramesFromNapi(const napi_value &napiValue) {
+        void Animation::setKeyFramesFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);
-            if (type != napi_object) return;
+            if (type != napi_object)
+                return;
 
             std::vector<KeyFrame> frames;
-            getter.ForEachInArray([&](const napi_value &elem, const uint32_t &_) {
+            getter.ForEachInArray([&](const napi_value& elem, const uint32_t& _) {
                 KeyFrame keyFrameItems;
                 NapiGetter keyframeItemGetter(elem);
                 keyframeItemGetter.GetType(type);
-                if (type != napi_object) return;
+                if (type != napi_object)
+                    return;
                 auto percentageGetter = keyframeItemGetter.GetProperty("percentage");
                 auto eventGetter = keyframeItemGetter.GetProperty("event");
 
                 // 如果百分比的字段不是数字
                 percentageGetter.GetType(type);
-                if (type != napi_number) return;
+                if (type != napi_number)
+                    return;
                 // 如果event不是一个对象
                 eventGetter.GetType(type);
-                if (type != napi_object) return;
+                if (type != napi_object)
+                    return;
 
                 // 设置 percentage
                 auto value = percentageGetter.Double();
@@ -61,7 +65,7 @@ namespace TaroCSSOM {
                 }
 
                 // 设置 event
-                eventGetter.ForEachInArray([&](const napi_value &item, const uint32_t &_) {
+                eventGetter.ForEachInArray([&](const napi_value& item, const uint32_t& _) {
                     NapiGetter itemGetter(item);
                     itemGetter.GetType(type);
 
@@ -162,7 +166,7 @@ namespace TaroCSSOM {
             }
         };
 
-        void Animation::setFillModeFromNapi(const napi_value &napiValue) {
+        void Animation::setFillModeFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);
@@ -176,7 +180,7 @@ namespace TaroCSSOM {
             }
         }
 
-        void Animation::setDurationFromNapi(const napi_value &napiValue) {
+        void Animation::setDurationFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);
@@ -188,7 +192,7 @@ namespace TaroCSSOM {
                 }
             }
         };
-        void Animation::setTimingFunctionFromNapi(const napi_value &napiValue) {
+        void Animation::setTimingFunctionFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);
@@ -200,7 +204,7 @@ namespace TaroCSSOM {
                 }
             }
         };
-        void Animation::setDelayFromNapi(const napi_value &napiValue) {
+        void Animation::setDelayFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);
@@ -212,7 +216,7 @@ namespace TaroCSSOM {
                 }
             }
         };
-        void Animation::setIterationCountFromNapi(const napi_value &napiValue) {
+        void Animation::setIterationCountFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);
@@ -225,14 +229,14 @@ namespace TaroCSSOM {
             }
         };
 
-        void Animation::setIntoNode(ArkUI_NodeHandle &node) {
+        void Animation::setIntoNode(ArkUI_NodeHandle& node) {
             if (this->has_value()) {
                 staticSetValueToNode(node, this->value());
             }
         }
 
-        void Animation::staticSetValueToNode(const ArkUI_NodeHandle &node,
-                                             const AnimationOption &value) {
+        void Animation::staticSetValueToNode(const ArkUI_NodeHandle& node,
+                                             const AnimationOption& value) {
             //     ArkUI_NumberValue arkUI_NumberValue[] = {};
             //     ArkUI_AttributeItem item = {arkUI_NumberValue, 1};
             //     arkUI_NumberValue[0].f32 = value;
@@ -240,7 +244,7 @@ namespace TaroCSSOM {
             //     NODE_ANIMATION, item);
         }
 
-        void Animation::staticResetValueToNode(const ArkUI_NodeHandle &node) {
+        void Animation::staticResetValueToNode(const ArkUI_NodeHandle& node) {
             //     TaroRuntime::NativeNodeApi::getInstance()->resetAttribute(node,
             //     NODE_ANIMATION);
         }

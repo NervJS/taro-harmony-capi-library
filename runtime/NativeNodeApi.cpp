@@ -25,9 +25,9 @@ napi_env NativeNodeApi::env = nullptr;
 napi_value NativeNodeApi::global = nullptr;
 napi_value NativeNodeApi::js_capi_bridge = nullptr;
 
-NativeNodeApi *NativeNodeApi::instance = nullptr;
+NativeNodeApi* NativeNodeApi::instance = nullptr;
 
-NativeNodeApi *NativeNodeApi::getInstance() {
+NativeNodeApi* NativeNodeApi::getInstance() {
     if (instance == nullptr) {
         instance = new NativeNodeApi();
         OH_ArkUI_GetModuleInterface(ARKUI_NATIVE_NODE, ArkUI_NativeNodeAPI_1, instance->nodeAPI);
@@ -121,11 +121,11 @@ ArkUI_NodeHandle NativeNodeApi::getParent(ArkUI_NodeHandle node) {
     return it;
 }
 
-ArkUI_IntSize NativeNodeApi::measureNode(ArkUI_NodeHandle &nodeHandler) {
+ArkUI_IntSize NativeNodeApi::measureNode(ArkUI_NodeHandle& nodeHandler) {
     if (has_destroy_) {
         return {0, 0};
     }
-    ArkUI_LayoutConstraint *layoutConstraint = OH_ArkUI_LayoutConstraint_Create();
+    ArkUI_LayoutConstraint* layoutConstraint = OH_ArkUI_LayoutConstraint_Create();
     if (nodeAPI->measureNode(nodeHandler, layoutConstraint) == 0) {
         return getMeasuredSize(nodeHandler);
     }
@@ -133,7 +133,7 @@ ArkUI_IntSize NativeNodeApi::measureNode(ArkUI_NodeHandle &nodeHandler) {
     return {0, 0};
 }
 
-int32_t NativeNodeApi::measureNode(ArkUI_NodeHandle &nodeHandler, ArkUI_LayoutConstraint *constraint) {
+int32_t NativeNodeApi::measureNode(ArkUI_NodeHandle& nodeHandler, ArkUI_LayoutConstraint* constraint) {
     int32_t status = nodeAPI->measureNode(nodeHandler, constraint);
     if (status != ARKUI_ERROR_CODE_NO_ERROR) {
         TARO_LOG_ERROR("NativeNodeApi", "failed, status=%{public}d", status);
@@ -141,12 +141,12 @@ int32_t NativeNodeApi::measureNode(ArkUI_NodeHandle &nodeHandler, ArkUI_LayoutCo
     return status;
 }
 
-uint32_t NativeNodeApi::getTotalChildCount(ArkUI_NodeHandle &nodeHandler) {
+uint32_t NativeNodeApi::getTotalChildCount(ArkUI_NodeHandle& nodeHandler) {
     return nodeAPI->getTotalChildCount(nodeHandler);
 }
 
-const napi_extended_error_info *NativeNodeApi::getLastErrorInfo() {
-    const napi_extended_error_info *errorInfo = {0};
+const napi_extended_error_info* NativeNodeApi::getLastErrorInfo() {
+    const napi_extended_error_info* errorInfo = {0};
     napi_get_last_error_info(NativeNodeApi::env, &errorInfo);
 
     return errorInfo;
@@ -234,7 +234,7 @@ NativeNodeApi::registerNodeEvent(ArkUI_NodeHandle nodeHandle, ArkUI_NodeEventTyp
 }
 
 int32_t
-NativeNodeApi::registerNodeEvent(ArkUI_NodeHandle nodeHandle, ArkUI_NodeEventType eventType, int eventIndex, void *args) {
+NativeNodeApi::registerNodeEvent(ArkUI_NodeHandle nodeHandle, ArkUI_NodeEventType eventType, int eventIndex, void* args) {
     if (has_destroy_) {
         return -1;
     }
@@ -249,11 +249,11 @@ void NativeNodeApi::unRegisterNodeEvent(ArkUI_NodeHandle nodeHandle, ArkUI_NodeE
     return nodeAPI->unregisterNodeEvent(nodeHandle, eventType);
 }
 
-int NativeNodeApi::addNodeEventReceiver(ArkUI_NodeHandle node, void (*eventReceiver)(ArkUI_NodeEvent *event)) {
+int NativeNodeApi::addNodeEventReceiver(ArkUI_NodeHandle node, void (*eventReceiver)(ArkUI_NodeEvent* event)) {
     return nodeAPI->addNodeEventReceiver(node, eventReceiver);
 }
 
-int NativeNodeApi::removeNodeEventReceiver(ArkUI_NodeHandle node, void (*eventReceiver)(ArkUI_NodeEvent *event)) {
+int NativeNodeApi::removeNodeEventReceiver(ArkUI_NodeHandle node, void (*eventReceiver)(ArkUI_NodeEvent* event)) {
     int32_t status = nodeAPI->removeNodeEventReceiver(node, eventReceiver);
     if (status != ARKUI_ERROR_CODE_NO_ERROR) {
         TARO_LOG_ERROR("NativeNodeApi", "failed, status=%{public}d", status);
@@ -261,7 +261,7 @@ int NativeNodeApi::removeNodeEventReceiver(ArkUI_NodeHandle node, void (*eventRe
     return status;
 }
 
-int32_t NativeNodeApi::registerNodeCustomEvent(ArkUI_NodeHandle node, ArkUI_NodeCustomEventType eventType, int32_t targetId, void *userData) {
+int32_t NativeNodeApi::registerNodeCustomEvent(ArkUI_NodeHandle node, ArkUI_NodeCustomEventType eventType, int32_t targetId, void* userData) {
     int32_t status = nodeAPI->registerNodeCustomEvent(node, eventType, targetId, userData);
     if (status != ARKUI_ERROR_CODE_NO_ERROR) {
         TARO_LOG_ERROR("NativeNodeApi", "failed, status=%{public}d", status);
@@ -290,12 +290,12 @@ void NativeNodeApi::unregisterNodeCustomEvent(ArkUI_NodeHandle node, ArkUI_NodeC
     return nodeAPI->unregisterNodeCustomEvent(node, eventType);
 }
 
-void NativeNodeApi::registerNodeEventReceiver(void (*eventReceiver)(ArkUI_NodeEvent *event)) {
+void NativeNodeApi::registerNodeEventReceiver(void (*eventReceiver)(ArkUI_NodeEvent* event)) {
     return nodeAPI->registerNodeEventReceiver(eventReceiver);
 }
 
 int32_t NativeNodeApi::removeNodeCustomEventReceiver(ArkUI_NodeHandle node,
-                                                     void (*eventReceiver)(ArkUI_NodeCustomEvent *event)) {
+                                                     void (*eventReceiver)(ArkUI_NodeCustomEvent* event)) {
     int32_t status = nodeAPI->removeNodeCustomEventReceiver(node, eventReceiver);
     if (status != ARKUI_ERROR_CODE_NO_ERROR) {
         TARO_LOG_ERROR("NativeNodeApi", "failed, status=%{public}d", status);
@@ -304,7 +304,7 @@ int32_t NativeNodeApi::removeNodeCustomEventReceiver(ArkUI_NodeHandle node,
 }
 
 int32_t NativeNodeApi::addNodeCustomEventReceiver(ArkUI_NodeHandle node,
-                                                  void (*eventReceiver)(ArkUI_NodeCustomEvent *event)) {
+                                                  void (*eventReceiver)(ArkUI_NodeCustomEvent* event)) {
     int32_t status = nodeAPI->addNodeCustomEventReceiver(node, eventReceiver);
     if (status != ARKUI_ERROR_CODE_NO_ERROR) {
         TARO_LOG_ERROR("NativeNodeApi", "failed, status=%{public}d", status);
@@ -312,7 +312,7 @@ int32_t NativeNodeApi::addNodeCustomEventReceiver(ArkUI_NodeHandle node,
     return status;
 }
 
-void NativeNodeApi::registerNodeCustomEventReceiver(void (*eventReceiver)(ArkUI_NodeCustomEvent *event)) {
+void NativeNodeApi::registerNodeCustomEventReceiver(void (*eventReceiver)(ArkUI_NodeCustomEvent* event)) {
     return nodeAPI->registerNodeCustomEventReceiver(eventReceiver);
 }
 
@@ -325,11 +325,12 @@ int32_t NativeNodeApi::layoutNode(ArkUI_NodeHandle node, int32_t positionX, int3
 }
 
 void NativeNodeApi::setAttribute(ArkUI_NodeHandle nodeHandle, ArkUI_NodeAttributeType nodeAttributeType,
-                                 ArkUI_AttributeItem *item) {
+                                 ArkUI_AttributeItem* item) {
     if (has_destroy_) {
         return;
     }
-    if (nodeHandle == nullptr) return;
+    if (nodeHandle == nullptr)
+        return;
     int32_t status = nodeAPI->setAttribute(nodeHandle, nodeAttributeType, item);
     if (status == ARKUI_ERROR_CODE_ARKTS_NODE_NOT_SUPPORTED || status == ARKUI_ERROR_CODE_ATTRIBUTE_OR_EVENT_NOT_SUPPORTED) {
         // FIXME 设置属性时应该要判断部分属性不允许设置，ETS、SPAN 组件需要在后续修复
@@ -365,7 +366,7 @@ void NativeNodeApi::setAttribute(ArkUI_NodeHandle nodeHandle, ArkUI_NodeAttribut
     }
 }
 
-const ArkUI_AttributeItem *
+const ArkUI_AttributeItem*
 NativeNodeApi::getAttribute(ArkUI_NodeHandle nodeHandle, ArkUI_NodeAttributeType nodeAttributeType) {
     return nodeAPI->getAttribute(nodeHandle, nodeAttributeType);
 }

@@ -8,10 +8,10 @@
 #include <cstdint>
 
 #include "arkui_node.h"
+#include "helper/ImageLoader.h"
 #include "runtime/cssom/stylesheet/css_property.h"
 #include "runtime/dom/ark_nodes/text_styled.h"
 #include "runtime/dom/element/image.h"
-#include "helper/ImageLoader.h"
 
 namespace TaroRuntime {
 namespace TaroDOM {
@@ -29,22 +29,22 @@ namespace TaroDOM {
         int32_t nid = 0;
         std::vector<TextLineBox> lineBox;
 
-        TextLineBox &GetLastLineTextBox() {
+        TextLineBox& GetLastLineTextBox() {
             if (lineBox.size() == 0) {
                 lineBox.emplace_back(TextLineBox{});
             }
             return lineBox[lineBox.size() - 1];
         }
 
-        void AddLineTextBox(TextPoint &start, TextPoint &end) {
+        void AddLineTextBox(TextPoint& start, TextPoint& end) {
             lineBox.emplace_back(TextLineBox{.start = start, .end = end});
         }
     };
 
     class TaroTextNode : public TaroRenderNode {
         using ImageCallbackInfo = std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>;
-        using ProcessImagesCallback = std::function<void(const std::shared_ptr<std::vector<ImageCallbackInfo>> &)>;
-        using srcType = std::variant<std::string, ArkUI_DrawableDescriptor *>;
+        using ProcessImagesCallback = std::function<void(const std::shared_ptr<std::vector<ImageCallbackInfo>>&)>;
+        using srcType = std::variant<std::string, ArkUI_DrawableDescriptor*>;
 
         public:
         std::shared_ptr<TextStyled> textStyled_ = nullptr;
@@ -77,20 +77,20 @@ namespace TaroDOM {
         std::vector<ArkUI_NodeHandle>& GetImageArkNodeList();
         bool GetIfInTextNodeArea(int32_t nid, float x, float y);
         std::shared_ptr<TextElementInfo> GetLastTextElementInfo(int32_t);
-        std::shared_ptr<TextElementInfo> GetTextElementInfoFromRange(int32_t index, int32_t nid, int32_t start, int32_t end, int32_t &line);
+        std::shared_ptr<TextElementInfo> GetTextElementInfoFromRange(int32_t index, int32_t nid, int32_t start, int32_t end, int32_t& line);
         void GetAllTextElementInfos();
         bool CheckIsPointInsideRectangle(float x, float y, float rectTopLeftX, float rectTopLeftY, float rectBottomRightX, float rectBottomRightY);
 
         void SetMeasuredTextWidth(const float);
         void SetMeasuredTextHeight(const float);
-        void AppendChild(const std::shared_ptr<TaroRenderNode> &child) override {};
-        void RemoveChild(const std::shared_ptr<TaroRenderNode> &child) override {};
-        void ReplaceChild(const std::shared_ptr<TaroRenderNode> &old_child, const std::shared_ptr<TaroRenderNode> &new_child) override {};
-        void InsertChildAt(const std::shared_ptr<TaroRenderNode> &child, uint8_t index) override {};
-        void InsertChildBefore(const std::shared_ptr<TaroRenderNode> &child, const std::shared_ptr<TaroRenderNode> &sibling) override {};
-        void InsertChildAfter(const std::shared_ptr<TaroRenderNode> &child, const std::shared_ptr<TaroRenderNode> &sibling) override {};
-        void OnDisplayChange(const PropertyType::Display &val, const PropertyType::Display &oldVal) override;
-    
+        void AppendChild(const std::shared_ptr<TaroRenderNode>& child) override {};
+        void RemoveChild(const std::shared_ptr<TaroRenderNode>& child) override {};
+        void ReplaceChild(const std::shared_ptr<TaroRenderNode>& old_child, const std::shared_ptr<TaroRenderNode>& new_child) override {};
+        void InsertChildAt(const std::shared_ptr<TaroRenderNode>& child, uint8_t index) override {};
+        void InsertChildBefore(const std::shared_ptr<TaroRenderNode>& child, const std::shared_ptr<TaroRenderNode>& sibling) override {};
+        void InsertChildAfter(const std::shared_ptr<TaroRenderNode>& child, const std::shared_ptr<TaroRenderNode>& sibling) override {};
+        void OnDisplayChange(const PropertyType::Display& val, const PropertyType::Display& oldVal) override;
+
         void SetTextRenderNodeInner(const ArkUI_NodeHandle& arkHandle);
         void SetTextRenderNodeImageInfos(const std::vector<std::shared_ptr<ImageInfo>>& infos);
         void SetTextRenderNodeImageNodes(const std::vector<ArkUI_NodeHandle>& nodes);
@@ -108,7 +108,7 @@ namespace TaroDOM {
         float m_MeasuredTextWidth = 0;
         float m_MeasuredTextHeight = 0;
         bool m_HasExactlyImage = true;
-        void ProcessImageResults(std::vector<std::shared_ptr<ImageInfo>> &images, ProcessImagesCallback &&onAllImagesLoaded);
+        void ProcessImageResults(std::vector<std::shared_ptr<ImageInfo>>& images, ProcessImagesCallback&& onAllImagesLoaded);
         void SetTextMeasureFunc();
         void PaintImages();
         void SetSize();

@@ -19,7 +19,7 @@ namespace TaroAnimate {
 
     bool AnimationPropTransform::getSystemPropValue(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                     CSSProperty::Type prop_type,
-                                                    TaroAnimationPropValue &prop_value) const {
+                                                    TaroAnimationPropValue& prop_value) const {
         auto transform = node->GetTransform();
         if (!transform.has_value()) {
             prop_value = TaroCSSOM::TaroStylesheet::TransformParam::staticTransformSystemValue();
@@ -35,9 +35,9 @@ namespace TaroAnimate {
     bool AnimationPropTransform::getAnimationPropValue(
         std::shared_ptr<TaroDOM::TaroRenderNode> node,
         CSSProperty::Type prop_type,
-        const TaroCSSOM::TaroStylesheet::KeyframeValue &n_val,
-        const TaroAnimationPropValue &sys_value,
-        TaroAnimationPropValue &prop_value) const {
+        const TaroCSSOM::TaroStylesheet::KeyframeValue& n_val,
+        const TaroAnimationPropValue& sys_value,
+        TaroAnimationPropValue& prop_value) const {
         if (auto transformVal = std::get_if<
                 std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam>>(
                 &n_val)) {
@@ -56,8 +56,8 @@ namespace TaroAnimate {
 
     void AnimationPropTransform::setNodeProperty(
         std::shared_ptr<TaroDOM::TaroRenderNode> node, CSSProperty::Type prop_type,
-        const TaroAnimationPropValue &prop_value) const {
-        const auto *transform_value =
+        const TaroAnimationPropValue& prop_value) const {
+        const auto* transform_value =
             std::get_if<std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam>>(
                 &prop_value);
         if (transform_value == nullptr) {
@@ -68,7 +68,7 @@ namespace TaroAnimate {
 
     void AnimationPropTransform::setKeyframeToNode(std::shared_ptr<TaroDOM::TaroRenderNode> node,
                                                    CSSProperty::Type prop_type,
-                                                   const TaroCSSOM::TaroStylesheet::KeyframeValue &keyframe) const {
+                                                   const TaroCSSOM::TaroStylesheet::KeyframeValue& keyframe) const {
         const auto transform = std::get_if<std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam>>(&keyframe);
         if (transform == nullptr) {
             return;

@@ -5,13 +5,14 @@
 #ifndef TARO_HARMONY_CPP_DIRTY_VSYNC_TASK_H
 #define TARO_HARMONY_CPP_DIRTY_VSYNC_TASK_H
 
-#include <cstdint>
-#include <functional>
-#include <queue>
-#include <deque>
-#include <unordered_set>
-#include <memory>
 #include <algorithm>
+#include <cstdint>
+#include <deque>
+#include <functional>
+#include <memory>
+#include <queue>
+#include <unordered_set>
+
 #include "runtime/dom/ark_nodes/arkui_node.h"
 #include "runtime/dom/element/element.h"
 
@@ -34,7 +35,7 @@ struct WeakPtrEqual {
 };
 
 // ID 获取函数的主模板
-template<typename T>
+template <typename T>
 struct IDGetter {
     static int get(const T& obj) {
         static_assert(sizeof(T) == 0, "No specialization for IDGetter<T>");
@@ -43,7 +44,7 @@ struct IDGetter {
 };
 
 // TaroRenderNode 的特化
-template<>
+template <>
 struct IDGetter<TaroRuntime::TaroDOM::TaroRenderNode> {
     static int get(const TaroRuntime::TaroDOM::TaroRenderNode& obj) {
         return obj.uid_;
@@ -51,17 +52,16 @@ struct IDGetter<TaroRuntime::TaroDOM::TaroRenderNode> {
 };
 
 // TaroElement 的特化
-template<>
+template <>
 struct IDGetter<TaroRuntime::TaroDOM::TaroElement> {
     static int get(const TaroRuntime::TaroDOM::TaroElement& obj) {
         return obj.nid_;
     }
 };
 
-template<typename T>
+template <typename T>
 class UniqueWeakPtrQueue {
-
-public:
+    public:
     std::deque<std::weak_ptr<T>> queue;
     std::unordered_set<int> set;
 
@@ -106,15 +106,15 @@ public:
 
     void cleanup() {
         auto it = std::remove_if(queue.begin(), queue.end(),
-            [this](const std::weak_ptr<T>& wp) {
-                if (wp.expired()) {
-                    if (auto sp = wp.lock()) {
-                        set.erase(IDGetter<T>::get(*sp));
-                    }
-                    return true;
-                }
-                return false;
-            });
+                                 [this](const std::weak_ptr<T>& wp) {
+                                     if (wp.expired()) {
+                                         if (auto sp = wp.lock()) {
+                                             set.erase(IDGetter<T>::get(*sp));
+                                         }
+                                         return true;
+                                     }
+                                     return false;
+                                 });
         queue.erase(it, queue.end());
 
         // 更新 set 以只包含有效元素

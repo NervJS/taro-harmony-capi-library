@@ -11,17 +11,17 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        TaroInputFocus::TaroInputFocus(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroInputFocus::TaroInputFocus(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {}
 
         TaroInputFocus::~TaroInputFocus() {}
 
-        int TaroInputFocus::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroInputFocus::parseHmEvent(ArkUI_NodeEvent* event) {
             auto arkui_node = OH_ArkUI_NodeEvent_GetNodeHandle(event);
             // The pointer returned by this API is an internal buffer pointer of the ArkUI framework.
             // As such, you do not need to call delete to release the memory.
-            NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
-            const ArkUI_AttributeItem *item = nativeNodeApi->getAttribute(arkui_node, NODE_TEXT_INPUT_TEXT);
+            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
+            const ArkUI_AttributeItem* item = nativeNodeApi->getAttribute(arkui_node, NODE_TEXT_INPUT_TEXT);
             if (item != nullptr && item->string != nullptr) {
                 value_ = item->string;
             } else {
@@ -30,27 +30,27 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroInputFocus::serializeFun(napi_value &ret_obj) {
+        int TaroInputFocus::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
             // detail填充
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             NapiSetter::SetProperty(js_detail, "value", value_);
             NapiSetter::SetProperty(js_detail, "height", 0);
             NapiSetter::SetProperty(ret_obj, "detail", js_detail);
             return 0;
         }
 
-        TaroInputBlur::TaroInputBlur(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroInputBlur::TaroInputBlur(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {}
 
         TaroInputBlur::~TaroInputBlur() {}
 
-        int TaroInputBlur::parseHmEvent(ArkUI_NodeEvent *event) {
-            NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        int TaroInputBlur::parseHmEvent(ArkUI_NodeEvent* event) {
+            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
             auto arkui_node = OH_ArkUI_NodeEvent_GetNodeHandle(event);
             // The pointer returned by this API is an internal buffer pointer of the ArkUI framework.
             // As such, you do not need to call delete to release the memory.
-            const ArkUI_AttributeItem *item = nativeNodeApi->getAttribute(arkui_node, NODE_TEXT_INPUT_TEXT);
+            const ArkUI_AttributeItem* item = nativeNodeApi->getAttribute(arkui_node, NODE_TEXT_INPUT_TEXT);
             if (item != nullptr && item->string != nullptr) {
                 value_ = item->string;
             } else {
@@ -59,28 +59,27 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroInputBlur::serializeFun(napi_value &ret_obj) {
-
+        int TaroInputBlur::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
             // detail填充
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             NapiSetter::SetProperty(js_detail, "value", value_);
             NapiSetter::SetProperty(js_detail, "height", 0);
             NapiSetter::SetProperty(ret_obj, "detail", js_detail);
             return 0;
         }
 
-        TaroInputSubmit::TaroInputSubmit(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroInputSubmit::TaroInputSubmit(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {}
 
         TaroInputSubmit::~TaroInputSubmit() {}
 
-        int TaroInputSubmit::parseHmEvent(ArkUI_NodeEvent *event) {
-            NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        int TaroInputSubmit::parseHmEvent(ArkUI_NodeEvent* event) {
+            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
             auto arkui_node = OH_ArkUI_NodeEvent_GetNodeHandle(event);
             // The pointer returned by this API is an internal buffer pointer of the ArkUI framework.
             // As such, you do not need to call delete to release the memory.
-            const ArkUI_AttributeItem *item = nativeNodeApi->getAttribute(arkui_node, NODE_TEXT_INPUT_TEXT);
+            const ArkUI_AttributeItem* item = nativeNodeApi->getAttribute(arkui_node, NODE_TEXT_INPUT_TEXT);
             if (item != nullptr && item->string != nullptr) {
                 value_ = item->string;
             } else {
@@ -89,10 +88,10 @@ namespace TaroDOM {
             return 0;
         }
 
-        int TaroInputSubmit::serializeFun(napi_value &ret_obj) {
+        int TaroInputSubmit::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
             // detail填充
-            auto &js_detail = detail();
+            auto& js_detail = detail();
             NapiSetter::SetProperty(js_detail, "value", value_);
             NapiSetter::SetProperty(js_detail, "height", 0);
             NapiSetter::SetProperty(ret_obj, "detail", js_detail);

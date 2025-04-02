@@ -170,7 +170,6 @@ std::unordered_map<std::type_index, std::unordered_map<int, int>> TEnum::intEnum
     {std::type_index(typeid(OH_Drawing_WordBreakType)),
      {{ARKUI_WORD_BREAK_NORMAL, WORD_BREAK_TYPE_NORMAL},
       {ARKUI_WORD_BREAK_BREAK_ALL, WORD_BREAK_TYPE_BREAK_ALL},
-      {ARKUI_WORD_BREAK_BREAK_WORD, WORD_BREAK_TYPE_BREAK_WORD}}}
-};
+      {ARKUI_WORD_BREAK_BREAK_WORD, WORD_BREAK_TYPE_BREAK_WORD}}}};
 
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet

@@ -4,13 +4,13 @@
 
 #include "helper/SwitchManager.h"
 namespace TaroHelper {
-SwitchManager *SwitchManager::instance = nullptr;
+SwitchManager* SwitchManager::instance = nullptr;
 
 SwitchManager::SwitchManager() {
     switches.fill(false);
 }
 
-SwitchManager *SwitchManager::getInstance() {
+SwitchManager* SwitchManager::getInstance() {
     if (instance == nullptr) {
         instance = new SwitchManager();
     }

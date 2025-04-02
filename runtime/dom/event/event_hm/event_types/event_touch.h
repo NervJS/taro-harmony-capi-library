@@ -11,15 +11,15 @@ namespace TaroDOM {
     namespace TaroEvent {
         class TaroEventTouch : public TaroEventBase {
             public:
-            TaroEventTouch(const std::string &js_event_type, ArkUI_NodeEvent *event);
+            TaroEventTouch(const std::string& js_event_type, ArkUI_NodeEvent* event);
 
             virtual ~TaroEventTouch() = default;
 
-            int parseHmEvent(ArkUI_NodeEvent *event) override;
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
 
-            int serializeFun(napi_value &ret_obj) override;
+            int serializeFun(napi_value& ret_obj) override;
 
-            void revertEventBubble () override ;
+            void revertEventBubble() override;
 
             bool realTrigger() override;
 
@@ -37,7 +37,7 @@ namespace TaroDOM {
         // 各touch类型子事件
         class TaroEventTouchStart : public TaroEventTouch {
             public:
-            TaroEventTouchStart(const std::string &event_type, ArkUI_NodeEvent *event)
+            TaroEventTouchStart(const std::string& event_type, ArkUI_NodeEvent* event)
                 : TaroEventTouch(event_type,
                                  event) {
                 hm_touch_type_ = UI_TOUCH_EVENT_ACTION_DOWN;
@@ -46,7 +46,7 @@ namespace TaroDOM {
 
         class TaroEventTouchEnd : public TaroEventTouch {
             public:
-            TaroEventTouchEnd(const std::string &event_type, ArkUI_NodeEvent *event)
+            TaroEventTouchEnd(const std::string& event_type, ArkUI_NodeEvent* event)
                 : TaroEventTouch(event_type,
                                  event) {
                 hm_touch_type_ = UI_TOUCH_EVENT_ACTION_UP;
@@ -55,7 +55,7 @@ namespace TaroDOM {
 
         class TaroEventTouchMove : public TaroEventTouch {
             public:
-            TaroEventTouchMove(const std::string &event_type, ArkUI_NodeEvent *event)
+            TaroEventTouchMove(const std::string& event_type, ArkUI_NodeEvent* event)
                 : TaroEventTouch(event_type,
                                  event) {
                 hm_touch_type_ = UI_TOUCH_EVENT_ACTION_MOVE;
@@ -64,7 +64,7 @@ namespace TaroDOM {
 
         class TaroEventTouchCancel : public TaroEventTouch {
             public:
-            TaroEventTouchCancel(const std::string &event_type, ArkUI_NodeEvent *event)
+            TaroEventTouchCancel(const std::string& event_type, ArkUI_NodeEvent* event)
                 : TaroEventTouch(event_type,
                                  event) {
                 hm_touch_type_ = UI_TOUCH_EVENT_ACTION_CANCEL;

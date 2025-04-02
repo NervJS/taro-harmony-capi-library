@@ -34,7 +34,6 @@ std::vector<std::string_view> split(std::string_view str, const char* delimiter)
  */
 std::string extractPathWithoutParams(std::string url);
 
-
 /**
  * 检查字符串中是否包含数字
  * @param str

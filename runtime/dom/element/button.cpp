@@ -123,7 +123,8 @@ namespace TaroDOM {
 
             if (!new_style->backgroundColor.has_value())
                 new_style->backgroundColor.set(0x00000000);
-            if (!new_style->color.has_value()) new_style->color.set(theme.plainText);
+            if (!new_style->color.has_value())
+                new_style->color.set(theme.plainText);
         } else {
             if (!new_style->borderTopColor.has_value())
                 new_style->borderTopColor.set(theme.background);
@@ -136,7 +137,8 @@ namespace TaroDOM {
 
             if (!new_style->backgroundColor.has_value())
                 new_style->backgroundColor.set(theme.background);
-            if (!new_style->color.has_value()) new_style->color.set(theme.text);
+            if (!new_style->color.has_value())
+                new_style->color.set(theme.text);
         }
 
         if (!new_style->borderTopLeftRadius.has_value())

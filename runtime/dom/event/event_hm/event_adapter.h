@@ -28,13 +28,13 @@ class TaroEventAdapter final {
     };
 
     public:
-    static TaroEventAdapter *instance();
+    static TaroEventAdapter* instance();
 
     // 节点释放时，需要清空所有的绑定内容，防止内存泄漏, true:发现了节点，false：没发现
     bool disposeArkNode(ArkUI_NodeHandle);
 
     // 某个节点注册事件
-    int registerNodeEvent(int nid, ArkUI_NodeHandle node_handle, ArkUI_NodeEventType event_type, int target_id, void *args);
+    int registerNodeEvent(int nid, ArkUI_NodeHandle node_handle, ArkUI_NodeEventType event_type, int target_id, void* args);
 
     // 某个节点取消事件
     void unRegisterNodeEvent(int nid, ArkUI_NodeHandle node_handle, ArkUI_NodeEventType event_type);
@@ -43,11 +43,11 @@ class TaroEventAdapter final {
     void clearNodeEvent(int nid, ArkUI_NodeHandle node_handle);
 
     private:
-    bool hasRegister(const TaroEventAdapter_Keeper &keeper, ArkUI_NodeEventType event_type);
+    bool hasRegister(const TaroEventAdapter_Keeper& keeper, ArkUI_NodeEventType event_type);
 
-    static void eventReceiver(ArkUI_NodeEvent *event);
+    static void eventReceiver(ArkUI_NodeEvent* event);
 
-    void dispatchEvent(ArkUI_NodeEvent *event);
+    void dispatchEvent(ArkUI_NodeEvent* event);
 
     // ArkUI_NodeHandle->绑定的node节点
     std::unordered_map<ArkUI_NodeHandle, TaroEventAdapter_Keeper> ark_to_keepers_;

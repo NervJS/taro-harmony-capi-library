@@ -15,7 +15,8 @@ namespace TaroRuntime {
 namespace TaroCSSOM {
     CSSStyleRule::CSSStyleRule(std::list<Combinator> combinator,
                                std::unique_ptr<CSSStyleDeclaration> declaration)
-        : combinator_(combinator), declaration_(std::move(declaration)) {}
+        : combinator_(combinator),
+          declaration_(std::move(declaration)) {}
 
     CSSStyleRule::~CSSStyleRule() {}
 

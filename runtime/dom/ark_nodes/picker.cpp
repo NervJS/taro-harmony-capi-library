@@ -3,8 +3,9 @@
  */
 
 #include "picker.h"
-#include <arkui/native_dialog.h>
+
 #include <cstdint>
+#include <arkui/native_dialog.h>
 
 #include "runtime/NapiDialogNodeApi.h"
 #include "runtime/NativeNodeApi.h"
@@ -116,7 +117,7 @@ namespace TaroDOM {
     }
 
     void TaroSelectorPickerNode::SetSelectorRange(Optional<std::string> values) {
-        if(!values.has_value() || !isPickerCreated) {
+        if (!values.has_value() || !isPickerCreated) {
             return;
         }
         ArkUI_NumberValue pickerSetting[] = {{.i32 = ARKUI_TEXTPICKER_RANGETYPE_SINGLE}};
@@ -125,7 +126,7 @@ namespace TaroDOM {
     }
 
     void TaroSelectorPickerNode::SetSelect(Optional<uint32_t> select) {
-        if(!isPickerCreated || !select.has_value()) {
+        if (!isPickerCreated || !select.has_value()) {
             return;
         }
         ArkUI_NumberValue pickerSetting[] = {{.u32 = select.value()}};
@@ -174,7 +175,7 @@ namespace TaroDOM {
     }
 
     void TaroMultiSelectorPickerNode::SetMultiSelectorValues(std::vector<uint32_t> index) {
-        if(!isPickerCreated || index.size() == 0) {
+        if (!isPickerCreated || index.size() == 0) {
             return;
         }
         ArkUI_NumberValue indexArray[index.size()];
@@ -222,11 +223,11 @@ namespace TaroDOM {
     }
 
     void TaroTimePickerNode::SetTime(std::string time) {
-        if(!isPickerCreated) {
+        if (!isPickerCreated) {
             return;
         }
         size_t pos = time.find(":");
-        if(pos == std::string::npos) {
+        if (pos == std::string::npos) {
             return;
         }
         ArkUI_AttributeItem item = {.string = time.replace(pos, 1, "-").c_str()};
@@ -246,7 +247,7 @@ namespace TaroDOM {
     }
 
     void TaroDatePickerNode::SetDate(std::string date) {
-        if(!isPickerCreated || date.empty()) {
+        if (!isPickerCreated || date.empty()) {
             return;
         }
         ArkUI_AttributeItem item = {.string = date.c_str()};
@@ -254,7 +255,7 @@ namespace TaroDOM {
     }
 
     void TaroDatePickerNode::SetStart(std::string start) {
-        if(!isPickerCreated || start.empty()) {
+        if (!isPickerCreated || start.empty()) {
             return;
         }
         ArkUI_AttributeItem item = {.string = start.c_str()};
@@ -262,7 +263,7 @@ namespace TaroDOM {
     }
 
     void TaroDatePickerNode::SetEnd(std::string end) {
-        if(!isPickerCreated || end.empty()) {
+        if (!isPickerCreated || end.empty()) {
             return;
         }
         ArkUI_AttributeItem item = {.string = end.c_str()};
@@ -302,7 +303,7 @@ namespace TaroDOM {
     }
 
     void TaroRegionPickerNode::SetRegionData(std::string regionData, uint32_t province, uint32_t city, uint32_t region) {
-        if(!isPickerCreated) {
+        if (!isPickerCreated) {
             return;
         }
         // set range

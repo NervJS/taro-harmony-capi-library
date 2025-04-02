@@ -31,11 +31,11 @@ namespace TaroCSSOM {
                                       {"medium", ARKUI_FONT_WEIGHT_MEDIUM},
                                       {"regular", ARKUI_FONT_WEIGHT_REGULAR}};
 
-        FontWeight::FontWeight(const napi_value &napiValue) {
+        FontWeight::FontWeight(const napi_value& napiValue) {
             setValueFromNapi(napiValue);
         }
 
-        void FontWeight::setValueFromNapi(const napi_value &napiValue) {
+        void FontWeight::setValueFromNapi(const napi_value& napiValue) {
             NapiGetter getter(napiValue);
             napi_valuetype type;
             getter.GetType(type);

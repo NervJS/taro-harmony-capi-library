@@ -35,7 +35,7 @@ static napi_value Init(napi_env env, napi_value exports) {
 
 #if IS_DEBUG == 1
     std::string dts = "\n";
-    for (auto &item : desc) {
+    for (auto& item : desc) {
         if (item.utf8name != nullptr) {
             dts += "export const " + std::string(item.utf8name) + ": (...args: any[]) => any | Promise<any>\n";
         }
@@ -59,7 +59,7 @@ static napi_module TaroHarmonyLibrary = {.nm_version = 1,
                                          .nm_filename = nullptr,
                                          .nm_register_func = Init,
                                          .nm_modname = LIBRARY_NAME,
-                                         .nm_priv = ((void *)0),
+                                         .nm_priv = ((void*)0),
                                          .reserved = {0}};
 
 extern "C" __attribute__((constructor)) void RegisterModule(void) {

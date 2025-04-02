@@ -22,15 +22,14 @@
 #include "runtime/cssom/stylesheet/types/TColor.h"
 #include "runtime/cssom/stylesheet/types/TEnum.h"
 
-
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 
 template <typename T, typename Enable = void>
 class AttributeBase : public TaroHelper::Optional<T> {
     public:
-    virtual void setValueFromNapi(const napi_value &value) = 0;
+    virtual void setValueFromNapi(const napi_value& value) = 0;
     virtual void setValueFromStringView(std::string_view value) = 0;
-    virtual void assign(const AttributeBase<T> &item) {
+    virtual void assign(const AttributeBase<T>& item) {
         if (item.has_value()) {
             this->set(item);
         }
@@ -50,7 +49,7 @@ class AttributeBase<TColor> : public TaroHelper::Optional<uint32_t> {
         }
     }
 
-    void setValueFromNapi(const napi_value &napiValue) {
+    void setValueFromNapi(const napi_value& napiValue) {
         try {
             auto color = TColor::MakeFromNapi(napiValue);
             this->set(color.getValue());
@@ -58,7 +57,7 @@ class AttributeBase<TColor> : public TaroHelper::Optional<uint32_t> {
         }
     }
 
-    void assign(const AttributeBase<TColor> &item) {
+    void assign(const AttributeBase<TColor>& item) {
         if (item.has_value()) {
             this->set(item);
         }
@@ -83,7 +82,7 @@ class AttributeBase<
     void setValue(float value) {
         this->set(value);
     }
-    void setValueFromNapi(const napi_value &napiValue) {
+    void setValueFromNapi(const napi_value& napiValue) {
         NapiGetter getter(napiValue);
         napi_valuetype type;
         getter.GetType(type);
@@ -95,7 +94,7 @@ class AttributeBase<
         }
     }
 
-    void assign(const AttributeBase<T> &item) {
+    void assign(const AttributeBase<T>& item) {
         if (item.has_value()) {
             this->set(item);
         }
@@ -120,7 +119,7 @@ class AttributeBase<float> : public TaroHelper::Optional<float> {
         this->set(value);
     }
 
-    void setValueFromNapi(const napi_value &napiValue) {
+    void setValueFromNapi(const napi_value& napiValue) {
         NapiGetter getter(napiValue);
         napi_valuetype type;
         getter.GetType(type);
@@ -135,7 +134,7 @@ class AttributeBase<float> : public TaroHelper::Optional<float> {
         }
     }
 
-    void assign(const AttributeBase<float> &item) {
+    void assign(const AttributeBase<float>& item) {
         if (item.has_value()) {
             this->set(item);
         }
@@ -157,7 +156,7 @@ class AttributeBase<Dimension> : public TaroHelper::Optional<Dimension> {
         this->set(Dimension{value, DimensionUnit::VP});
     }
 
-    void setValueFromNapi(const napi_value &napiValue) {
+    void setValueFromNapi(const napi_value& napiValue) {
         NapiGetter getter(napiValue);
         napi_valuetype type;
         getter.GetType(type);
@@ -174,13 +173,12 @@ class AttributeBase<Dimension> : public TaroHelper::Optional<Dimension> {
         }
     }
 
-    void assign(const AttributeBase<Dimension> &item) {
+    void assign(const AttributeBase<Dimension>& item) {
         if (item.has_value()) {
             this->set(item);
         }
     }
 };
-
 
 // 针对 enum 类型的特化
 template <typename T>
@@ -201,7 +199,7 @@ class AttributeBase<T, typename std::enable_if<std::is_enum<T>::value>::type>
         this->set(value);
     }
 
-    void setValueFromNapi(const napi_value &napiValue) {
+    void setValueFromNapi(const napi_value& napiValue) {
         NapiGetter getter(napiValue);
         napi_valuetype type;
         getter.GetType(type);
@@ -221,13 +219,13 @@ class AttributeBase<T, typename std::enable_if<std::is_enum<T>::value>::type>
         }
     };
 
-    void assign(const AttributeBase<T> &item) {
+    void assign(const AttributeBase<T>& item) {
         if (item.has_value()) {
             this->set(item);
         }
     }
 
-    AttributeBase &operator=(T value) {
+    AttributeBase& operator=(T value) {
         this->setValue(value);
         return *this;
     }
@@ -241,7 +239,7 @@ class AttributeBase<std::string> : public TaroHelper::Optional<std::string> {
         std::string s(str);
         this->set(s);
     };
-    void setValueFromNapi(const napi_value &napiValue) {
+    void setValueFromNapi(const napi_value& napiValue) {
         NapiGetter getter(napiValue);
         napi_valuetype type;
         getter.GetType(type);
@@ -253,7 +251,7 @@ class AttributeBase<std::string> : public TaroHelper::Optional<std::string> {
         }
     }
 
-    void assign(const AttributeBase<std::string> &item) {
+    void assign(const AttributeBase<std::string>& item) {
         if (item.has_value()) {
             this->set(item);
         }

@@ -11,11 +11,11 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     namespace TaroEvent {
-        TaroEventAreaChange::TaroEventAreaChange(const std::string &js_event_type, ArkUI_NodeEvent *event)
+        TaroEventAreaChange::TaroEventAreaChange(const std::string& js_event_type, ArkUI_NodeEvent* event)
             : TaroEventBase(js_event_type, event) {
         }
 
-        int TaroEventAreaChange::parseHmEvent(ArkUI_NodeEvent *event) {
+        int TaroEventAreaChange::parseHmEvent(ArkUI_NodeEvent* event) {
             auto component_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
             if (component_event == nullptr) {
                 return -1;
@@ -35,7 +35,7 @@ namespace TaroDOM {
             new_page_y_ = component_event->data[11].f32;
         }
 
-        int TaroEventAreaChange::serializeFun(napi_value &ret_obj) {
+        int TaroEventAreaChange::serializeFun(napi_value& ret_obj) {
             NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
 
             NapiSetter::SetProperty(ret_obj, "originWidth", old_width_);

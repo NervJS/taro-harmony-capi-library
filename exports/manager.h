@@ -44,7 +44,7 @@ class Manager {
     static napi_value Unstable_unsafe_SetSwiperOverflow(napi_env env, napi_callback_info info);
 
     static napi_value RegisterResource(napi_env env, napi_callback_info info);
-    static ArkUI_DrawableDescriptor *GetDrawableDescriptor(std::string &key);
+    static ArkUI_DrawableDescriptor* GetDrawableDescriptor(std::string& key);
     static napi_value RegisterFontFamily(napi_env env, napi_callback_info info);
     static napi_value InitFileManger(napi_env env, napi_callback_info info);
 
@@ -53,7 +53,7 @@ class Manager {
     static napi_value Unstable_SetPageIsTextNeedLayout(napi_env env, napi_callback_info info);
 
     private:
-    static std::unordered_map<std::string, ArkUI_DrawableDescriptor *> resourceMap_;
+    static std::unordered_map<std::string, ArkUI_DrawableDescriptor*> resourceMap_;
 };
 } // namespace TaroHarmonyLibrary
 #endif // NATIVE_XCOMPONENT_PLUGIN_MANAGER_H

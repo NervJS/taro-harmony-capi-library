@@ -12,8 +12,8 @@ struct HiTraceSystraceSection {
     public:
     template <typename... ConvertsToStringPiece>
     explicit HiTraceSystraceSection(
-        const char *name,
-        ConvertsToStringPiece &&...args) {
+        const char* name,
+        ConvertsToStringPiece&&... args) {
         std::ostringstream oss;
         (oss << ... << args);
         std::string result = std::string(name) + oss.str();

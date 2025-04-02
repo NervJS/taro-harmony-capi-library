@@ -25,11 +25,11 @@ namespace TaroCSSOM {
             TaroHelper::Optional<Dimension> right;
             TaroHelper::Optional<Dimension> bottom;
 
-            void traver(std::function<void(const std::string &, const Dimension &)>);
+            void traver(std::function<void(const std::string&, const Dimension&)>);
 
-            bool operator==(const BoundingBox &other) const;
-            bool operator!=(const BoundingBox &other) const;
-            TaroHelper::Optional<Dimension> &operator[](const std::string &key);
+            bool operator==(const BoundingBox& other) const;
+            bool operator!=(const BoundingBox& other) const;
+            TaroHelper::Optional<Dimension>& operator[](const std::string& key);
         };
 
     } // namespace TaroStylesheet

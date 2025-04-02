@@ -16,8 +16,8 @@
 
 namespace TaroRuntime {
 namespace TaroDOM {
-    static void MovableEventForPan(ArkUI_GestureEvent *event, void *data) {
-        auto movable_view = static_cast<TaroMovableView *>(data);
+    static void MovableEventForPan(ArkUI_GestureEvent* event, void* data) {
+        auto movable_view = static_cast<TaroMovableView*>(data);
         if (movable_view == nullptr) {
             TARO_LOG_ERROR("MovableEventForPan", "movable_view is nullptr");
             return;
@@ -39,8 +39,8 @@ namespace TaroDOM {
         }
     }
 
-    static void MovableEventForPinch(ArkUI_GestureEvent *event, void *data) {
-        auto movable_view = static_cast<TaroMovableView *>(data);
+    static void MovableEventForPinch(ArkUI_GestureEvent* event, void* data) {
+        auto movable_view = static_cast<TaroMovableView*>(data);
         if (movable_view == nullptr) {
             TARO_LOG_ERROR("MovableEventForPinch", "movable_view is nullptr");
             return;
@@ -63,7 +63,12 @@ namespace TaroDOM {
     }
 
     TaroMovableView::TaroMovableView(napi_value node)
-        : TaroElement(node), attributes_(std::make_unique<TaroMovableViewAttributes>()), position_x(0), position_y(0), out_of_bounds(0), scale_value(1) {}
+        : TaroElement(node),
+          attributes_(std::make_unique<TaroMovableViewAttributes>()),
+          position_x(0),
+          position_y(0),
+          out_of_bounds(0),
+          scale_value(1) {}
 
     TaroMovableView::~TaroMovableView() {
     }
@@ -109,12 +114,14 @@ namespace TaroDOM {
         TaroEvent::GestureParam_Pan pan_param;
         pan_param.directions = dir;
         event_emitter_->registerEvent_NoCallBack(TaroEvent::EventGeneratorType::Gesture, (int)TaroEvent::TaroGestureType::Pan, "pan", [this](TaroEvent::TaroEventPtr event) {
-                                                 auto gesture_event = std::dynamic_pointer_cast<TaroEvent::GestureEventBase>(event);
-                                                 MovableEventForPan(gesture_event->event_, this);
-                                                 return 0; }, nullptr, &pan_param);
+            auto gesture_event = std::dynamic_pointer_cast<TaroEvent::GestureEventBase>(event);
+            MovableEventForPan(gesture_event->event_, this);
+            return 0;
+        },
+                                                 nullptr, &pan_param);
     }
 
-    bool TaroMovableView::bindListenEvent(const std::string &event_name) {
+    bool TaroMovableView::bindListenEvent(const std::string& event_name) {
         if (event_name == "touchstart") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_TOUCH_START, event_name);
         } else if (event_name == "touchmove") {
@@ -244,7 +251,7 @@ namespace TaroDOM {
                                   areaHeightEnd + incrementHeight * 0.5);
     }
 
-    void TaroMovableView::onPanStart(ArkUI_GestureEvent *event) {
+    void TaroMovableView::onPanStart(ArkUI_GestureEvent* event) {
         if (disabled_) {
             return;
         }
@@ -274,7 +281,7 @@ namespace TaroDOM {
         }
     }
 
-    void TaroMovableView::onPanUpdate(ArkUI_GestureEvent *event) {
+    void TaroMovableView::onPanUpdate(ArkUI_GestureEvent* event) {
         std::string direction = attributes_->direction.value();
         if (disabled_ || direction == "none") {
             return;
@@ -314,7 +321,7 @@ namespace TaroDOM {
         callJSFunc("change");
     }
 
-    void TaroMovableView::onPanEnd(ArkUI_GestureEvent *event) {
+    void TaroMovableView::onPanEnd(ArkUI_GestureEvent* event) {
         if (disabled_) {
             return;
         }
@@ -323,7 +330,7 @@ namespace TaroDOM {
         callJSFunc("dragend");
     }
 
-    void TaroMovableView::onPinchStart(ArkUI_GestureEvent *event) {
+    void TaroMovableView::onPinchStart(ArkUI_GestureEvent* event) {
         scale_value_temp = scale_value;
     }
 
@@ -334,7 +341,7 @@ namespace TaroDOM {
         return false;
     }
 
-    void TaroMovableView::onPinchUpdate(ArkUI_GestureEvent *event) {
+    void TaroMovableView::onPinchUpdate(ArkUI_GestureEvent* event) {
         // TODO 双指缩放时缩放范围有问题，需要调整
         if (disabled_ || !attributes_->scale.value()) {
             return;
@@ -349,15 +356,15 @@ namespace TaroDOM {
         }
     }
 
-    void TaroMovableView::onPinchEnd(ArkUI_GestureEvent *event) {}
+    void TaroMovableView::onPinchEnd(ArkUI_GestureEvent* event) {}
 
-    void TaroMovableView::serializeForPan(napi_value &ret_obj) {
+    void TaroMovableView::serializeForPan(napi_value& ret_obj) {
         NapiSetter::SetProperty(ret_obj, "x", position_x);
         NapiSetter::SetProperty(ret_obj, "y", position_y);
         NapiSetter::SetProperty(ret_obj, "source", "touch");
     }
 
-    void TaroMovableView::serializeForPinch(napi_value &ret_obj) {
+    void TaroMovableView::serializeForPinch(napi_value& ret_obj) {
         NapiSetter::SetProperty(ret_obj, "x", position_x);
         NapiSetter::SetProperty(ret_obj, "y", position_y);
         NapiSetter::SetProperty(ret_obj, "scale", scale_value);
@@ -375,7 +382,7 @@ namespace TaroDOM {
         getEventEmitter()->triggerEvents(event);
     }
 
-    void TaroMovableView::Build(std::shared_ptr<TaroElement> &reuse_element) {
+    void TaroMovableView::Build(std::shared_ptr<TaroElement>& reuse_element) {
         std::shared_ptr<TaroStackNode> new_node = std::dynamic_pointer_cast<TaroStackNode>(GetHeadRenderNode());
         auto element = std::static_pointer_cast<TaroElement>(shared_from_this());
         auto ark_handle = reuse_element->GetNodeHandle();

@@ -3,7 +3,6 @@
  * Apache-2.0 License https://github.com/libevent/libevent/blob/master/LICENSE
  */
 
-
 #ifndef EVCONFIG_PRIVATE_H_INCLUDED_
 #define EVCONFIG_PRIVATE_H_INCLUDED_
 

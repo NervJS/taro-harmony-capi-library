@@ -9,8 +9,8 @@
 #include <arkui/native_type.h>
 #include <napi/native_api.h>
 
-#include "helper/Optional.h"
 #include "helper/ImageLoader.h"
+#include "helper/Optional.h"
 
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 enum BgImageType {
@@ -38,8 +38,9 @@ struct BackgroundImageItem {
     TaroHelper::Optional<ArkUI_LinearGradientDirection> direction;
     float angle;
 };
-inline bool operator==(const BackgroundImageItem &lhs, const BackgroundImageItem &rhs) {
-    if (lhs.type != rhs.type) return false;
+inline bool operator==(const BackgroundImageItem& lhs, const BackgroundImageItem& rhs) {
+    if (lhs.type != rhs.type)
+        return false;
     switch (lhs.type) {
         case PIC: {
             auto srclSrc = std::get_if<std::string>(&lhs.src);
@@ -62,7 +63,7 @@ inline bool operator==(const BackgroundImageItem &lhs, const BackgroundImageItem
     }
 }
 
-inline bool operator!=(const BackgroundImageItem &lhs, const BackgroundImageItem &rhs) {
+inline bool operator!=(const BackgroundImageItem& lhs, const BackgroundImageItem& rhs) {
     return !(lhs == rhs);
 }
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet

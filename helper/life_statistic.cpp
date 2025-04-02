@@ -7,15 +7,14 @@
 #include <thread>
 #include <unistd.h>
 
-#include "helper/TaroLog.h"
 #include "api_cost_statistic.h"
+#include "helper/TaroLog.h"
 
 namespace TaroHelper {
 std::unordered_map<std::string, int32_t>* TaroClassLifeStatistic::life_stat_ = nullptr;
 std::mutex TaroClassLifeStatistic::life_lock_;
 std::unordered_set<std::string> TaroClassLifeStatistic::print_names_ = {
-    "TaroElement", "TaroRenderNode", "NodeHandle"
-};
+    "TaroElement", "TaroRenderNode", "NodeHandle"};
 
 void thread_fun(uint32_t print_interval) {
     while (true) {
@@ -70,7 +69,6 @@ bool TaroClassLifeStatistic::needPrint(const std::string& name) {
     }
     return false;
 }
-
 
 void TaroClassLifeStatistic::printUseInfo() {
 #if USE_CLASS_LIFE_CHECK == 1

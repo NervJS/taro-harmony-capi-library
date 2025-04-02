@@ -18,10 +18,10 @@ class AnimationMultiOption {
     std::vector<std::string> directions_;
 
     public:
-    bool operator==(const AnimationMultiOption &other) const {
+    bool operator==(const AnimationMultiOption& other) const {
         return names_ == other.names_;
     }
-    bool operator!=(const AnimationMultiOption &other) const {
+    bool operator!=(const AnimationMultiOption& other) const {
         return names_ != other.names_;
     }
 };
@@ -29,20 +29,21 @@ class AnimationMultiOption {
 class AnimationMulti : public AttributeBase<AnimationMultiOption> {
     public:
     AnimationMulti() = default;
-    void setNameFromNapi(const napi_value &);
-    void setKeyFramesFromNapi(const napi_value &);
-    void setDurationFromNapi(const napi_value &);
-    void setTimingFunctionFromNapi(const napi_value &);
-    void setFillModeFromNapi(const napi_value &);
-    void setDelayFromNapi(const napi_value &);
-    void setIterationCountFromNapi(const napi_value &);
-    void setValueFromNapi(const napi_value &value) override {}
+    void setNameFromNapi(const napi_value&);
+    void setKeyFramesFromNapi(const napi_value&);
+    void setDurationFromNapi(const napi_value&);
+    void setTimingFunctionFromNapi(const napi_value&);
+    void setFillModeFromNapi(const napi_value&);
+    void setDelayFromNapi(const napi_value&);
+    void setIterationCountFromNapi(const napi_value&);
+    void setValueFromNapi(const napi_value& value) override {}
     void setValueFromStringView(std::string_view value) override {}
     Optional<AnimationOption> getAnimation(size_t index) const;
-    Optional<AnimationOption> getAnimation(const std::string &name) const;
+    Optional<AnimationOption> getAnimation(const std::string& name) const;
 
-    void assign(const AttributeBase<AnimationMultiOption> &item) override ;
+    void assign(const AttributeBase<AnimationMultiOption>& item) override;
+
     private:
-    Optional<KeyFrame> parseKeyframe(const ::napi_value &napi_keyframe);
+    Optional<KeyFrame> parseKeyframe(const ::napi_value& napi_keyframe);
 };
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet

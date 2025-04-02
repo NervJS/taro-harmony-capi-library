@@ -15,8 +15,8 @@
 
 namespace TaroRuntime {
 namespace TaroAnimate {
-    TaroAnimationProps *TaroAnimationProps::instance() {
-        static TaroAnimationProps *props = nullptr;
+    TaroAnimationProps* TaroAnimationProps::instance() {
+        static TaroAnimationProps* props = nullptr;
         if (props == nullptr) {
             props = new TaroAnimationProps;
         }
@@ -24,7 +24,7 @@ namespace TaroAnimate {
     }
 
     int TaroAnimationProps::registerProp(CSSProperty::Type prop_type,
-                                         AnimationPropBase *prop_handler) {
+                                         AnimationPropBase* prop_handler) {
         if (prop_handler == nullptr || anim_props_.count(prop_type) > 0) {
             TARO_LOG_DEBUG("TaroAnimation", "prop:%{public}d has been register",
                            prop_type);
@@ -34,7 +34,7 @@ namespace TaroAnimate {
         return 0;
     }
 
-    const AnimationPropBase *TaroAnimationProps::getAnimationProp(
+    const AnimationPropBase* TaroAnimationProps::getAnimationProp(
         CSSProperty::Type prop_type) const {
         const auto iter = anim_props_.find(prop_type);
         if (iter != anim_props_.end()) {
@@ -44,7 +44,7 @@ namespace TaroAnimate {
     }
 
     bool TaroAnimationProps::checkPropertyType(
-        CSSProperty::Type prop_type, const TaroAnimationPropValue &prop_value) {
+        CSSProperty::Type prop_type, const TaroAnimationPropValue& prop_value) {
         const auto prop_handler =
             TaroAnimationProps::instance()->getAnimationProp(prop_type);
         if (prop_handler == nullptr) {
@@ -55,7 +55,7 @@ namespace TaroAnimate {
 
     bool TaroAnimationProps::getSystemPropValue(
         CSSProperty::Type prop_type, std::shared_ptr<TaroDOM::TaroRenderNode> node,
-        TaroAnimationPropValue &prop_value) {
+        TaroAnimationPropValue& prop_value) {
         if (node == nullptr) {
             return false;
         }
@@ -72,9 +72,9 @@ namespace TaroAnimate {
     bool TaroAnimationProps::getAnimationPropValue(
         std::shared_ptr<TaroDOM::TaroRenderNode> node,
         CSSProperty::Type prop_type,
-        const TaroCSSOM::TaroStylesheet::KeyframeValue &n_val,
-        const TaroAnimationPropValue &sys_value,
-        TaroAnimationPropValue &prop_value) {
+        const TaroCSSOM::TaroStylesheet::KeyframeValue& n_val,
+        const TaroAnimationPropValue& sys_value,
+        TaroAnimationPropValue& prop_value) {
         const auto prop_handler =
             TaroAnimationProps::instance()->getAnimationProp(prop_type);
         if (prop_handler == nullptr) {
@@ -86,7 +86,7 @@ namespace TaroAnimate {
 
     void TaroAnimationProps::setNodeProperty(
         std::weak_ptr<TaroDOM::TaroRenderNode> node,
-        CSSProperty::Type prop_type, const TaroAnimationPropsInfo &prop_value,
+        CSSProperty::Type prop_type, const TaroAnimationPropsInfo& prop_value,
         uint64_t version) {
         const auto prop_handler =
             TaroAnimationProps::instance()->getAnimationProp(prop_type);
@@ -115,7 +115,7 @@ namespace TaroAnimate {
     void TaroAnimationProps::setKeyframeToNode(
         std::shared_ptr<TaroDOM::TaroRenderNode> node,
         CSSProperty::Type prop_type,
-        const TaroCSSOM::TaroStylesheet::KeyframeValue &keyframe) {
+        const TaroCSSOM::TaroStylesheet::KeyframeValue& keyframe) {
         const auto prop_handler = TaroAnimationProps::instance()->getAnimationProp(prop_type);
         if (prop_handler == nullptr) {
             return;

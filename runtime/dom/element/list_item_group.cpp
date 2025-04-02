@@ -31,7 +31,7 @@ namespace TaroDOM {
         render_item_group->SetStyle(style_);
     }
 
-    void TaroListItemGroup::GetSpace(const napi_value &value) {
+    void TaroListItemGroup::GetSpace(const napi_value& value) {
         NapiGetter getter(value);
         TaroHelper::Optional<double> val = getter.Double();
         if (val.has_value()) {

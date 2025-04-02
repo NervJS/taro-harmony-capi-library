@@ -18,9 +18,9 @@ namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 class BackgroundSize : public AttributeBase<BackgroundSizeParam> {
     public:
     BackgroundSize() = default;
-    BackgroundSize(const napi_value &);
+    BackgroundSize(const napi_value&);
     void setValueFromStringView(std::string_view str);
-    void setValueFromNapi(const napi_value &);
+    void setValueFromNapi(const napi_value&);
 
     private:
     BackgroundSizeParam param_;

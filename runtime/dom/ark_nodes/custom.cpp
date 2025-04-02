@@ -15,7 +15,7 @@ namespace TaroDOM {
 
     TaroCustomNode::~TaroCustomNode() {};
 
-    void TaroCustomNode::OnMeasure(ArkUI_NodeCustomEvent *event) {
+    void TaroCustomNode::OnMeasure(ArkUI_NodeCustomEvent* event) {
         SystraceSection s("Taro Custom Layout:: OnMeasure");
 
         if (style_ref_) {
@@ -33,9 +33,10 @@ namespace TaroDOM {
             }
         }
 
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
 
-        if (parent_ref_.expired()) return;
+        if (parent_ref_.expired())
+            return;
         auto parent_differ_ = parent_ref_.lock()->layoutDiffer_;
         auto layoutConstrain = OH_ArkUI_NodeCustomEvent_GetLayoutConstraintInMeasure(event);
         // 创建子节点布局限制，复用父组件布局中的百分比参考值。
@@ -59,7 +60,7 @@ namespace TaroDOM {
             auto child = children_refs_[i]->GetArkUINodeHandle();
             // 调用测算接口测算子组件。
             nativeNodeApi->measureNode(child, childLayoutConstrain);
-            const ArkUI_AttributeItem *margin = nativeNodeApi->getAttribute(child, NODE_MARGIN);
+            const ArkUI_AttributeItem* margin = nativeNodeApi->getAttribute(child, NODE_MARGIN);
             auto size = nativeNodeApi->getMeasuredSize(child);
             // TARO_LOG_DEBUG("TaroCustomNode", "nid: %{public}d margin top:%{public}f left:%{public}f", element_nid_, margin->value[0].f32, margin->value[2].f32);
             if (size.width && style_ref_ && !style_ref_->width.has_value() && !layoutDiffer_.computed_style_.width) {
@@ -94,7 +95,7 @@ namespace TaroDOM {
     };
 
     void TaroCustomNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_CUSTOM));
         SetCustomLayout();
     };

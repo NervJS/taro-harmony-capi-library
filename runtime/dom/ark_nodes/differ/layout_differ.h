@@ -9,58 +9,59 @@
 namespace TaroRuntime {
 namespace TaroDOM {
 
-class BaseRenderNode;
+    class BaseRenderNode;
 
-struct ComputedStyle {
-    float height;
-    float width;
-    float paddingTop;
-    float paddingRight;
-    float paddingBottom;
-    float paddingLeft;
-    float borderTop;
-    float borderRight;
-    float borderBottom;
-    float borderLeft;
-    float marginTop;
-    float marginRight;
-    float marginBottom;
-    float marginLeft;
-    double top;
-    double left;
-    double right;
-    double bottom;
-    double globalX;
-    double globalY;
-    YGOverflow overflow;
-    YGDisplay display;
-};
+    struct ComputedStyle {
+        float height;
+        float width;
+        float paddingTop;
+        float paddingRight;
+        float paddingBottom;
+        float paddingLeft;
+        float borderTop;
+        float borderRight;
+        float borderBottom;
+        float borderLeft;
+        float marginTop;
+        float marginRight;
+        float marginBottom;
+        float marginLeft;
+        double top;
+        double left;
+        double right;
+        double bottom;
+        double globalX;
+        double globalY;
+        YGOverflow overflow;
+        YGDisplay display;
+    };
 
-class LayoutDiffer {
-    public:
-    LayoutDiffer(BaseRenderNode* render_node): base_node_(render_node) {};
+    class LayoutDiffer {
+        public:
+        LayoutDiffer(BaseRenderNode* render_node)
+            : base_node_(render_node) {};
 
-    ~LayoutDiffer() {};
+        ~LayoutDiffer() {};
 
-    void SetComputedStyle(YGNodeRef yGNodeRef, bool update_old_style = true);
+        void SetComputedStyle(YGNodeRef yGNodeRef, bool update_old_style = true);
 
-    float GetComputedStyle(const char *name) const;
+        float GetComputedStyle(const char* name) const;
 
-    YGOverflow GetOverFlowStyle ();
+        YGOverflow GetOverFlowStyle();
 
-    YGDisplay GetDisplayStyle ();
+        YGDisplay GetDisplayStyle();
 
-    static void DiffAndSetStyle(ComputedStyle computed_style, ComputedStyle old_computed_style, BaseRenderNode* base_render_node);
+        static void DiffAndSetStyle(ComputedStyle computed_style, ComputedStyle old_computed_style, BaseRenderNode* base_render_node);
 
-    bool is_first_layout_finish_;
+        bool is_first_layout_finish_;
 
-    ComputedStyle computed_style_;
+        ComputedStyle computed_style_;
 
-    ComputedStyle old_computed_style_;
+        ComputedStyle old_computed_style_;
 
-    private:
-    BaseRenderNode* base_node_;
-};
+        private:
+        BaseRenderNode* base_node_;
+    };
 
-}
-}
+} // namespace TaroDOM
+} // namespace TaroRuntime

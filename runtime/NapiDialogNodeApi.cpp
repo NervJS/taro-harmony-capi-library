@@ -3,9 +3,8 @@
  */
 
 #include "NapiDialogNodeApi.h"
+
 #include <arkui/native_interface.h>
-
-
 
 namespace TaroRuntime {
 

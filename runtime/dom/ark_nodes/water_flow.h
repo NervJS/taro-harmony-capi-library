@@ -22,10 +22,10 @@ namespace TaroDOM {
         void setRowGap(float gap);
 
         // 设置瀑布流组件末尾的自定义显示组件
-        void setFooter(const std::shared_ptr<TaroRenderNode> &footerNode);
+        void setFooter(const std::shared_ptr<TaroRenderNode>& footerNode);
 
         // 初始化waterflow section option
-        void initSections(std::vector<std::shared_ptr<TaroNode>> &child_nodes_);
+        void initSections(std::vector<std::shared_ptr<TaroNode>>& child_nodes_);
         void updateSectionCount(int32_t index, int32_t count);
         void updateSectionColumn(int32_t index, int32_t column);
         void updateRowGap(int32_t index, double gap);
@@ -41,7 +41,7 @@ namespace TaroDOM {
 
         private:
         bool init_adapter_;
-        ArkUI_WaterFlowSectionOption *sections_;
+        ArkUI_WaterFlowSectionOption* sections_;
         bool scrollX_;
         void LayoutSelf();
     };

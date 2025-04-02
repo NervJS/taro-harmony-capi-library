@@ -3,17 +3,19 @@
  */
 
 #include "transform_origin.h"
+
+#include "./utils.h"
 #include "helper/string.h"
 #include "runtime/NapiGetter.h"
 #include "runtime/NativeNodeApi.h"
 #include "runtime/cssom/dimension/dimension.h"
-#include "./utils.h"
 
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 
 void TransformOrigin::setValueFromStringView(std::string_view str) {
     auto values = TaroHelper::string::splitBySpace(str);
-    if (values.empty()) return;
+    if (values.empty())
+        return;
     if (values.size() >= 3) {
         // z轴只支持度量值
         auto z = Dimension::FromString(values[2]);
@@ -74,7 +76,7 @@ void TransformOrigin::setValueFromStringView(std::string_view str) {
     this->set(data_);
 }
 
-void TransformOrigin::setValueFromNapi(const napi_value &napiValue) {
+void TransformOrigin::setValueFromNapi(const napi_value& napiValue) {
     NapiGetter getter(napiValue);
     auto type = getter.GetType();
     if (type == napi_object) {
@@ -141,11 +143,12 @@ void TransformOrigin::setValueFromNapi(const napi_value &napiValue) {
     }
 }
 
-void TransformOrigin::assign(const AttributeBase<TransformOriginData> &item) {
-    if (item.has_value()) this->set(item);
+void TransformOrigin::assign(const AttributeBase<TransformOriginData>& item) {
+    if (item.has_value())
+        this->set(item);
 }
 
-bool TransformOrigin::isEqual(const Optional<TransformOriginData> &other) const {
+bool TransformOrigin::isEqual(const Optional<TransformOriginData>& other) const {
     bool hasValue = this->has_value();
     if (hasValue == other.has_value()) {
         if (hasValue) {

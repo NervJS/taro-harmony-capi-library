@@ -8,14 +8,14 @@
 namespace TaroRuntime {
 namespace TaroAnimate {
 
-    double TaroEvaluator::evaluate(const double &begin, const double &end,
+    double TaroEvaluator::evaluate(const double& begin, const double& end,
                                    float fraction) {
         return begin + (end - begin) * fraction;
     }
 
     TaroCSSOM::TaroStylesheet::Color TaroEvaluator::evaluate(
-        const TaroCSSOM::TaroStylesheet::Color &begin,
-        const TaroCSSOM::TaroStylesheet::Color &end, float fraction) {
+        const TaroCSSOM::TaroStylesheet::Color& begin,
+        const TaroCSSOM::TaroStylesheet::Color& end, float fraction) {
         // convert begin color from ARGB to linear
         double begin_red = 0.0f;
         double begin_green = 0.0f;
@@ -45,8 +45,8 @@ namespace TaroAnimate {
     }
 
     TaroCSSOM::TaroStylesheet::Transform TaroEvaluator::evaluate(
-        const TaroCSSOM::TaroStylesheet::Transform &begin,
-        const TaroCSSOM::TaroStylesheet::Transform &end, float fraction) {
+        const TaroCSSOM::TaroStylesheet::Transform& begin,
+        const TaroCSSOM::TaroStylesheet::Transform& end, float fraction) {
         TaroCSSOM::TaroStylesheet::Transform res;
         res.set(TaroCSSOM::TaroStylesheet::TransformParam::staticBlend(
             begin.value(), end.value(), fraction));
@@ -55,8 +55,8 @@ namespace TaroAnimate {
 
     std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam>
     TaroEvaluator::evaluate(
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam> &begin,
-        const std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam> &end,
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam>& begin,
+        const std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam>& end,
         float fraction) {
         TaroCSSOM::TaroStylesheet::TransformParam res =
             TaroCSSOM::TaroStylesheet::TransformParam::staticBlend(*begin, *end,
@@ -66,7 +66,7 @@ namespace TaroAnimate {
     }
 
     AnimPropType_MultiValue TaroEvaluator::evaluate(
-        const AnimPropType_MultiValue &begin, const AnimPropType_MultiValue &end,
+        const AnimPropType_MultiValue& begin, const AnimPropType_MultiValue& end,
         float fraction) {
         AnimPropType_MultiValue result;
         auto min_size = std::min(begin.values_.size(), end.values_.size());
@@ -82,8 +82,8 @@ namespace TaroAnimate {
     }
 
     Dimension TaroEvaluator::evaluate(
-        const Dimension &begin,
-        const Dimension &end,
+        const Dimension& begin,
+        const Dimension& end,
         float fraction) {
         if (begin.Unit() != end.Unit()) {
             return end;
@@ -95,8 +95,8 @@ namespace TaroAnimate {
         return std::move(ret_value);
     }
 
-    void TaroEvaluator::convertUIntToRgb(uint32_t argb, double &red, double &green,
-                                         double &blue, double &alpha) {
+    void TaroEvaluator::convertUIntToRgb(uint32_t argb, double& red, double& green,
+                                         double& blue, double& alpha) {
         const double GAMMA_FACTOR = 2.2;
         uint8_t u_alpha = (argb >> 24) & 0xFF;
         alpha = u_alpha;
@@ -108,7 +108,7 @@ namespace TaroAnimate {
         blue = std::pow(u_blue, GAMMA_FACTOR);
     }
     void TaroEvaluator::convertRgbToUInt(double red, double green, double blue,
-                                         double alpha, uint32_t &argb) {
+                                         double alpha, uint32_t& argb) {
         const double GAMMA_FACTOR = 2.2;
         uint32_t u_alpha = std::clamp(static_cast<int32_t>(alpha), 0, UINT8_MAX);
         uint32_t u_red = std::clamp(

@@ -30,26 +30,26 @@ namespace TaroDOM {
             sections_ = nullptr;
         }
         if (init_adapter_) {
-            NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
             nativeNodeApi->resetAttribute(GetArkUINodeHandle(), NODE_WATER_FLOW_NODE_ADAPTER);
         }
     }
 
     void TaroWaterFlowNode::Build() {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_WATER_FLOW));
         TaroScrollContainerNode::setEdgeEffect(ARKUI_EDGE_EFFECT_NONE);
     }
 
     void TaroWaterFlowNode::setTemplate(std::string temp) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item = {nullptr, 0, temp.c_str(), nullptr};
         auto directionTemplate = scrollX_ ? NODE_WATER_FLOW_ROW_TEMPLATE : NODE_WATER_FLOW_COLUMN_TEMPLATE;
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), directionTemplate, &item);
     }
 
     void TaroWaterFlowNode::setColumnGap(float gap) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item;
         ArkUI_NumberValue value[1] = {{.f32 = gap}};
         item = {value, 1};
@@ -57,7 +57,7 @@ namespace TaroDOM {
     }
 
     void TaroWaterFlowNode::setRowGap(float gap) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item;
         ArkUI_NumberValue value[1] = {{.f32 = gap}};
         item = {value, 1};
@@ -65,7 +65,7 @@ namespace TaroDOM {
     }
 
     void TaroWaterFlowNode::setCacheCount(int32_t count) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[1] = {{.i32 = count}};
         ArkUI_AttributeItem item{value, 1};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_WATER_FLOW_CACHED_COUNT, &item);
@@ -74,7 +74,7 @@ namespace TaroDOM {
     void TaroWaterFlowNode::Layout() {
         TaroRenderNode::Layout();
         if (!init_adapter_) {
-            NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
             ArkUI_AttributeItem item{nullptr, 0, nullptr, adapter_->GetHandle()};
             nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_WATER_FLOW_NODE_ADAPTER, &item);
             init_adapter_ = true;
@@ -92,13 +92,13 @@ namespace TaroDOM {
         }
     }
 
-    void TaroWaterFlowNode::setFooter(const std::shared_ptr<TaroRenderNode> &footerNode) {
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+    void TaroWaterFlowNode::setFooter(const std::shared_ptr<TaroRenderNode>& footerNode) {
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_AttributeItem item{nullptr, 0, nullptr, footerNode->GetArkUINodeHandle()};
         nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_WATER_FLOW_FOOTER, &item);
     }
 
-    void TaroWaterFlowNode::initSections(std::vector<std::shared_ptr<TaroNode>> &children) {
+    void TaroWaterFlowNode::initSections(std::vector<std::shared_ptr<TaroNode>>& children) {
         int32_t size = children.size();
         if (sections_ == nullptr) {
             sections_ = OH_ArkUI_WaterFlowSectionOption_Create();
@@ -125,7 +125,7 @@ namespace TaroDOM {
             }
         }
 
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[] = {0};
         value[0].i32 = 0;
         ArkUI_AttributeItem item{value, 1, nullptr, sections_};
@@ -137,7 +137,7 @@ namespace TaroDOM {
         curCount += count;
         OH_ArkUI_WaterFlowSectionOption_SetItemCount(sections_, index, curCount);
 
-        NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue value[] = {0};
         value[0].i32 = 0;
         ArkUI_AttributeItem item{value, 1, nullptr, sections_};
@@ -152,7 +152,7 @@ namespace TaroDOM {
 
                 OH_ArkUI_WaterFlowSectionOption_SetCrossCount(self_->sections_, index, column);
 
-                NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+                NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
                 ArkUI_NumberValue value[] = {0};
                 value[0].i32 = 0;
                 ArkUI_AttributeItem item{value, 1, nullptr, self_->sections_};
@@ -168,7 +168,7 @@ namespace TaroDOM {
                 self_->LayoutSelf();
 
                 OH_ArkUI_WaterFlowSectionOption_SetRowGap(self_->sections_, index, gap);
-                NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+                NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
                 ArkUI_NumberValue value[] = {0};
                 value[0].i32 = 0;
                 ArkUI_AttributeItem item{value, 1, nullptr, self_->sections_};
@@ -185,7 +185,7 @@ namespace TaroDOM {
 
                 OH_ArkUI_WaterFlowSectionOption_SetColumnGap(self_->sections_, index, gap);
 
-                NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+                NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
                 ArkUI_NumberValue value[] = {0};
                 value[0].i32 = 0;
                 ArkUI_AttributeItem item{value, 1, nullptr, self_->sections_};
@@ -202,7 +202,7 @@ namespace TaroDOM {
 
                 OH_ArkUI_WaterFlowSectionOption_SetMargin(self_->sections_, index, marginTop, marginRight, marginBottom, marginLeft);
 
-                NativeNodeApi *nativeNodeApi = NativeNodeApi::getInstance();
+                NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
                 ArkUI_NumberValue value[] = {0};
                 value[0].i32 = 0;
                 ArkUI_AttributeItem item{value, 1, nullptr, self_->sections_};

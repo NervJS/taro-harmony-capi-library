@@ -41,7 +41,7 @@ namespace TaroDOM {
         bool disabled_ = false;
 
         // FIXME 改为 element 自己声明 attributes_ 并重写 GetAttrs 方法
-        virtual CommonAttributes *GetAttrs() const {
+        virtual CommonAttributes* GetAttrs() const {
             return attributes_.get();
         }
 
@@ -52,7 +52,7 @@ namespace TaroDOM {
         void SetAttributeNodeValue(std::string key, napi_value value);
         napi_value GetAttributeNodeValue(std::string key);
 
-        void SetReuseId(const napi_value &value);
+        void SetReuseId(const napi_value& value);
 
         void SetNodeValue(napi_value node);
 
@@ -97,7 +97,7 @@ namespace TaroDOM {
 
         void RemoveDisabledAttribute(std::shared_ptr<TaroRenderNode> renderNode);
 
-        void GetCatchMoveAttribute(const napi_value &value);
+        void GetCatchMoveAttribute(const napi_value& value);
 
         napi_value GetDataset();
 
@@ -112,8 +112,8 @@ namespace TaroDOM {
         protected:
         std::unique_ptr<CommonAttributes> attributes_;
         virtual void HandleAttributeChanged(ATTRIBUTE_NAME name,
-                                            const std::string &preValue,
-                                            const std::string &curValue) {};
+                                            const std::string& preValue,
+                                            const std::string& curValue) {};
 
         private:
         napi_ref dataset_ref_ = nullptr;
