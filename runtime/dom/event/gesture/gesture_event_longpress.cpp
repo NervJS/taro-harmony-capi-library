@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "gesture_event_longpress.h"
 
 #include "event_generator_gesture.h"

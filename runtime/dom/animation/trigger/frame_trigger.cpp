@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "frame_trigger.h"
 
 #include "frame_trigger_master.h"

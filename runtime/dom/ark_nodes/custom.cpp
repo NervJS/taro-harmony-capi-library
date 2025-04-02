@@ -1,6 +1,6 @@
-//
-// Created by zhutianjian on 24-7-24.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "./custom.h"
 

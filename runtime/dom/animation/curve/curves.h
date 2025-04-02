@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #pragma once
 
 #include "cubic_curve.h"

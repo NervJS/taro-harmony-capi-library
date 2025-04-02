@@ -1,8 +1,6 @@
-//
-// Created on 2024/6/17.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "input.h"
 
@@ -332,7 +330,7 @@ namespace TaroDOM {
         SetPlaceholderAttribute();
         SetPlaceholderStyleAttribute();
         SetPlaceholderTextColorAttribute();
-    
+
         if (!is_appeared) {
             // 防止折叠屏重新buildProcess时，再次根据focus属性强制让input又聚焦了一次
             auto func = [this, render_input](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {

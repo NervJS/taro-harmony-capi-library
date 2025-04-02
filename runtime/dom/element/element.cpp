@@ -1,6 +1,6 @@
-//
-// Created by zhuminghui2 on 2024/5/3.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "element.h"
 

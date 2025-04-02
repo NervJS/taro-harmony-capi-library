@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "cubic_curve.h"
 
 #include "../animator/utils.h"

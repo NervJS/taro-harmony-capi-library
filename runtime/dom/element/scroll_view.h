@@ -1,6 +1,6 @@
-//
-// Created on 2024/4/17.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TARO_CAPI_HARMONY_SCROLLVIEW_H
 #define TARO_CAPI_HARMONY_SCROLLVIEW_H

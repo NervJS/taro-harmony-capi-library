@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "taro_event.h"
 
 #include "arkjs/ArkJS.h"

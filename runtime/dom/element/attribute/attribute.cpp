@@ -1,6 +1,6 @@
-//
-// Created by zhutianjian on 24-5-28.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "attribute.h"
 

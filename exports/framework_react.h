@@ -1,6 +1,6 @@
-//
-// Created by zhutianjian on 24-9-20.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #pragma once
 

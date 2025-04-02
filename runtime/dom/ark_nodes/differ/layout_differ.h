@@ -1,8 +1,7 @@
-//
-// Created on 2024/9/14.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #pragma once
 
 #include "yoga/YGConfig.h"
@@ -40,25 +39,25 @@ struct ComputedStyle {
 class LayoutDiffer {
     public:
     LayoutDiffer(BaseRenderNode* render_node): base_node_(render_node) {};
-    
+
     ~LayoutDiffer() {};
-    
+
     void SetComputedStyle(YGNodeRef yGNodeRef, bool update_old_style = true);
-    
+
     float GetComputedStyle(const char *name) const;
 
     YGOverflow GetOverFlowStyle ();
-    
+
     YGDisplay GetDisplayStyle ();
-    
+
     static void DiffAndSetStyle(ComputedStyle computed_style, ComputedStyle old_computed_style, BaseRenderNode* base_render_node);
-    
+
     bool is_first_layout_finish_;
-    
+
     ComputedStyle computed_style_;
-    
+
     ComputedStyle old_computed_style_;
-    
+
     private:
     BaseRenderNode* base_node_;
 };

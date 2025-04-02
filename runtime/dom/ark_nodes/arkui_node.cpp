@@ -1,14 +1,6 @@
-//
-// Created on 2024/6/7.
-//
-// Node APIs are not fully supported. To solve the compilation error of the
-// interface cannot be found, please include "napi/native_api.h".
-
-//
-// Created on 2024/6/5.
-//
-// Node APIs are not fully supported. To solve the compilation error of the
-// interface cannot be found, please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "arkui_node.h"
 
@@ -100,7 +92,7 @@ namespace TaroDOM {
     int32_t TaroRenderNode::uid_flag_ = 1000;
     std::unordered_map<int32_t, std::weak_ptr<TaroRenderNode>> TaroRenderNode::custom_layout_render_nodes_;
 
-    TaroRenderNode::TaroRenderNode() {} 
+    TaroRenderNode::TaroRenderNode() {}
 
     TaroRenderNode::TaroRenderNode(TaroDOM::TaroElementRef element)
         : BaseRenderNode(), element_ref_(element) {
@@ -589,10 +581,10 @@ namespace {
         if (is_layout_dirty_) {
             SetLayoutDirty(false);
         };
-    
+
         layoutDiffer_.SetComputedStyle(ygNodeRef, !is_apply_reused);
         is_apply_reused = false;
-    
+
         if (auto element = element_ref_.lock()) {
             TARO_LOG_DEBUG("dirty", "ReLayout className: %{public}s, width: %{public}f, height: %{public}f, left: %{public}f, top: %{public}f",
                 element->class_name_.c_str(),
@@ -602,7 +594,7 @@ namespace {
                 layoutDiffer_.computed_style_.top
             );
         }
-    
+
         LayoutDiffer::DiffAndSetStyle(layoutDiffer_.computed_style_, layoutDiffer_.old_computed_style_, this);
 
         // 布局改变后，需要对部分影响到的绘制样式重新标脏>绘制

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "gesture_factory.h"
 
 namespace TaroRuntime::TaroDOM::TaroEvent {

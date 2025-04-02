@@ -1,8 +1,6 @@
-//
-// Created on 2024/6/17.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TARO_CAPI_HARMONY_DEMO_EVENT_INPUT_H
 #define TARO_CAPI_HARMONY_DEMO_EVENT_INPUT_H
@@ -17,7 +15,7 @@ namespace TaroDOM {
             TaroInputFocus(const std::string &js_event_type, ArkUI_NodeEvent *event);
 
             virtual ~TaroInputFocus();
-    
+
             int parseHmEvent(ArkUI_NodeEvent *event) override;
 
             int serializeFun(napi_value &ret_obj) override;
@@ -31,7 +29,7 @@ namespace TaroDOM {
             TaroInputBlur(const std::string &js_event_type, ArkUI_NodeEvent *event);
 
             virtual ~TaroInputBlur();
-    
+
             int parseHmEvent(ArkUI_NodeEvent *event) override;
 
             virtual int serializeFun(napi_value &ret_obj) override;
@@ -44,7 +42,7 @@ namespace TaroDOM {
             TaroInputSubmit(const std::string &js_event_type, ArkUI_NodeEvent *event);
 
             virtual ~TaroInputSubmit();
-    
+
             int parseHmEvent(ArkUI_NodeEvent *event) override;
 
             virtual int serializeFun(napi_value &ret_obj) override;

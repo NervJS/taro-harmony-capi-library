@@ -1,6 +1,6 @@
-//
-// Created by zhutianjian on 24-6-7.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "runtime/dom/element/text.h"
 

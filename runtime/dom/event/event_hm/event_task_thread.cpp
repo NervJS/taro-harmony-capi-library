@@ -1,5 +1,11 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "event_task_thread.h"
+
 #include <thread>
+
 #include "helper/Time.h"
 #include "helper/api_cost_statistic.h"
 #include "runtime/dom/element/element.h"

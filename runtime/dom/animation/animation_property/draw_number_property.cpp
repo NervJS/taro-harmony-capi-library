@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "draw_number_property.h"
 
 #include "runtime/cssom/stylesheet/css_property.h"

@@ -1,22 +1,5 @@
-//
-// Created on 2024/7/11.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
-
 /*
- * Copyright (c) 2021-2022 Huawei Device Co., Ltd.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
  */
 
 #include "./dimension.h"
@@ -202,10 +185,10 @@ std::optional<double> Dimension::ParseToVp(DimensionContextRef context) const {
     } else if (unit_ == DimensionUnit::DESIGN_PX) {
         result.emplace(value_ * context->design_ratio_);
     } else if (unit_ == DimensionUnit::SAFE_AREA) {
-        switch (static_cast<SAFE_AREA_DIRECTION>(value_)) { 
+        switch (static_cast<SAFE_AREA_DIRECTION>(value_)) {
             case SAFE_AREA_DIRECTION::TOP: {
                 result.emplace(context->safeArea.top);
-                break; 
+                break;
             }
             case SAFE_AREA_DIRECTION::LEFT: {
                 result.emplace(context->safeArea.left);

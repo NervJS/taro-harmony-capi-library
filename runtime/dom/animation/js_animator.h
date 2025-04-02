@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #pragma once
 
 #include "runtime/dom/animation/animation_property.h"

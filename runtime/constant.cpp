@@ -1,6 +1,6 @@
-//
-// Created by zhutianjian on 24-5-8.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "constant.h"
 
@@ -147,7 +147,7 @@ std::map<std::string, ATTRIBUTE_NAME> ATTRIBUTE_NAME_MAP = {
     {"max", ATTRIBUTE_NAME::MAX},
     {"blockColor", ATTRIBUTE_NAME::BLOCK_COLOR},
     {"blockSize", ATTRIBUTE_NAME::BLOCK_SIZE},
-    
+
     {"disableTouch", ATTRIBUTE_NAME::DISABLE_TOUCH},
     {"disableProgrammaticAnimation", ATTRIBUTE_NAME::DISABLE_PROGRAMMATIC_ANIMATION}
 };

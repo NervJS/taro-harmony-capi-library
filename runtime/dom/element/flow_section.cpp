@@ -1,8 +1,6 @@
-//
-// Created on 2024/7/20.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "flow_section.h"
 
@@ -99,7 +97,7 @@ namespace TaroDOM {
 
     void TaroFlowSection::GetMarginAttribute(const napi_value& value) {
         NapiGetter getter(value);
-    
+
         double marginTop = GetDoubleAttributeValue(getter.GetProperty("marginTop").GetNapiValue());
         double marginRight = GetDoubleAttributeValue(getter.GetProperty("marginRight").GetNapiValue());
         double marginBottom = GetDoubleAttributeValue(getter.GetProperty("marginBottom").GetNapiValue());
@@ -120,7 +118,7 @@ namespace TaroDOM {
         } else if (getter.Double().has_value()) {
             double_value = getter.Double().value();
         }
-    
+
         return double_value;
     }
 

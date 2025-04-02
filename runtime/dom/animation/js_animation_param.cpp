@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "js_animation_param.h"
 
 #include <js_native_api_types.h>

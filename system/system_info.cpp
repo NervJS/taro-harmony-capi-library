@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "system_info.h"
 #include "arkjs/ArkJS.h"
 #include "helper/TaroLog.h"

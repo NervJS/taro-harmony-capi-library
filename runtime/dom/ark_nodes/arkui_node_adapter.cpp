@@ -1,8 +1,6 @@
-//
-// Created on 2024/7/1.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "arkui_node_adapter.h"
 
@@ -351,7 +349,7 @@ namespace TaroDOM {
             if (it != cachedItems_.end() && !(it->second.empty())) {
                 auto reuseIt = it->second.begin();
                 auto reuseElement = (*reuseIt)->element_ref_.lock();
-            
+
                 if (reuseElement == nullptr) {
                     it->second.erase(reuseIt);
                     stack.push(newElement);
@@ -443,7 +441,7 @@ namespace TaroDOM {
 
         // 子组件会更新，我们只保存最新结构
         items_.insert_or_assign(renderNode->GetArkUINodeHandle(), renderNode);
-    
+
         // 设置需要展示的元素。
         int res = OH_ArkUI_NodeAdapterEvent_SetItem(event, handle);
         if (res != 0) {

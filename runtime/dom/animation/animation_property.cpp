@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "animation_property.h"
 
 #include "animation_property/base_property.h"

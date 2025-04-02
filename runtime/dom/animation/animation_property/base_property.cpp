@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "base_property.h"
 
 #include "runtime/cssom/stylesheet/common.h"

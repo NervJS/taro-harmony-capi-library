@@ -1,8 +1,6 @@
-//
-// Created on 2024/8/8.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TARO_HARMONY_CPP_FONTFAMILYMANAGER_H
 #define TARO_HARMONY_CPP_FONTFAMILYMANAGER_H
@@ -24,7 +22,7 @@ class FontFamilyManager {
     OH_Drawing_FontCollection* m_FontCollection = nullptr;
     std::vector<std::string> m_CurrentRequestUrls;
     std::mutex m_CurrentRequestUrlsMutex;
-    
+
     public:
     FontFamilyManager(const FontFamilyManager&) = delete;
     FontFamilyManager& operator=(const FontFamilyManager&) = delete;

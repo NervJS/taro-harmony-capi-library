@@ -1,16 +1,51 @@
 header:
-  license:
-    copyright-owner: O2Team
-    copyright-year: '2018-2025'
-    content: |
-      Copyright (c) 2018 O2Team. All Rights Reserved.
-    pattern: |
-      O2Team
+  - path: taro
+    license:
+      copyright-owner: O2Team
+      copyright-year: '2018-2025'
+      content: |
+        Copyright (c) 2018 O2Team. All Rights Reserved.
+      pattern: |
+        O2Team
 
-  comment: on-failure
+    comment: on-failure
 
-  paths:
-    - "**/*.c"
-    - "**/*.cpp"
-    - "**/*.h"
-    - "**/*.hpp"
+    paths:
+      - "**/*.c"
+      - "**/*.cpp"
+      - "**/*.h"
+      - "**/*.hpp"
+    paths-ignore:
+      - patches
+      - engine/jsi_executor
+      - engine/quickjs_jsi
+      - engine/react_common
+
+  - path: folly
+    license:
+      spdx-id: Apache-2.0
+      content: |
+        Modify from https://github.com/facebook/react-native/
+        Apache-2.0 License https://github.com/facebook/react-native/blob/main/LICENSE
+    paths:
+      - "engine/jsi_executor/**/*"
+      - "engine/quickjs_jsi/**/*"
+      - "engine/react_common/**/*"
+
+  - path: folly
+    license:
+      spdx-id: Apache-2.0
+      content: |
+        Modify from https://github.com/facebook/folly/
+        Apache-2.0 License https://github.com/facebook/folly/blob/main/LICENSE
+    paths:
+      - "patches/folly/**/*"
+
+  - path: libevent
+    license:
+      spdx-id: Apache-2.0
+      content: |
+        Modify from https://github.com/libevent/
+        Apache-2.0 License https://github.com/libevent/libevent/blob/master/LICENSE
+    paths:
+      - "patches/libevent/**/*"

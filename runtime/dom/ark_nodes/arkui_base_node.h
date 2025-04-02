@@ -1,8 +1,6 @@
-//
-// Created on 2024/6/24.
-//
-// Node APIs are not fully supported. To solve the compilation error of the
-// interface cannot be found, please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef HARMONY_LIBRARY_ARKUI_BASE_NODE_H
 #define HARMONY_LIBRARY_ARKUI_BASE_NODE_H
@@ -135,7 +133,7 @@ namespace TaroDOM {
         virtual void OnDisplayChange(const PropertyType::Display &val, const PropertyType::Display &oldVal) {};
 
         DimensionContextRef GetDimensionContext();
-    
+
         protected:
         bool is_layout_dirty_ = false;
         bool is_draw_dirty_ = false;

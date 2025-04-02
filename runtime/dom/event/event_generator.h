@@ -1,4 +1,9 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #pragma once
+
 #include <string>
 #include <arkui/native_type.h>
 

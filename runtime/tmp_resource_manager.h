@@ -1,8 +1,6 @@
-//
-// Created on 2024/11/27.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TARO_HARMONY_CPP_TMP_RESOURCE_MANAGER_H
 #define TARO_HARMONY_CPP_TMP_RESOURCE_MANAGER_H
@@ -24,9 +22,9 @@ public:
         static TaroTmpResource* instance = new TaroTmpResource();
         return instance;
     }
-    
+
     std::unordered_map<std::string, OH_PixelmapNative*> tmp_pixels_manager_;
-    
+
     // 检查并创建目录
     bool ensureDirectoryExists(std::string path) {
         if (!std::filesystem::exists(path)) {
@@ -41,7 +39,7 @@ public:
         }
         return true; // 目录已经存在
     }
-    
+
     bool Clear(std::string path) {
         if (TMP_CANVAS_RESOURCE_PATH == path) {
             tmp_pixels_manager_.clear();
@@ -65,11 +63,11 @@ public:
             if (auto pixels = tmp_pixels_manager_[path]) {
                 OH_PixelmapNative_Release(pixels);
                 tmp_pixels_manager_.erase(path);
-            } 
+            }
         }  else {
             for (auto it: tmp_pixels_manager_) {
                 OH_PixelmapNative_Release(it.second);
-            }   
+            }
         }
     }
 

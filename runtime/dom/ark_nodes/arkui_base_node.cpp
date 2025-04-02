@@ -1,8 +1,6 @@
-//
-// Created on 2024/6/24.
-//
-// Node APIs are not fully supported. To solve the compilation error of the
-// interface cannot be found, please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "./arkui_base_node.h"
 
@@ -830,7 +828,7 @@ namespace TaroDOM {
             }                                                                                                                               \
             case DimensionUnit::CALC: {                                                                                                     \
                 auto context = GetDimensionContext();                                                                                       \
-                \ 
+                \
                 CALC_FUNCTION(ygNodeRef, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                      \
             }                                                                                                                               \
@@ -876,7 +874,7 @@ namespace TaroDOM {
             }                                                                                                                               \
             case DimensionUnit::CALC: {                                                                                                     \
                 auto context = GetDimensionContext();                                                                                       \
-                \ 
+                \
                 CALC_FUCNTION(ygNodeRef, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                      \
             }                                                                                                                               \
@@ -920,7 +918,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
             case DimensionUnit::CALC: {                                                                                                           \
                 auto context = GetDimensionContext();                                                                                             \
-                \ 
+                \
                 CALC_FUNCTION(ygNodeRef, EDGE, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                            \
             }                                                                                                                                     \
@@ -979,7 +977,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
             case DimensionUnit::CALC: {                                                                                                           \
                 auto context = GetDimensionContext();                                                                                             \
-                \ 
+                \
                 CALC_FUNCTION(ygNodeRef, EDGE, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                            \
             }                                                                                                                                     \
@@ -989,7 +987,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
         }                                                                                                                                         \
         CheckIfYGDirty();                                                                                                                         \
-        \   
+        \
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \
     }
 

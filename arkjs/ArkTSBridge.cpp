@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "ArkTSBridge.h"
 
 #include <boost/exception/diagnostic_information.hpp>

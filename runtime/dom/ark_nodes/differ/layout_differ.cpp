@@ -1,8 +1,6 @@
-//
-// Created on 2024/9/14.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "./layout_differ.h"
 #include "runtime/cssom/stylesheet/harmony_style_setter/harmony_style_setter.h"
@@ -19,7 +17,7 @@ void LayoutDiffer::SetComputedStyle(YGNodeRef yGNodeRef, bool update_old_style) 
     if (update_old_style) {
         old_computed_style_ = computed_style_;
     }
-    
+
     computed_style_.width = YGNodeLayoutGetWidth(yGNodeRef);
     computed_style_.height = YGNodeLayoutGetHeight(yGNodeRef);
     computed_style_.top = YGNodeLayoutGetTop(yGNodeRef);
@@ -134,7 +132,7 @@ void LayoutDiffer::DiffAndSetStyle(ComputedStyle computed_style, ComputedStyle o
                              old_computed_style.borderBottom != computed_style.borderBottom ||
                              old_computed_style.borderLeft != computed_style.borderLeft;
     bool is_overflow_changed = old_computed_style.overflow != computed_style.overflow;
-    
+
     // Diff出新旧的计算属性，设置到ark_node上
     if (is_first_layout || is_display_changed) {
         auto visibility = computed_style.display == YGDisplayNone ? ARKUI_VISIBILITY_NONE : ARKUI_VISIBILITY_VISIBLE;
@@ -153,19 +151,19 @@ void LayoutDiffer::DiffAndSetStyle(ComputedStyle computed_style, ComputedStyle o
         TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBorderWidth(
             render_node->ark_node_, computed_style.borderTop, computed_style.borderRight, computed_style.borderBottom, computed_style.borderLeft);
     }
-    
+
     if (is_first_layout || is_overflow_changed) {
         bool is_overflow_hidden = computed_style.overflow == YGOverflowHidden || computed_style.overflow == YGOverflowScroll;
-        
+
          if (dynamic_cast<TaroScrollContainerNode *>(render_node)) {
              is_overflow_hidden = true;
          } else if (dynamic_cast<TaroSwiperNode *>(render_node)) {
 //              is_overflow_hidden = true;
          }
-            
+
         TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setOverflow(render_node->ark_node_, is_overflow_hidden ? 1 : 0);
     }
-    
+
     if (is_parent_should_position) {
         if (is_first_layout || is_position_changed) {
             ArkUI_NumberValue arkUI_NumberValue[] = {0.0, 0.0};

@@ -1,8 +1,6 @@
-//
-// Created on 2024/8/21.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "canvas.h"
 
@@ -149,10 +147,10 @@ namespace TaroDOM {
                     ArkJS arkJs(NativeNodeApi::env);
                     return arkJs.createDouble(width);
                 }
-            case CANVAS_FUNC_CODE::DrawImage: 
+            case CANVAS_FUNC_CODE::DrawImage:
                 node->DrawImage(paramsGetter);
                 break;
-            case CANVAS_FUNC_CODE::DRAWABLE: 
+            case CANVAS_FUNC_CODE::DRAWABLE:
                 node->AwaitDrawAble(paramsGetter);
                 break;
             case CANVAS_FUNC_CODE::RESET:

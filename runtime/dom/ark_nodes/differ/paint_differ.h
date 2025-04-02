@@ -1,8 +1,7 @@
-//
-// Created on 2024/9/14.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #pragma once
 
 #include "helper/Optional.h"
@@ -108,18 +107,18 @@ class PaintDiffer {
         paint_style_ = std::make_shared<PaintStyle>();
         old_paint_style_ = std::make_shared<PaintStyle>();
     };
-    
+
     ~PaintDiffer() {}
-    
+
     std::shared_ptr<PaintStyle> paint_style_;
 
     std::shared_ptr<PaintStyle> old_paint_style_;
-    
+
     void ClearForceUpdate();
     void ClearOldStyle();
-    
+
     static void DiffAndSetStyle(PaintStyle& paint_style_, PaintStyle& old_paint_style_, BaseRenderNode* base_render_node);
-    
+
     private:
     BaseRenderNode* render_node_;
 };

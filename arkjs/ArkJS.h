@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #ifndef native_ArkJS_H
 #define native_ArkJS_H
 

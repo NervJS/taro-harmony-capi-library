@@ -1,8 +1,6 @@
-//
-// Created on 2024/4/20.
-//
-// Node APIs are not fully supported. To solve the compilation error of the
-// interface cannot be found, please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "./background_image.h"
 
@@ -267,7 +265,7 @@ void BackgroundImage::setValueFromNapi(const napi_value& napiValue) {
 void BackgroundImage::setValueFromStringView(std::string_view value) {
     auto processColorStop = [](std::string_view param, std::vector<uint32_t>& colorArr, std::vector<float>& stopArr) {
         param = TaroHelper::string::trim(param);
-        
+
         // 先尝试解析整个字符串作为颜色
         auto fullColor = TColor::MakeFromString(param).getValue();
         if (fullColor.has_value()) {
@@ -276,7 +274,7 @@ void BackgroundImage::setValueFromStringView(std::string_view value) {
             stopArr.push_back(std::nanf(""));
             return;
         }
-        
+
         // 检查是否以百分比结尾
         if (size_t percentPos = param.rfind('%'); percentPos != std::string_view::npos) {
             // 从百分号往前找数字的起始位置
@@ -284,12 +282,12 @@ void BackgroundImage::setValueFromStringView(std::string_view value) {
             while (numStart > 0 && (std::isdigit(param[numStart - 1]) || param[numStart - 1] == '.' || param[numStart - 1] == '-')) {
                 --numStart;
             }
-            
+
             if (numStart > 0) {
                 // 尝试解析前面的部分作为颜色
                 std::string_view colorPart = TaroHelper::string::trim(param.substr(0, numStart));
                 std::string_view stopPart = TaroHelper::string::trim(param.substr(numStart));
-                
+
                 auto c = TColor::MakeFromString(colorPart).getValue();
                 if (c.has_value()) {
                     colorArr.push_back(c.value());
@@ -302,7 +300,7 @@ void BackgroundImage::setValueFromStringView(std::string_view value) {
                 }
             }
         }
-        
+
         // 如果上述都失败了，尝试作为纯颜色值处理
         auto c = TColor::MakeFromString(param).getValue();
         if (c.has_value()) {

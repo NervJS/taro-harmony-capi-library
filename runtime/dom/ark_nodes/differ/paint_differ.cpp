@@ -1,8 +1,6 @@
-//
-// Created on 2024/9/14.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "paint_differ.h"
 #include "differ_macro.h"
@@ -21,7 +19,7 @@ void PaintDiffer::DiffAndSetStyle(PaintStyle& paint_style_, PaintStyle& old_pain
     bool is_border_radius_removed = IS_PROPERTY_WITH_IDX_REMOVED(border_radius_);
     bool is_border_color_changed = IS_PROPERTY_WITH_IDX_CHANGED(border_color_);
     bool is_border_color_removed = IS_PROPERTY_WITH_IDX_REMOVED(border_color_);
-    
+
     if (is_border_style_changed) {
         if (is_border_style_removed) {
             TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBorderStyle(render_node->ark_node_);
@@ -158,7 +156,7 @@ void PaintDiffer::DiffAndSetStyle(PaintStyle& paint_style_, PaintStyle& old_pain
             TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setZIndex(render_node->ark_node_, paint_style_.zIndex_.value);
         }
     }
-    
+
     if (IS_PROPERTY_CHANGED(pointerEvents_)) {
         if (IS_PROPERTY_REMOVED(pointerEvents_)) {
             TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setPointerEvents(render_node->ark_node_);
@@ -218,7 +216,7 @@ void PaintDiffer::ClearOldStyle() {
     old_paint_style_->transform_origin_ = DrawProperty<TaroHelper::Optional<TaroCSSOM::TaroStylesheet::TransformOriginData>>();
     old_paint_style_->zIndex_ = DrawProperty<TaroHelper::Optional<int32_t>>();
     old_paint_style_->pointerEvents_ = DrawProperty<TaroHelper::Optional<PropertyType::PointerEvents>>();
-    
+
 
     old_paint_style_->color_ = DrawProperty<TaroHelper::Optional<uint32_t>>();
     old_paint_style_->fontSize_ = DrawProperty<TaroHelper::Optional<Dimension>>();

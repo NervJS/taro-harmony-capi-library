@@ -1,6 +1,7 @@
-//
-// Created by wangzhongqiang on 24-4-28.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #pragma once
 
 #include <functional>

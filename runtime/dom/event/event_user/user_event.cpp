@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "user_event.h"
 
 #include "runtime/NapiSetter.h"

@@ -1,6 +1,6 @@
-//
-// Created by zhutianjian on 24-5-8.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TESTNDK_CONSTANT_H
 #define TESTNDK_CONSTANT_H

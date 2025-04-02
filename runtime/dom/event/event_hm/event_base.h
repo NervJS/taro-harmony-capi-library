@@ -1,6 +1,7 @@
-//
-// Created by wangzhongqiang on 24-4-28.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #pragma once
 
 #include <functional>
@@ -23,18 +24,18 @@ namespace TaroDOM {
 
             public:
             virtual bool realTrigger();
-    
+
             virtual int parseHmEvent(ArkUI_NodeEvent *event);
 
             // virtual int parseFun();
             virtual int serializeFun(napi_value &ret_val);
 
             int serializeFun() override;
-    
+
             ArkUI_NodeEvent * getOriginEvent () {
                 return event_;
             }
-    
+
             virtual void revertEventBubble () {}
 
             napi_value &detail();

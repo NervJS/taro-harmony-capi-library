@@ -1,8 +1,6 @@
-//
-// Created on 2024/6/18.
-//
-// Node APIs are not fully supported. To solve the compilation error of the
-// interface cannot be found, please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TARO_CAPI_HARMONY_DEMO_HARMONY_STYLE_SETTER_H
 #define TARO_CAPI_HARMONY_DEMO_HARMONY_STYLE_SETTER_H

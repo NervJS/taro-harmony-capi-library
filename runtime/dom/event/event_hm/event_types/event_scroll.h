@@ -1,6 +1,6 @@
-//
-// Created by wangzhongqiang on 2024/5/10.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #pragma once
 
@@ -16,7 +16,7 @@ namespace TaroDOM {
             TaroEventScroll(const std::string &js_event_type, ArkUI_NodeEvent *event);
 
             virtual ~TaroEventScroll() = default;
-    
+
             int parseHmEvent(ArkUI_NodeEvent *event) override;
 
             int serializeFun(napi_value &ret_obj) override;

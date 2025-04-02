@@ -1,6 +1,6 @@
-//
-// Created by zhuminghui2 on 2024/5/3.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TARO_CAPI_HARMONY_DEMO_ELEMENT_H
 #define TARO_CAPI_HARMONY_DEMO_ELEMENT_H
@@ -161,7 +161,7 @@ namespace TaroDOM {
                    tag_name_ == TAG_NAME::CHECKBOX_GROUP ||
                    tag_name_ == TAG_NAME::CHECKBOX;
         }
-    
+
         std::shared_ptr<TaroCSSOM::TaroStylesheet::Stylesheet> GetTextNodeStyleFromElement(const std::shared_ptr<TaroElement> &element);
 
         virtual void PreBuild();
@@ -196,7 +196,7 @@ namespace TaroDOM {
         void CheckMatchEmptySelector();
         bool GetMatchEmptySelector();
         void SetMatchEmptySelector(bool val);
-    
+
         // 验证自己是否在滚动容器中已经上屏，如果不是滚动容器则默认返回 true
         // 后期 list -> listItemGroup -> listItem 时要考虑两层 adapter 嵌套的情况
         bool checkIsInScrollContainerIndex(bool useCacheCount = false);

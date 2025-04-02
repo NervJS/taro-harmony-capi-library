@@ -1,8 +1,6 @@
-//
-// Created on 2024/8/15.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "FileDownloader.h"
 #include "helper/TaroLog.h"
@@ -28,7 +26,7 @@ namespace TaroHelper {
             TARO_LOG_DEBUG("Download core", "Failed to initialize HTTP session.");
             return false;
         }
-    
+
         Rcp_Request* request = HMS_Rcp_CreateRequest(url.c_str());
         if (!request) {
             HMS_Rcp_CancelSession(session);
@@ -36,7 +34,7 @@ namespace TaroHelper {
             TARO_LOG_DEBUG("Download core", "Failed to create HTTP request.");
             return false;
         }
-    
+
         request->method = RCP_METHOD_GET;
         Rcp_Headers* headers = HMS_Rcp_CreateHeaders();
         if (!headers) {
@@ -54,11 +52,11 @@ namespace TaroHelper {
                 }
             }
         }
-    
+
         // 将头部添加到请求中
         request->headers = headers;
-        Rcp_ResponseCallbackObject * responseCallback = new Rcp_ResponseCallbackObject; 
-        
+        Rcp_ResponseCallbackObject * responseCallback = new Rcp_ResponseCallbackObject;
+
         auto callbackWrapper = new std::function<void(Rcp_Response*, uint32_t)>([callback, request, session, responseCallback](Rcp_Response* response, uint32_t errCode) mutable {
             callback(response, errCode);
             HMS_Rcp_DestroyRequest(request);
@@ -77,7 +75,7 @@ namespace TaroHelper {
             },
             callbackWrapper
         };
-    
+
         auto result = HMS_Rcp_Fetch(session, request, responseCallback);
         if (result != 0) {
             HMS_Rcp_CancelSession(session);

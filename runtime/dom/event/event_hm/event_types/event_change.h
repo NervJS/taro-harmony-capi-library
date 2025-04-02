@@ -1,6 +1,6 @@
-//
-// Created by wangzhongqiang on 2024/5/10.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #pragma once
 
@@ -17,7 +17,7 @@ namespace TaroDOM {
             }
 
             virtual ~TaroTextInputEventChange() {}
-    
+
             int parseHmEvent(ArkUI_NodeEvent *event) override;
 
             virtual int serializeFun(napi_value &ret_obj) override;

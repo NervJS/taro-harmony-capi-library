@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "event_generator_hm.h"
 
 #include "event_adapter.h"
@@ -138,7 +142,7 @@ void EventGenerator_HM::dispatchEvent(ArkUI_NodeEvent* event) {
             continue;
         }
         event_obj->parseHmEvent(event);
-        bool  with_native_bubble =elem_event.with_native_bubble_; 
+        bool  with_native_bubble =elem_event.with_native_bubble_;
         if (with_native_bubble) {
             event_obj->revertEventBubble();
         }

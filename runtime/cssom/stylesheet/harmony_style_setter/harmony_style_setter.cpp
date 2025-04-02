@@ -1,5 +1,9 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "harmony_style_setter.h"
+
 namespace TaroRuntime {
 namespace TaroCSSOM {
     namespace TaroStylesheet {

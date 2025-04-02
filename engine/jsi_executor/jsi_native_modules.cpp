@@ -1,14 +1,6 @@
-//
-// Created on 2024/6/3.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
-
 /*
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * Modify from https://github.com/facebook/react-native/
+ * Apache-2.0 License https://github.com/facebook/react-native/blob/main/LICENSE
  */
 
 #include "jsi_native_modules.h"

@@ -1,8 +1,6 @@
-//
-// Created on 2024/8/13.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TARO_HARMONY_CPP_DIRTY_VSYNC_TASK_H
 #define TARO_HARMONY_CPP_DIRTY_VSYNC_TASK_H
@@ -66,7 +64,7 @@ class UniqueWeakPtrQueue {
 public:
     std::deque<std::weak_ptr<T>> queue;
     std::unordered_set<int> set;
-    
+
     UniqueWeakPtrQueue() = default;
 
     void push(const std::shared_ptr<T>& value) {
@@ -118,7 +116,7 @@ public:
                 return false;
             });
         queue.erase(it, queue.end());
-        
+
         // 更新 set 以只包含有效元素
         set.clear();
         for (const auto& wp : queue) {
@@ -190,7 +188,7 @@ class DirtyTaskPipeline {
     bool isRequestVsync_ = false;
     bool isFlushing_ = false;
     // TODO: 下面3个std::unordered_set更换为std::set更佳, 将depth较低的摆放在前面，优先处理顶层节点，可减少一些重复处理的情况
-    
+
     UniqueWeakPtrQueue<TaroElement> notifyFixedRootNodes_;
     // 需要重新匹配样式的脏节点
     UniqueWeakPtrQueue<TaroElement> dirtyStyleNodes_;

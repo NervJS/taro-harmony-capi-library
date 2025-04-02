@@ -1,8 +1,6 @@
-//
-// Created on 2024/8/13.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #include "./dirty_vsync_task.h"
 
@@ -39,7 +37,7 @@ void DirtyTaskPipeline::RequestNextFrame() {
                 [this](uint64_t time, uint64_t id) {
                     OnVsync(time, id);
                 }
-            );   
+            );
         }
     }
 }
@@ -138,15 +136,15 @@ void DirtyTaskPipeline::FlushLayout() {
         SystraceSection s("TaroDirtyPipeline:: FlushLayout");
         auto oldDirtyLayoutNodes = std::move(dirtyLayoutNodes_);
         dirtyLayoutNodes_ = UniqueWeakPtrQueue<TaroRenderNode>();
-        
+
         while (!oldDirtyLayoutNodes.empty()) {
             if (auto renderNode = oldDirtyLayoutNodes.pop()) {
                 bool isLocalMeasure = false;
                 auto parent = renderNode->parent_ref_.lock();
                 if (parent) {
                     if (
-                        std::dynamic_pointer_cast<TaroDOM::TaroWaterFlowNode>(parent) || 
-                        std::dynamic_pointer_cast<TaroDOM::TaroListNode>(parent) || 
+                        std::dynamic_pointer_cast<TaroDOM::TaroWaterFlowNode>(parent) ||
+                        std::dynamic_pointer_cast<TaroDOM::TaroListNode>(parent) ||
                         std::dynamic_pointer_cast<TaroDOM::TaroSwiperNode>(parent)
                     ) {
                         isLocalMeasure = true;
@@ -156,10 +154,10 @@ void DirtyTaskPipeline::FlushLayout() {
                 if (isLocalMeasure) {
                     TaroSetCanMeasureChild(parent->ygNodeRef, true);
                 }
-                    
+
                 renderNode->Measure();
                 renderNode->LayoutAll();
-                    
+
                 if (isLocalMeasure) {
                     TaroSetCanMeasureChild(parent->ygNodeRef, false);
                 }
@@ -181,7 +179,7 @@ void DirtyTaskPipeline::FlushPaint() {
 
 void DirtyTaskPipeline::FlushPaintLocalSync(const std::shared_ptr<TaroElement>& paintRoot) {
     SystraceSection s("TaroDirtyPipeline::FlushPaintLocalSync");
-    
+
     auto it = dirtyPaintNodes_.queue.begin();
     while (it != dirtyPaintNodes_.queue.end()) {
         if (auto sp = it->lock()) {
@@ -193,7 +191,7 @@ void DirtyTaskPipeline::FlushPaintLocalSync(const std::shared_ptr<TaroElement>& 
                     }
                 }
             }
-            
+
             if (shouldPaint) {
                 sp->Paint();
                 *sp->paintDiffer_.old_paint_style_ = *sp->paintDiffer_.paint_style_;

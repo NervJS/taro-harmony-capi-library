@@ -1,6 +1,6 @@
-//
-// Created by zhutianjian on 24-4-17.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TESTNDK_RENDER_H
 #define TESTNDK_RENDER_H

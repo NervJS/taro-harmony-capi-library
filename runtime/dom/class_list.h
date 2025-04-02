@@ -1,6 +1,6 @@
-//
-// Created by zhutianjian on 24-8-26.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef TARO_HARMONY_CLASS_LIST_H
 #define TARO_HARMONY_CLASS_LIST_H

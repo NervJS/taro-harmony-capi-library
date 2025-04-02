@@ -1,6 +1,7 @@
-//
-// Created by wangzhongqiang on 2024/5/11.
-//
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #pragma once
 
 #include "runtime/dom/event/event_hm/event_base.h"
@@ -13,11 +14,11 @@ namespace TaroDOM {
             TaroEventTouch(const std::string &js_event_type, ArkUI_NodeEvent *event);
 
             virtual ~TaroEventTouch() = default;
-    
+
             int parseHmEvent(ArkUI_NodeEvent *event) override;
-    
+
             int serializeFun(napi_value &ret_obj) override;
-    
+
             void revertEventBubble () override ;
 
             bool realTrigger() override;

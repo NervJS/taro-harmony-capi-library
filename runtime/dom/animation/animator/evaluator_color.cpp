@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 #include "evaluator_color.h"
 
 #include "helper/TaroLog.h"

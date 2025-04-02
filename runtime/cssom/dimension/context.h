@@ -1,8 +1,6 @@
-//
-// Created on 2024/7/11.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
 
 #ifndef HARMONY_LIBRARY_DIMENSION_CONTEXT_H
 #define HARMONY_LIBRARY_DIMENSION_CONTEXT_H
@@ -36,7 +34,7 @@ class DimensionContext {
         static std::shared_ptr<DimensionContext> currentInstance(new DimensionContext());
         return currentInstance;
     }
-    
+
     static void UpdateCurrentContext(std::shared_ptr<DimensionContext> instance) {
         auto currentContext = GetCurrentContext();
         currentContext->design_ratio_ = instance->design_ratio_;

@@ -1,8 +1,7 @@
-//
-// Created on 2024/8/20.
-//
-// Node APIs are not fully supported. To solve the compilation error of the interface cannot be found,
-// please include "napi/native_api.h".
+/*
+ * Copyright (c) 2018 O2Team. All Rights Reserved.
+ */
+
 // 参考文档：https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/native__gesture_8h-V5 (OH_ArkUI_GestureEvent_GetRawInputEvent)
 // 参考文档：https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/ui__input__event_8h-V5 (OH_ArkUI_PointerEvent_xxx)
 
@@ -82,7 +81,7 @@ int GestureOperator_Tap::addGesture(ArkUI_NodeHandle node_handle, GestureParam* 
     } else {
         recognizer_ = NativeGestureApi::GetInstance()->createTapGestureWithDistanceThreshold(count_num, fingers_num, 5);
     }
-    
+
     if (recognizer_ == nullptr) {
         TARO_LOG_ERROR("TaroGesture", "createTapGesture failed");
         return -3;
