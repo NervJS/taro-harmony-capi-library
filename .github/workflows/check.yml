@@ -1,4 +1,4 @@
-name: C/C++ format CI
+name: Files check CI
 
 on:
   push:
@@ -17,8 +17,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
+    - name: Check License Header
+      uses: apache/skywalking-eyes/header@main
     - name: Run clang-format style check for C/C++/Protobuf programs.
       uses: jidicula/clang-format-action@v4.15.0

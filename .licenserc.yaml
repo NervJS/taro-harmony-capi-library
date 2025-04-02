@@ -1,0 +1,16 @@
+header:
+  license:
+    copyright-owner: O2Team
+    copyright-year: '2018-2025'
+    content: |
+      Copyright (c) 2018 O2Team. All Rights Reserved.
+    pattern: |
+      O2Team
+
+  comment: on-failure
+
+  paths:
+    - "**/*.c"
+    - "**/*.cpp"
+    - "**/*.h"
+    - "**/*.hpp"
