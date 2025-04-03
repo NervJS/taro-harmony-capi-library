@@ -5,7 +5,6 @@
 #pragma once
 
 #include <mutex>
-#include <js_native_api_types.h>
 #include <napi/native_api.h>
 
 #include "helper/TaroTimer.h"
