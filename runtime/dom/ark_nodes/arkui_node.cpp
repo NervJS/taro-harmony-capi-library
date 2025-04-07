@@ -659,7 +659,7 @@ namespace TaroDOM {
                 std::weak_ptr<TaroRenderNode> weakRenderNode = std::static_pointer_cast<TaroRenderNode>(shared_from_this());
                 auto oldUrl = *url;
                 TaroHelper::loadImage({.url = *url}, [weakRenderNode, oldUrl](
-                                                         const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result) {
+                        const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result) {
                     if (auto self = weakRenderNode.lock()) {
                         // 拿到执行的时候的当前background url跟捕获到URL 是否一样，不一样就不设了
                         if (self->paintDiffer_.paint_style_->background_image_.value.has_value()) {
@@ -699,6 +699,7 @@ namespace TaroDOM {
             if (paintDiffer_.paint_style_->background_size_.value.has_value()) {
                 TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBackgroundSize(ark_node_, backgroundSizeItem, layoutDiffer_.computed_style_.width, layoutDiffer_.computed_style_.height);
             }
+            relatedImageDrawableDescriptors.push_back(res->result_DrawableDescriptor);
         } else {
             // 兜底状态，一般不会触发
             b.src = url;

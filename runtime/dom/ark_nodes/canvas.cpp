@@ -604,9 +604,10 @@ namespace TaroDOM {
                     [this, imageData](const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result) {
                         auto res = std::get_if<TaroHelper::ResultImageInfo>(&result);
                         if (res) {
-                            OH_PixelmapNativeHandle pixelmap = OH_ArkUI_DrawableDescriptor_GetStaticPixelMap(res->result_DrawableDescriptor);
+                            OH_PixelmapNativeHandle pixelmap = OH_ArkUI_DrawableDescriptor_GetStaticPixelMap(res->result_DrawableDescriptor->get());
                             DrawImageFromPixel(imageData, pixelmap, res->width, res->height);
                             Draw();
+                            relatedImageDrawableDescriptors.push_back(res->result_DrawableDescriptor);
                         }
                     });
             }

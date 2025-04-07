@@ -696,7 +696,7 @@ napi_value Manager::LoadImage(napi_env env, napi_callback_info info) {
             ArkJS arkJs(env);
             auto res = std::get_if<TaroHelper::ResultImageInfo>(&result);
             if (res) {
-                OH_PixelmapNativeHandle pixelmap = OH_ArkUI_DrawableDescriptor_GetStaticPixelMap(res->result_DrawableDescriptor);
+                OH_PixelmapNativeHandle pixelmap = OH_ArkUI_DrawableDescriptor_GetStaticPixelMap(res->result_DrawableDescriptor->get());
                 TaroRuntime::TaroDOM::TaroTmpResource::GetInstance()->tmp_pixels_manager_[src.c_str()] = pixelmap;
                 std::vector<napi_value> args(2);
                 args[0] = arkJs.createDouble(TaroRuntime::px2Vp(res->width));

@@ -164,6 +164,7 @@ namespace TaroDOM {
         bool is_first_layout_finish_ = false;
         friend class LayoutDiffer;
         friend class PaintDiffer;
+        std::vector<std::shared_ptr<ImagePixels>> relatedImageDrawableDescriptors;
 
         protected:
         // 自定义布局

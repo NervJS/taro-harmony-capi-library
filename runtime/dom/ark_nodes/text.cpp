@@ -260,6 +260,7 @@ namespace TaroDOM {
                             this_->textStyled_->InitStyledString(this_->style_ref_, this_->textNodeStyle_, dimensionContext);
                             for (const auto& result : *results) {
                                 if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
+                                    this_->relatedImageDrawableDescriptors.push_back(info->result_DrawableDescriptor);
                                     for (auto& imageInfo : this_->m_ImageInfos) {
                                         if (imageInfo->src == info->url) {
                                             imageInfo->oriWidth = info->width;
@@ -421,7 +422,8 @@ namespace TaroDOM {
                                     return;
                                 ArkUI_AttributeItem srcItem;
                                 if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
-                                    srcItem = {.object = info->result_DrawableDescriptor};
+                                    renderText->relatedImageDrawableDescriptors.push_back(info->result_DrawableDescriptor);
+                                    srcItem = {.object = info->result_DrawableDescriptor->get()};
                                 } else {
                                     srcItem = {.string = src.c_str()};
                                 }

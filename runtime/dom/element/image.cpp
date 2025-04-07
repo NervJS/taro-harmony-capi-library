@@ -160,6 +160,8 @@ namespace TaroDOM {
                                     render_image->image_raw_width = res->width;
                                     render_image->image_raw_height = res->height;
                                     render_image->repairSizeIfNeed();
+                                    render_image->setImageSrc(res->result_DrawableDescriptor->get());
+                                    render_image->relatedImageDrawableDescriptors.push_back(res->result_DrawableDescriptor);
                                 }
                             });
                         }
