@@ -29,7 +29,7 @@ void HarmonyStyleSetter::setBackgroundImage(
         if (auto url = std::get_if<std::string>(&value.src)) {
             item = {.value = arkUI_NumberValue, .size = 1, .string = (*url).c_str()};
         } else if (auto imgInfo = std::get_if<TaroHelper::ResultImageInfo>(&value.src)) {
-            item = {.value = arkUI_NumberValue, .size = 1, .object = imgInfo->result_DrawableDescriptor};
+            item = {.value = arkUI_NumberValue, .size = 1, .object = imgInfo->result_DrawableDescriptor->get()};
         }
         arkUI_NumberValue[0].i32 = repeatVale;
         TaroRuntime::NativeNodeApi::getInstance()->setAttribute(node, NODE_BACKGROUND_IMAGE, &item);
