@@ -7,8 +7,8 @@
 #include <thread>
 #include <unistd.h>
 
-#include "helper/api_cost_statistic.h"
 #include "helper/TaroLog.h"
+#include "helper/api_cost_statistic.h"
 
 namespace TaroHelper {
 std::unordered_map<std::string, int32_t>* TaroClassLifeStatistic::life_stat_ = nullptr;

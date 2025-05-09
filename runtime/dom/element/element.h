@@ -105,9 +105,6 @@ namespace TaroDOM {
         void invalidateStyleInternal();
         void markAncestorsForInvalidatedStyle();
 
-        void SetIsInline(bool isInline);
-        bool GetIsInline();
-
         void BuildProcess();
 
         void MountPseudoRenderNode();
@@ -208,8 +205,6 @@ namespace TaroDOM {
         virtual napi_value ExecuteFunc(std::shared_ptr<TaroRenderNode> renderNode, napi_value name, napi_value params);
 
         protected:
-        // 行内元素
-        bool is_inline_;
         void AppendOrInsertIntoParent();
         virtual void HandleAttributeChanged(
             ATTRIBUTE_NAME name, const std::string& preValue,

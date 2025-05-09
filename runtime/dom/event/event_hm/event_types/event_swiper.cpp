@@ -52,6 +52,13 @@ namespace TaroDOM {
                 TARO_LOG_DEBUG("TaroEvent", "get swiper transition event failed");
                 return -1;
             }
+            auto current_index = component_event->data[0].i32;
+            auto item_index = component_event->data[1].i32;
+
+            if (current_index != item_index) {
+                return -1;
+            }
+            current_index_ = item_index;
             move_val_ = component_event->data[2].f32;
             return 0;
         }

@@ -36,6 +36,7 @@ namespace TaroDOM {
             int serializeFun(napi_value& ret_obj) override;
 
             float move_val_ = 0.0;
+            int current_index_ = 0;
         };
     } // namespace TaroEvent
 } // namespace TaroDOM

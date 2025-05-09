@@ -213,10 +213,12 @@ namespace TaroDOM {
                 auto castItem = std::dynamic_pointer_cast<TaroImage>(item);
                 if (castItem->attributes_->src.has_value()) {
                     if (auto src = std::get_if<std::string>(&castItem->attributes_->src.value())) {
-                        imageInfo->src = *src;
-                        if (imageInfo->src.starts_with("//")) {
-                            imageInfo->src.insert(0, "https:");
+                        if (src->starts_with("//")) {
+                            src->insert(0, "https:");
                         }
+                        imageInfo->src = *src;
+                    } else if (auto descriptor = std::get_if<ArkUI_DrawableDescriptor*>(&castItem->attributes_->src.value())) {
+                        imageInfo->src = *descriptor;
                     } else {
                         imageInfo->src = "";
                     }

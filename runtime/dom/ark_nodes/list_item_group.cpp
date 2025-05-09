@@ -62,7 +62,7 @@ namespace TaroDOM {
     }
 
     void TaroListItemGroupNode::Layout() {
-        if (!is_first_layout_finish_) {
+        if (!HasLayoutFlag(LAYOUT_STATE_FLAG::IS_FIRST_LAYOUT_FINISH)) {
             TaroRenderNode::Layout();
             return;
         }

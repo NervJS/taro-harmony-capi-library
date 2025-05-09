@@ -4,10 +4,10 @@
 
 #include "keyframe_vsync.h"
 
+#include <cstdint>
 #include <functional>
 #include <string>
 #include <native_vsync/native_vsync.h>
-#include <stdint.h>
 
 #include "helper/TaroLog.h"
 #include "helper/Time.h"

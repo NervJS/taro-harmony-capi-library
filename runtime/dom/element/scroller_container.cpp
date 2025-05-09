@@ -244,7 +244,9 @@ namespace TaroDOM {
             render_scroll_view->SetFlexDirection(ArkUI_FlexDirection::ARKUI_FLEX_DIRECTION_ROW);
         }
 
-        if (parentType_ != TARO_ELEMENT_MAX) {
+        if (is_scroll_x) {
+            render_scroll_view->setNestedMode(ARKUI_SCROLL_NESTED_MODE_SELF_ONLY, ARKUI_SCROLL_NESTED_MODE_SELF_ONLY);
+        } else if (parentType_ != TARO_ELEMENT_MAX) {
             render_scroll_view->setNestedMode(ARKUI_SCROLL_NESTED_MODE_PARENT_FIRST, ARKUI_SCROLL_NESTED_MODE_SELF_FIRST);
         }
 

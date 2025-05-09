@@ -37,11 +37,22 @@ void TaroSwiperItem::Build() {
 }
 
 void TaroSwiperItem::SetAttributesToRenderNode() {
-    TaroView::SetAttributesToRenderNode();
-
-    GetHeadRenderNode()->SetWidth(Dimension{1, DimensionUnit::PERCENT});
-    GetHeadRenderNode()->SetHeight(Dimension{1, DimensionUnit::PERCENT});
-
+    TaroElement::SetAttributesToRenderNode();
+    if (auto swiper = std::dynamic_pointer_cast<TaroSwiper>(GetParentNode())) {
+        if (swiper->IsAutoHeight()) {
+            auto emptyStyle = std::make_shared<TaroCSSOM::TaroStylesheet::Stylesheet>();
+            GetHeadRenderNode()->SetStyle(emptyStyle);
+            if (swiper->GetVertical()) {
+                GetHeadRenderNode()->SetHeight(Dimension{1, DimensionUnit::PERCENT});
+            } else {
+                GetHeadRenderNode()->SetWidth(Dimension{1, DimensionUnit::PERCENT});
+            }
+        } else {
+            GetHeadRenderNode()->SetStyle(style_);
+            GetHeadRenderNode()->SetHeight(Dimension{1, DimensionUnit::PERCENT});
+            GetHeadRenderNode()->SetWidth(Dimension{1, DimensionUnit::PERCENT});
+        }
+    }
     GetFooterRenderNode()->SetStyle(style_);
 }
 

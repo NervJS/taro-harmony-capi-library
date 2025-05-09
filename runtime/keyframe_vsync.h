@@ -4,11 +4,11 @@
 
 #pragma once
 
+#include <cstdint>
 #include <functional>
 #include <list>
 #include <mutex>
 #include <native_vsync/native_vsync.h>
-#include <stdint.h>
 
 namespace TaroRuntime {
 using KeyframeVsyncFun = std::function<void(uint64_t, uint32_t)>;

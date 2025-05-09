@@ -635,7 +635,7 @@ namespace TaroDOM {
     }
 
     void TaroCanvasNode::StartTask(TaroCanvasData* taskData) {
-        for (std::function<void(OH_Drawing_Canvas * canvas, TaroCanvasData*)> f : tasks_) {
+        for (std::function<void(OH_Drawing_Canvas* canvas, TaroCanvasData*)> f : tasks_) {
             f(cCanvas_, taskData);
         }
     }

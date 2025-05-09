@@ -11,6 +11,8 @@
 #include "helper/TaroTimer.h"
 #include "runtime/NapiSetter.h"
 #include "runtime/cssom/dimension/context.h"
+#include "runtime/dirty_vsync_task.h"
+#include "runtime/dom/ark_nodes/stack.h"
 #include "runtime/dom/ark_nodes/swiper.h"
 #include "runtime/dom/element/swiper_item.h"
 #include "runtime/dom/event/event_hm/event_types/event_areachange.h"
@@ -29,18 +31,41 @@ namespace TaroDOM {
         if (!is_init_) {
             // create render node
             auto element = std::static_pointer_cast<TaroElement>(shared_from_this());
+
             auto render_swiper = std::make_shared<TaroSwiperNode>(element);
             render_swiper->Build();
             render_swiper->SetShouldPosition(false);
 
-            SetRenderNode(render_swiper);
+            if (IsAutoHeight()) {
+                autoHeightContainer_ = std::make_shared<TaroStackNode>(element);
+                autoHeightContainer_->Build();
+                autoHeightWrap_ = std::make_shared<TaroStackNode>(element);
+                autoHeightWrap_->Build();
+                autoHeightWrap_->SetAlign(ARKUI_ALIGNMENT_START);
+
+                autoHeightContainer_->AppendChild(autoHeightWrap_);
+                autoHeightWrap_->AppendChild(render_swiper);
+                SetHeadRenderNode(autoHeightContainer_);
+            } else {
+                SetHeadRenderNode(render_swiper);
+            }
+
+            SetFooterRenderNode(render_swiper);
+        }
+    }
+    void TaroSwiper::handleEvent() {
+        auto onTransition = [this](std::shared_ptr<TaroEvent::TaroEventBase> event, napi_value&) -> int {
+            this->onTransition(event);
+            return 0;
+        };
+        event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_SWIPER_ON_CHANGE, "change", nullptr, GetFooterRenderNode()->GetArkUINodeHandle());
+        if (IsAutoHeight()) {
+            event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_SWIPER_ON_TRANSITION, "transition", onTransition, GetFooterRenderNode()->GetArkUINodeHandle());
         }
     }
 
     bool TaroSwiper::bindListenEvent(const std::string& event_name) {
-        if (event_name == "change") {
-            event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_SWIPER_ON_CHANGE, event_name);
-        } else if (event_name == "click") {
+        if (event_name == "click") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_CLICK, event_name);
         } else if (event_name == "touchstart") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_TOUCH_START, event_name);
@@ -49,12 +74,44 @@ namespace TaroDOM {
         } else if (event_name == "touchend") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_TOUCH_END, event_name);
         } else if (event_name == "transition") {
-            bool is_vertical = is_vertical_;
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_SWIPER_ON_TRANSITION, event_name);
         } else {
             return false;
         }
         return true;
+    }
+
+    void TaroSwiper::SetWrapperHeight(std::shared_ptr<TaroSwiper> swiperElement, int move_index, float move_val) {
+        auto& child_nodes = swiperElement->child_nodes_;
+        auto leftItem = std::dynamic_pointer_cast<TaroSwiperItem>(child_nodes[(move_index - 1 + child_nodes.size()) % child_nodes.size()]);
+        auto rightItem = std::dynamic_pointer_cast<TaroSwiperItem>(child_nodes[move_index]);
+        if (leftItem && rightItem) {
+            auto curH = leftItem->GetFooterRenderNode()->layoutDiffer_.computed_style_.height;
+            auto nextH = rightItem->GetFooterRenderNode()->layoutDiffer_.computed_style_.height;
+            // 改变swiper容器的高度
+            autoHeightWrap_->SetLayoutFlag(LAYOUT_STATE_FLAG::IS_IGNORE_SIZE);
+            autoHeightWrap_->SetHeight((nextH - curH) * (1 - move_val) + curH);
+        }
+    }
+
+    void TaroSwiper::onTransition(std::shared_ptr<TaroEvent::TaroEventBase> event) {
+        if (IsAutoHeight()) {
+            auto swiperEvent = std::dynamic_pointer_cast<TaroEvent::TaroEventTransitionInSwiper>(event);
+            if (swiperEvent) {
+                auto swiperElement = std::static_pointer_cast<TaroSwiper>(swiperEvent->cur_target_);
+                if (swiperEvent->move_val_ >= 0) {
+                    SetWrapperHeight(swiperElement, swiperEvent->current_index_, swiperEvent->move_val_);
+                } else if (swiperEvent->move_val_ <= 0) {
+                    auto nextIndex = swiperEvent->current_index_ + 1;
+                    auto& child_nodes = swiperElement->child_nodes_;
+                    SetWrapperHeight(swiperElement, (nextIndex + child_nodes.size()) % child_nodes.size(), 1 + swiperEvent->move_val_);
+                }
+            }
+        }
+    }
+
+    bool TaroSwiper::IsAutoHeight() {
+        return attributes_->adjustHeight.value_or("") == "current" && !is_vertical_;
     }
 
     void TaroSwiper::updateIndex(const napi_value& value) {
@@ -66,7 +123,11 @@ namespace TaroDOM {
         if (is_init_ && attributes_->index.has_value()) {
             if (attributes_->usedIndex != attributes_->index) {
                 attributes_->usedIndex.set(attributes_->index);
-                std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetIndex(attributes_->index.value(), attributes_->disableProgrammaticAnimation.value_or(false));
+                DirtyTaskPipeline::GetInstance()->RegistryNextTick([node = weak_from_this()]() {
+                    if (auto that = std::static_pointer_cast<TaroSwiper>(node.lock())) {
+                        std::static_pointer_cast<TaroSwiperNode>(that->GetFooterRenderNode())->SetIndex(that->attributes_->index.value(), that->attributes_->disableProgrammaticAnimation.value_or(false));
+                    }
+                });
             }
         }
     }
@@ -78,7 +139,7 @@ namespace TaroDOM {
             attributes_->loop.set(loop.value());
         }
         if (is_init_ && attributes_->loop.has_value()) {
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetLoop(attributes_->loop.value());
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetLoop(attributes_->loop.value());
         }
     }
 
@@ -89,7 +150,7 @@ namespace TaroDOM {
             attributes_->duration.set(duration.value());
         }
         if (is_init_ && attributes_->duration.has_value()) {
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetDuration(attributes_->duration.value());
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetDuration(attributes_->duration.value());
         }
     }
 
@@ -100,7 +161,7 @@ namespace TaroDOM {
             attributes_->interval.set(interval.value());
         }
         if (is_init_ && attributes_->interval.has_value()) {
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetInterval(attributes_->interval.value());
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetInterval(attributes_->interval.value());
         }
     }
 
@@ -111,7 +172,7 @@ namespace TaroDOM {
             attributes_->vertical.set(vertical.value());
         }
         if (is_init_ && attributes_->vertical.has_value()) {
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetVertical(attributes_->vertical.value());
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetVertical(attributes_->vertical.value());
         }
     }
 
@@ -122,7 +183,7 @@ namespace TaroDOM {
             attributes_->autoPlay.set(autoPlay.value());
         }
         if (is_init_ && attributes_->autoPlay.has_value()) {
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetAutoPlay(attributes_->autoPlay.value());
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetAutoPlay(attributes_->autoPlay.value());
         }
     }
 
@@ -134,6 +195,16 @@ namespace TaroDOM {
         }
     }
 
+    void TaroSwiper::updateAdjustHeight(const napi_value& value) {
+        NapiGetter getter(value);
+        auto adjustHeight = getter.String();
+        if (adjustHeight.has_value()) {
+            attributes_->adjustHeight.set(adjustHeight.value());
+        } else {
+            attributes_->adjustHeight.reset();
+        }
+    }
+
     void TaroSwiper::updateDisplayTouch(const napi_value& value) {
         NapiGetter getter(value);
         auto autoPlay = getter.BoolNull();
@@ -141,7 +212,7 @@ namespace TaroDOM {
             attributes_->disableTouch.set(autoPlay.value());
         }
         if (is_init_ && attributes_->disableTouch.has_value()) {
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetDisableSwiper(attributes_->disableTouch.value());
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetDisableSwiper(attributes_->disableTouch.value());
         }
     }
 
@@ -152,7 +223,7 @@ namespace TaroDOM {
             attributes_->indicator.set(indicator.value());
         }
         isIndicator_ = attributes_->indicator.value(); // we have default value
-        auto render_swiper = std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode());
+        auto render_swiper = std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode());
         if (is_init_) {
             render_swiper->SetIndicator(isIndicator_);
         }
@@ -179,7 +250,7 @@ namespace TaroDOM {
             }
         }
         if (is_init_ && isIndicator_) {
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetIndicatorActiveColor(ArkUI_SwiperIndicatorType::ARKUI_SWIPER_INDICATOR_TYPE_DOT, attributes_->indicatorColor.has_value(), attributes_->indicatorActiveColor.value());
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetIndicatorActiveColor(ArkUI_SwiperIndicatorType::ARKUI_SWIPER_INDICATOR_TYPE_DOT, attributes_->indicatorColor.has_value(), attributes_->indicatorActiveColor.value());
         }
     }
 
@@ -198,8 +269,8 @@ namespace TaroDOM {
             }
         }
         if (is_init_ && attributes_->nextMargin.has_value()) {
-            double margin = attributes_->nextMargin.value().ParseToVp(GetHeadRenderNode()->GetDimensionContext()).value_or(0.0f);
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetNextMargin(margin);
+            double margin = attributes_->nextMargin.value().ParseToVp(GetFooterRenderNode()->GetDimensionContext()).value_or(0.0f);
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetNextMargin(margin);
         }
     }
 
@@ -219,8 +290,8 @@ namespace TaroDOM {
         }
 
         if (is_init_ && attributes_->prevMargin.has_value()) {
-            double margin = attributes_->prevMargin.value().ParseToVp(GetHeadRenderNode()->GetDimensionContext()).value_or(0.0f);
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetPrevMargin(margin);
+            double margin = attributes_->prevMargin.value().ParseToVp(GetFooterRenderNode()->GetDimensionContext()).value_or(0.0f);
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetPrevMargin(margin);
         }
     }
 
@@ -231,7 +302,7 @@ namespace TaroDOM {
             attributes_->displayCount.set(displayCount.value());
         }
         if (is_init_ && attributes_->displayCount.has_value()) {
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode())->SetDisplayCount(attributes_->displayCount.value());
+            std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode())->SetDisplayCount(attributes_->displayCount.value());
         }
     }
 
@@ -296,6 +367,8 @@ namespace TaroDOM {
             case ATTRIBUTE_NAME::DISABLE_PROGRAMMATIC_ANIMATION:
                 updateDisableProgrammaticAnimation(value);
                 break;
+            case ATTRIBUTE_NAME::ADJUST_HEIGHT:
+                updateAdjustHeight(value);
             default:
                 break;
         }
@@ -304,14 +377,17 @@ namespace TaroDOM {
     void TaroSwiper::SetAttributesToRenderNode() {
         TaroElement::SetAttributesToRenderNode();
 
-        std::shared_ptr<TaroSwiperNode> render_swiper =
-            std::static_pointer_cast<TaroSwiperNode>(GetHeadRenderNode());
+        std::shared_ptr<TaroSwiperNode> render_swiper = std::static_pointer_cast<TaroSwiperNode>(GetFooterRenderNode());
 
         DimensionContextRef dimContext = render_swiper->GetDimensionContext();
         if (attributes_->index.has_value()) {
             if (attributes_->usedIndex != attributes_->index) {
                 attributes_->usedIndex.set(attributes_->index);
-                render_swiper->SetIndex(attributes_->index.value(), attributes_->disableProgrammaticAnimation.value_or(false));
+                DirtyTaskPipeline::GetInstance()->RegistryNextTick([node = weak_from_this(), render_swiper]() {
+                    if (auto that = std::static_pointer_cast<TaroSwiper>(node.lock())) {
+                        render_swiper->SetIndex(that->attributes_->index.value(), that->attributes_->disableProgrammaticAnimation.value_or(false));
+                    }
+                });
             }
         }
         if (attributes_->disableTouch.has_value()) {
@@ -356,7 +432,19 @@ namespace TaroDOM {
             render_swiper->SetDisplayCount(attributes_->displayCount.value());
         }
 
-        render_swiper->SetStyle(style_);
+        if (IsAutoHeight()) {
+            autoHeightContainer_->SetStyle(style_);
+            if (!style_->overflow.has_value()) {
+                GetHeadRenderNode()->SetOverflow(PropertyType::Overflow::Hidden);
+            }
+            auto emptyStyle = std::make_shared<TaroCSSOM::TaroStylesheet::Stylesheet>();
+            autoHeightWrap_->SetStyle(emptyStyle);
+            render_swiper->SetStyle(emptyStyle);
+        } else {
+            render_swiper->SetStyle(style_);
+        }
+
+        handleEvent();
     }
 } // namespace TaroDOM
 } // namespace TaroRuntime

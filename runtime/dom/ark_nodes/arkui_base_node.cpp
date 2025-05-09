@@ -7,6 +7,7 @@
 #include <stack>
 
 #include "./differ/differ_macro.h"
+#include "./jd_image.h"
 #include "runtime/TaroYogaApi.h"
 #include "runtime/cssom/CSSStyleSheet.h"
 #include "runtime/cssom/dimension/context.h"
@@ -31,6 +32,18 @@ namespace TaroDOM {
             return iter->second;
         }
         return YGEdgeAll;
+    }
+
+    const std::unordered_map<TaroDirection, YGGutter> DIRECTION_MAPPING = {
+        {TaroDirection::Column, YGGutter::YGGutterColumn},
+        {TaroDirection::Row, YGGutter::YGGutterRow},
+        {TaroDirection::All, YGGutter::YGGutterAll}};
+    YGGutter TaroDirection2YgGutterMapping(const TaroDirection& direction) {
+        auto iter = DIRECTION_MAPPING.find(direction);
+        if (iter != DIRECTION_MAPPING.end()) {
+            return iter->second;
+        }
+        return YGGutter::YGGutterAll;
     }
 
     static constexpr auto to_underlying(TaroEdge e) noexcept {
@@ -249,6 +262,18 @@ namespace TaroDOM {
             paddingLeft,
             SetPadding(style->paddingLeft.value(), TaroEdge::TaroEdgeLeft),
             SetPadding(Dimension{YGUndefined}, TaroEdge::TaroEdgeLeft));
+
+        DIFF_STYLE_AND_SET(
+            CSSProperty::RowGap,
+            rowGap,
+            SetGap(style->rowGap.value(), TaroDirection::Row),
+            SetGap(Dimension{YGUndefined}, TaroDirection::Row));
+
+        DIFF_STYLE_AND_SET(
+            CSSProperty::ColumnGap,
+            columnGap,
+            SetGap(style->columnGap.value(), TaroDirection::Column),
+            SetGap(Dimension{YGUndefined}, TaroDirection::Column));
 
         DIFF_STYLE_AND_SET(
             CSSProperty::BorderTopWidth,
@@ -836,7 +861,7 @@ namespace TaroDOM {
             }                                                                                                                               \
             case DimensionUnit::CALC: {                                                                                                     \
                 auto context = GetDimensionContext();                                                                                       \
-                                                                                                                                            \
+                \ 
                 CALC_FUNCTION(ygNodeRef, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                      \
             }                                                                                                                               \
@@ -882,7 +907,7 @@ namespace TaroDOM {
             }                                                                                                                               \
             case DimensionUnit::CALC: {                                                                                                     \
                 auto context = GetDimensionContext();                                                                                       \
-                                                                                                                                            \
+                \ 
                 CALC_FUCNTION(ygNodeRef, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                      \
             }                                                                                                                               \
@@ -926,7 +951,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
             case DimensionUnit::CALC: {                                                                                                           \
                 auto context = GetDimensionContext();                                                                                             \
-                                                                                                                                                  \
+                \ 
                 CALC_FUNCTION(ygNodeRef, EDGE, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                            \
             }                                                                                                                                     \
@@ -985,7 +1010,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
             case DimensionUnit::CALC: {                                                                                                           \
                 auto context = GetDimensionContext();                                                                                             \
-                                                                                                                                                  \
+                \ 
                 CALC_FUNCTION(ygNodeRef, EDGE, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                            \
             }                                                                                                                                     \
@@ -995,12 +1020,44 @@ namespace TaroDOM {
             }                                                                                                                                     \
         }                                                                                                                                         \
         CheckIfYGDirty();                                                                                                                         \
+        \   
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
     }
 
     void BaseRenderNode::SetMargin(const Dimension& val, const TaroEdge& edge) {
         SET_LENGTH_VALUE_PROPERTY_WITH_AUTO_EDGE(
             YGNodeStyleSetMargin, YGNodeStyleSetMarginPercent,
             YGNodeStyleSetMarginAuto, YGNodeStyleSetMarginCalc, TaroEdge2YgEdgeMapping(edge));
+    }
+
+    void BaseRenderNode::SetGap(const Dimension& val, const TaroDirection& direction) {
+        {
+            switch (val.Unit()) {
+                case DimensionUnit::VP:
+                case DimensionUnit::PX:
+                case DimensionUnit::VW:
+                case DimensionUnit::VH:
+                case DimensionUnit::SAFE_AREA:
+                case DimensionUnit::DESIGN_PX: {
+                    YGNodeStyleSetGap(ygNodeRef, TaroDirection2YgGutterMapping(direction), val.ConvertToVp());
+                    break;
+                }
+                case DimensionUnit::PERCENT: {
+                    YGNodeStyleSetGapPercent(ygNodeRef, TaroDirection2YgGutterMapping(direction), val.Value() * 100);
+                    break;
+                }
+                case DimensionUnit::CALC: {
+                    auto context = GetDimensionContext();
+                    YGNodeStyleSetGapCalc(ygNodeRef, TaroDirection2YgGutterMapping(direction), val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_);
+                    break;
+                }
+                default: {
+                    YGNodeStyleSetGap(ygNodeRef, TaroDirection2YgGutterMapping(direction), val.ConvertToVp());
+                    break;
+                }
+            }
+            CheckIfYGDirty();
+        }
     }
 
     void BaseRenderNode::SetPosition(const Dimension& val, const TaroEdge& edge) {

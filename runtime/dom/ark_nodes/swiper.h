@@ -55,8 +55,13 @@ namespace TaroDOM {
 
         void SetDisplayCount(uint32_t displayCount);
 
+        float maxItemHeight_ = 0.0f;
+
         private:
         void LayoutSelf();
+        float nextMargin_ = 0.0f;
+        float prevMargin_ = 0.0f;
+        float displayCount_ = 1;
     };
 
 } // namespace TaroDOM

@@ -5,10 +5,10 @@
 #include "ImageLoader.h"
 
 #include <cstddef>
-#include <mutex>
-#include <memory>
-#include <unordered_map>
 #include <list>
+#include <memory>
+#include <mutex>
+#include <unordered_map>
 
 #include "helper/FileDownloader.h"
 #include "helper/FileManager.h"
@@ -80,8 +80,7 @@ void ImageLoader::cacheImage(const ResultImageInfo& result) {
         .drawable = result.result_DrawableDescriptor,
         .width = result.width,
         .height = result.height,
-        .size = estimatedSize
-    };
+        .size = estimatedSize};
 
     std::lock_guard<std::mutex> lock(cacheMutex);
     removeFromCache(result.url);
@@ -135,7 +134,7 @@ void loadImage(const LoadRequestOptions& options, ImageRequestCallback&& onCallb
     auto filePath = fileManagerInstance->GetFilesDir() + fileName;
 
     if (!options.url.compare("http") || fileManagerInstance->PathExists(filePath)) {
-        auto path = const_cast<char *>(filePath.c_str());
+        auto path = const_cast<char*>(filePath.c_str());
         auto loadRes = loadImageFromUri(options, path, filePath.length());
 
         if (std::holds_alternative<ResultImageInfo>(loadRes)) {
@@ -147,7 +146,7 @@ void loadImage(const LoadRequestOptions& options, ImageRequestCallback&& onCallb
     }
 
     if (fileManagerInstance->PathExists(filePath)) {
-        auto path = const_cast<char *>(filePath.c_str());
+        auto path = const_cast<char*>(filePath.c_str());
         auto loadRes = loadImageFromUri(options, path, filePath.length());
 
         if (std::holds_alternative<ResultImageInfo>(loadRes)) {
@@ -162,8 +161,7 @@ void loadImage(const LoadRequestOptions& options, ImageRequestCallback&& onCallb
     auto fileDownloaderParam = FileDownloaderParam{.headers = {{"Content-Type", "application/octet-stream"}}};
 
     auto downloadCallback = [options, callback = std::move(onCallback), fileManagerInstance,
-                             filePath = filePath, fileName = fileName, &imageLoader]
-                            (const Rcp_Response* response, uint32_t errCode) {
+                             filePath = filePath, fileName = fileName, &imageLoader](const Rcp_Response* response, uint32_t errCode) {
         auto runner = TaroRuntime::Render::GetInstance()->GetTaskRunner();
 
         if (!response || errCode != 0) {
@@ -177,7 +175,7 @@ void loadImage(const LoadRequestOptions& options, ImageRequestCallback&& onCallb
         auto src = response->body.buffer;
         auto length = response->body.length;
 
-        auto data = reinterpret_cast<uint8_t *>(const_cast<char *>(src));
+        auto data = reinterpret_cast<uint8_t*>(const_cast<char*>(src));
         auto loadRes = loadImageFromData(options, data, length);
         runner->runTask(TaroThread::TaskThread::MAIN, [loadRes, callback = std::move(callback)] {
             callback(loadRes);
@@ -282,7 +280,7 @@ static Image_ErrorCode getPixelmapListWithMultiFrame(OH_ImageSourceNative* image
     return IMAGE_SUCCESS;
 }
 
-static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromData(const LoadRequestOptions& options, uint8_t *data, size_t dataSize) {
+static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromData(const LoadRequestOptions& options, uint8_t* data, size_t dataSize) {
     ResultImageInfo result = {.url = options.url};
     OH_ImageSourceNative* imageSrc = nullptr;
     Image_ErrorCode errorCode;
@@ -316,8 +314,10 @@ static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromUri(const Load
     Image_ErrorCode errorCode;
     errorCode = OH_ImageSourceNative_CreateFromUri(path, length, &imageSrc);
     if (errorCode != IMAGE_SUCCESS) {
-        TARO_LOG_ERROR("TaroImageLoader", "OH_ImageSourceNative_CreateFromUri failed."
-            "errorCode: %{public}d, path: %{public}s, length: %{public}d", errorCode, path, length);
+        TARO_LOG_ERROR("TaroImageLoader",
+                       "OH_ImageSourceNative_CreateFromUri failed."
+                       "errorCode: %{public}d, path: %{public}s, length: %{public}d",
+                       errorCode, path, length);
         return ErrorImageInfo{.url = options.url, .errorCode = errorCode};
     }
 
@@ -338,7 +338,7 @@ static std::variant<ResultImageInfo, ErrorImageInfo> loadImageFromUri(const Load
     return result;
 };
 
-static Image_ErrorCode getDrawableDescriptor(OH_ImageSourceNative *source, const LoadRequestOptions& options, ResultImageInfo& result){
+static Image_ErrorCode getDrawableDescriptor(OH_ImageSourceNative* source, const LoadRequestOptions& options, ResultImageInfo& result) {
     uint32_t frameCount;
     auto errorCode = OH_ImageSourceNative_GetFrameCount(source, &frameCount);
     if (errorCode != IMAGE_SUCCESS) {

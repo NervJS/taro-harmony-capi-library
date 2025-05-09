@@ -3,7 +3,6 @@
  */
 
 #include "harmony_style_setter.h"
-#include "helper/ImageLoader.h"
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 void HarmonyStyleSetter::setBackgroundImage(
     const ArkUI_NodeHandle& node,
@@ -25,13 +24,21 @@ void HarmonyStyleSetter::setBackgroundImage(
     if (value.type == PIC) {
         ArkUI_NumberValue arkUI_NumberValue[1] = {};
         ArkUI_AttributeItem item;
+        arkUI_NumberValue[0].i32 = repeatVale;
         // 普通字符串的url
         if (auto url = std::get_if<std::string>(&value.src)) {
-            item = {.value = arkUI_NumberValue, .size = 1, .string = (*url).c_str()};
-        } else if (auto imgInfo = std::get_if<TaroHelper::ResultImageInfo>(&value.src)) {
-            item = {.value = arkUI_NumberValue, .size = 1, .object = imgInfo->result_DrawableDescriptor->get()};
+            if (url->empty()) {
+                if (auto emptyUrl = std::get_if<std::string>(&BackgroundImageItem::emptyImg.src)) {
+                    item = {.value = arkUI_NumberValue, .size = 1, .string = (*emptyUrl).c_str()};
+                    arkUI_NumberValue[0].i32 = ARKUI_IMAGE_REPEAT_NONE;
+                }
+            } else {
+                item = {.value = arkUI_NumberValue, .size = 1, .string = (*url).c_str()};
+            }
+        } else if (auto imgInfo = std::get_if<JDImageHarmony::ResultImageInfo>(&value.src)) {
+            // 通过 jd-image 请求完的图片资源格式
+            item = {.value = arkUI_NumberValue, .size = 1, .object = imgInfo->result_DrawableDescriptor};
         }
-        arkUI_NumberValue[0].i32 = repeatVale;
         TaroRuntime::NativeNodeApi::getInstance()->setAttribute(node, NODE_BACKGROUND_IMAGE, &item);
         NativeNodeApi::getInstance()->resetAttribute(node, NODE_LINEAR_GRADIENT);
         NativeNodeApi::getInstance()->resetAttribute(node, NODE_RADIAL_GRADIENT);
@@ -63,7 +70,7 @@ void HarmonyStyleSetter::setBackgroundImage(
                                         .size = 3,
                                         .object = &colors};
 
-            if (value.direction.has_value()) {
+            if (value.direction.has_value() && value.direction.value() != ARKUI_LINEAR_GRADIENT_DIRECTION_CUSTOM) {
                 // 线性渐变的方向，设置angle后不生效。数据类型ArkUI_LinearGradientDirection
                 arkUI_NumberValue[1].i32 = value.direction.value();
             } else {
@@ -75,6 +82,8 @@ void HarmonyStyleSetter::setBackgroundImage(
             arkUI_NumberValue[2].i32 = repeatVale;
 
             TaroRuntime::NativeNodeApi::getInstance()->setAttribute(node, NODE_LINEAR_GRADIENT, &item);
+            //             setBackgroundImage(node, BackgroundImageItem::emptyImg);
+            //             NativeNodeApi::getInstance()->resetAttribute(node, NODE_RADIAL_GRADIENT);
         }
     }
 }

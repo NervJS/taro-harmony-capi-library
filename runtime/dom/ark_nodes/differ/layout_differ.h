@@ -53,8 +53,6 @@ namespace TaroDOM {
 
         static void DiffAndSetStyle(ComputedStyle computed_style, ComputedStyle old_computed_style, BaseRenderNode* base_render_node);
 
-        bool is_first_layout_finish_;
-
         ComputedStyle computed_style_;
 
         ComputedStyle old_computed_style_;

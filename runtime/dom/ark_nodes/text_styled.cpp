@@ -16,8 +16,9 @@ namespace TaroDOM {
     TextStyled::~TextStyled() {}
 
     void TextStyled::InitStyledString(const StylesheetRef& nodeStyle, const StylesheetRef& textStyle, const DimensionContextRef& dimensionContext) {
-        //         if (!m_StyledString) {
-        m_StyledString&& m_OldStyledString.emplace_back(m_StyledString);
+        if (m_StyledString) {
+            m_OldStyledString.emplace_back(m_StyledString);
+        }
         m_TypographyStyle = OH_Drawing_CreateTypographyStyle();
         auto fontCollection = TaroCSSOM::FontFamilyManager::GetInstance()->GetFontCollection();
         auto globalTextStyle = GetTextStyle(textStyle, dimensionContext);
@@ -26,7 +27,6 @@ namespace TaroDOM {
         if (globalTextStyle) {
             OH_Drawing_DestroyTextStyle(globalTextStyle);
         }
-        //         }
     }
 
     ArkUI_StyledString* TextStyled::GetStyledString() {
@@ -55,6 +55,16 @@ namespace TaroDOM {
     void TextStyled::SetTypographyStyle(OH_Drawing_TypographyStyle* typographyStyle, const StylesheetRef& style, const StylesheetRef& style_ref, OH_Drawing_TextStyle* textStyle) {
         if (!style)
             return;
+        if (style->textAlign.has_value()) {
+            auto textAlign = style->textAlign.value();
+            if (textAlign == ARKUI_TEXT_ALIGNMENT_CENTER) {
+                OH_Drawing_SetTypographyTextAlign(typographyStyle, OH_Drawing_TextAlign::TEXT_ALIGN_CENTER);
+            } else if (textAlign == ARKUI_TEXT_ALIGNMENT_END) {
+                OH_Drawing_SetTypographyTextAlign(typographyStyle, OH_Drawing_TextAlign::TEXT_ALIGN_END);
+            } else if (textAlign == ARKUI_TEXT_ALIGNMENT_JUSTIFY) {
+                OH_Drawing_SetTypographyTextAlign(typographyStyle, OH_Drawing_TextAlign::TEXT_ALIGN_JUSTIFY);
+            }
+        }
         if (style->wordBreak.has_value()) {
             auto wordBreak = style->wordBreak.value();
             OH_Drawing_SetTypographyTextWordBreakType(typographyStyle, wordBreak);

@@ -9,7 +9,6 @@
 #include <ace/xcomponent/native_interface_xcomponent.h>
 #include <arkui/native_node.h>
 
-#include "helper/ImageLoader.h"
 #include "runtime/dom/element/element.h"
 
 namespace TaroRuntime {
@@ -46,7 +45,7 @@ namespace TaroDOM {
         public:
         TaroImage(napi_value node);
 
-        ~TaroImage() = default;
+        ~TaroImage();
 
         void Build() override;
         void Build(std::shared_ptr<TaroElement>& reuse_element) override;
@@ -81,6 +80,7 @@ namespace TaroDOM {
         void HandleOnImageComplete();
 
         std::string old_src_;
+        bool is_image_span_ = false;
     };
 } // namespace TaroDOM
 } // namespace TaroRuntime

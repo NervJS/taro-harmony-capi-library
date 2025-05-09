@@ -5,6 +5,7 @@
 #ifndef TARO_CAPI_HARMONY_DEMO_SWIPER_H
 #define TARO_CAPI_HARMONY_DEMO_SWIPER_H
 
+#include "runtime/dom/ark_nodes/stack.h"
 #include "runtime/dom/element/element.h"
 
 namespace TaroRuntime {
@@ -26,6 +27,7 @@ namespace TaroDOM {
         TaroHelper::Optional<uint32_t> displayCount;
         TaroHelper::Optional<bool> disableProgrammaticAnimation;
         TaroHelper::Optional<bool> disableTouch;
+        TaroHelper::Optional<std::string> adjustHeight;
 
         TaroSwiperAttributes() {
             loop = false;
@@ -61,11 +63,16 @@ namespace TaroDOM {
         void SetAttribute(std::shared_ptr<TaroRenderNode> renderNode, ATTRIBUTE_NAME name, napi_value value) override;
 
         bool bindListenEvent(const std::string& event_name) override;
+        void handleEvent();
 
         uint32_t GetDisplayCount();
         Dimension GetPrevMargin();
         Dimension GetNextMargin();
+        bool IsAutoHeight();
         bool GetVertical();
+
+        std::shared_ptr<TaroStackNode> autoHeightContainer_;
+        std::shared_ptr<TaroStackNode> autoHeightWrap_;
 
         private:
         void updateIndex(const napi_value& value);
@@ -82,7 +89,9 @@ namespace TaroDOM {
 
         void updateDisplayTouch(const napi_value& value);
         void updateDisableProgrammaticAnimation(const napi_value& value);
-
+        void updateAdjustHeight(const napi_value& value);
+        void onTransition(std::shared_ptr<TaroEvent::TaroEventBase> value);
+        void SetWrapperHeight(std::shared_ptr<TaroSwiper> swiperElement, int move_index, float move_val);
         bool isIndicator_;
         bool is_vertical_ = false;
         std::unique_ptr<TaroSwiperAttributes> attributes_;
