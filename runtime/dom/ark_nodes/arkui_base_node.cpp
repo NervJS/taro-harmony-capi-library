@@ -861,7 +861,7 @@ namespace TaroDOM {
             }                                                                                                                               \
             case DimensionUnit::CALC: {                                                                                                     \
                 auto context = GetDimensionContext();                                                                                       \
-                \ 
+                                                                                                                                            \
                 CALC_FUNCTION(ygNodeRef, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                      \
             }                                                                                                                               \
@@ -907,7 +907,7 @@ namespace TaroDOM {
             }                                                                                                                               \
             case DimensionUnit::CALC: {                                                                                                     \
                 auto context = GetDimensionContext();                                                                                       \
-                \ 
+                                                                                                                                            \
                 CALC_FUCNTION(ygNodeRef, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                      \
             }                                                                                                                               \
@@ -951,7 +951,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
             case DimensionUnit::CALC: {                                                                                                           \
                 auto context = GetDimensionContext();                                                                                             \
-                \ 
+                                                                                                                                                  \
                 CALC_FUNCTION(ygNodeRef, EDGE, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                            \
             }                                                                                                                                     \
@@ -1010,7 +1010,7 @@ namespace TaroDOM {
             }                                                                                                                                     \
             case DimensionUnit::CALC: {                                                                                                           \
                 auto context = GetDimensionContext();                                                                                             \
-                \ 
+                                                                                                                                                  \
                 CALC_FUNCTION(ygNodeRef, EDGE, val.GetCalcExpression(), context->design_ratio_, context->device_width_, context->device_height_); \
                 break;                                                                                                                            \
             }                                                                                                                                     \
@@ -1020,8 +1020,6 @@ namespace TaroDOM {
             }                                                                                                                                     \
         }                                                                                                                                         \
         CheckIfYGDirty();                                                                                                                         \
-        \   
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \
     }
 
     void BaseRenderNode::SetMargin(const Dimension& val, const TaroEdge& edge) {
