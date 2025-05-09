@@ -339,7 +339,7 @@ void BackgroundImage::setValueFromStringView(std::string_view value) {
             // 只要params还有字符，就找逗号，取逗号前面的字符串
             std::vector<uint32_t> colorArr; // 渐变颜色数组
             std::vector<float> stopArr;     // 渐变位置数组
-            item_.direction = ARKUI_LINEAR_GRADIENT_DIRECTION_BOTTOM;
+            item_.direction = ARKUI_LINEAR_GRADIENT_DIRECTION_CUSTOM;
             int paramNum = 0;
 
             auto paramVector = splitParams(params);
@@ -350,6 +350,7 @@ void BackgroundImage::setValueFromStringView(std::string_view value) {
                     if (TAngle c = TAngle::MakeFromString(param);
                         c.unit != PropertyType::AngleUnit::UNKNOWN) {
                         item_.angle = c.getDegValue();
+                        item_.direction = ARKUI_LINEAR_GRADIENT_DIRECTION_CUSTOM;
                     } else if (auto iter = DirectionMapping.find(param);
                                iter != DirectionMapping.end()) {
                         item_.direction = iter->second;

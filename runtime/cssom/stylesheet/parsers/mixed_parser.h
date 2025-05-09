@@ -39,6 +39,9 @@ void parseBackground(Stylesheet* ss, std::string_view value);
 // 解析 flex 混合值
 void parseFlex(Stylesheet* ss, std::string_view value);
 
+// 解析 gap 混合值
+void parseGap(Stylesheet* ss, std::string_view value);
+
 // 解析 flex-flow 混合值
 void parseFlexFlow(Stylesheet* ss, std::string_view value);
 

@@ -222,7 +222,6 @@ namespace TaroDOM {
 
         std::shared_ptr<TaroStackNode> render_node =
             std::static_pointer_cast<TaroStackNode>(GetHeadRenderNode());
-        render_node->SetIsInline(true);
         render_node->SetStyle(style_);
         render_node->SetTranslate(position_x, position_y, 0);
         render_node->SetScale(scale_value, scale_value);

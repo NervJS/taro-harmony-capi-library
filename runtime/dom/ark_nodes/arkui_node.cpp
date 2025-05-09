@@ -7,9 +7,7 @@
 #include <cstdint>
 #include <stack>
 #include <math.h>
-#include <native_vsync/native_vsync.h>
 
-#include "helper/ImageLoader.h"
 #include "helper/TaroTimer.h"
 #include "runtime/TaroYogaApi.h"
 #include "runtime/cssom/CSSStyleSheet.h"
@@ -112,7 +110,7 @@ namespace TaroDOM {
         old_style_ref_ = nullptr;
 
         NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
-        if (is_custom_layout_) {
+        if (HasLayoutFlag(LAYOUT_STATE_FLAG::IS_CUSTOM_LAYOUT)) {
             nativeNodeApi->removeNodeCustomEventReceiver(ark_node_, OnStaticCustomEvent);
             custom_layout_render_nodes_.erase(uid_);
             nativeNodeApi->unregisterNodeCustomEvent(ark_node_, ARKUI_NODE_CUSTOM_EVENT_ON_MEASURE);
@@ -165,7 +163,7 @@ namespace TaroDOM {
     }
 
     void TaroRenderNode::SetCustomLayout() {
-        is_custom_layout_ = true;
+        SetLayoutFlag(LAYOUT_STATE_FLAG::IS_CUSTOM_LAYOUT);
         NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         // 注册自定义事件监听器。
         nativeNodeApi->addNodeCustomEventReceiver(ark_node_, OnStaticCustomEvent);
@@ -253,7 +251,7 @@ namespace TaroDOM {
             YGNodeSetHasNewLayout(node->ygNodeRef, false);
             // Do the real work
             if (layoutWithoutDiff) {
-                node->is_first_layout_finish_ = false;
+                node->ClearLayoutFlag(LAYOUT_STATE_FLAG::IS_FIRST_LAYOUT_FINISH);
             }
             node->Layout();
             // 启动Animation动画
@@ -404,7 +402,7 @@ namespace TaroDOM {
         // 获取 background图片的原始宽高
 
         if (backgroundImage.has_value() && backgroundImage.value().type == TaroCSSOM::TaroStylesheet::PIC) {
-            if (auto imageInfo = std::get_if<TaroHelper::ResultImageInfo>(&(backgroundImage.value().src))) {
+            if (auto imageInfo = std::get_if<JDImageHarmony::ResultImageInfo>(&(backgroundImage.value().src))) {
                 imgWidth = imageInfo->width;
                 imgHeight = imageInfo->height;
             }
@@ -601,9 +599,7 @@ namespace TaroDOM {
 
         // 布局改变后，需要对部分影响到的绘制样式重新标脏>绘制
         MakeDrawPropertyDirtyFromLayoutEffect();
-        if (!is_first_layout_finish_) {
-            is_first_layout_finish_ = true;
-        }
+        SetLayoutFlag(LAYOUT_STATE_FLAG::IS_FIRST_LAYOUT_FINISH);
     }
 
     void TaroRenderNode::Paint() {
@@ -658,36 +654,36 @@ namespace TaroDOM {
                 }
                 std::weak_ptr<TaroRenderNode> weakRenderNode = std::static_pointer_cast<TaroRenderNode>(shared_from_this());
                 auto oldUrl = *url;
-                TaroHelper::loadImage({.url = *url}, [weakRenderNode, oldUrl](
-                        const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result) {
+                JDImageHarmony::JDImageLoadHelper::loadImage({.url = *url}, [weakRenderNode, oldUrl](
+                                                                                const std::variant<JDImageHarmony::ResultImageInfo, JDImageHarmony::ErrorImageInfo>& result) {
                     if (auto self = weakRenderNode.lock()) {
                         // 拿到执行的时候的当前background url跟捕获到URL 是否一样，不一样就不设了
                         if (self->paintDiffer_.paint_style_->background_image_.value.has_value()) {
                             auto bgImg = self->paintDiffer_.paint_style_->background_image_.value.value();
                             if (auto currentUrl = std::get_if<std::string>(&bgImg.src); currentUrl && bgImg.type == TaroCSSOM::TaroStylesheet::PIC) {
                                 if (oldUrl.find(*currentUrl) != std::string::npos) {
-                                    self->HandleBgImageLoad(result, oldUrl);
+                                    self->HandleJDImageLoad(result, oldUrl);
                                 }
                             }
                         }
                     }
                 });
+                return;
             }
-        } else {
-            TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBackgroundImage(ark_node_, paintDiffer_.paint_style_->background_image_.value, paintDiffer_.paint_style_->background_repeat_.value);
         }
+        TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBackgroundImage(ark_node_, paintDiffer_.paint_style_->background_image_.value, paintDiffer_.paint_style_->background_repeat_.value);
     }
 
-    void TaroRenderNode::HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result, const std::string url) {
+    void TaroRenderNode::HandleJDImageLoad(const std::variant<JDImageHarmony::ResultImageInfo, JDImageHarmony::ErrorImageInfo>& result, const std::string url) {
         TaroCSSOM::TaroStylesheet::BackgroundImageItem b;
         b.type = TaroCSSOM::TaroStylesheet::PIC;
-        if (auto res = std::get_if<TaroHelper::ErrorImageInfo>(&result); res) {
+        if (auto res = std::get_if<JDImageHarmony::ErrorImageInfo>(&result); res) {
             if (res->isUnsupportedType) {
                 b.src = res->url;
             } else {
                 b = TaroCSSOM::TaroStylesheet::BackgroundImageItem::emptyImg;
             }
-        } else if (auto res = std::get_if<TaroHelper::ResultImageInfo>(&result); res) {
+        } else if (auto res = std::get_if<JDImageHarmony::ResultImageInfo>(&result); res) {
             b.src = *res;
             auto backgroundSizeItem = CalcBackgroundSize(b);
             if (paintDiffer_.paint_style_->background_position_.value[0].has_value() || paintDiffer_.paint_style_->background_position_.value[1].has_value()) {
@@ -699,20 +695,11 @@ namespace TaroDOM {
             if (paintDiffer_.paint_style_->background_size_.value.has_value()) {
                 TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBackgroundSize(ark_node_, backgroundSizeItem, layoutDiffer_.computed_style_.width, layoutDiffer_.computed_style_.height);
             }
-            relatedImageDrawableDescriptors.push_back(res->result_DrawableDescriptor);
         } else {
             // 兜底状态，一般不会触发
             b.src = url;
         }
         TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBackgroundImage(ark_node_, b, paintDiffer_.paint_style_->background_repeat_.value);
-    }
-
-    bool TaroRenderNode::GetIsInline() {
-        return isInline_;
-    }
-
-    void TaroRenderNode::SetIsInline(bool isInline) {
-        isInline_ = isInline;
     }
 
     // 判断是否脱离文档流

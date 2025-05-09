@@ -4,11 +4,10 @@
 
 #pragma once
 
+#include <cstdint>
 #include <list>
 #include <unordered_map>
 #include <unordered_set>
-#include <native_vsync/native_vsync.h>
-#include <stdint.h>
 
 #include "frame_trigger.h"
 #include "runtime/keyframe_vsync.h"

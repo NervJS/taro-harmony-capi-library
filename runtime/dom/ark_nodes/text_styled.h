@@ -2,8 +2,8 @@
  * Copyright (c) 2018 O2Team. All Rights Reserved.
  */
 
-#ifndef TARO_HARMONY_CPP_TEXT_STYLED_H
-#define TARO_HARMONY_CPP_TEXT_STYLED_H
+#ifndef JD_HM_PHONE_TEXT_STYLED_H
+#define JD_HM_PHONE_TEXT_STYLED_H
 #include <vector>
 #include <arkui/styled_string.h>
 #include <native_drawing/drawing_text_declaration.h>
@@ -13,7 +13,7 @@
 namespace TaroRuntime {
 namespace TaroDOM {
     struct ImageInfo {
-        std::string src = "";
+        std::variant<std::string, ArkUI_DrawableDescriptor*> src = "";
         int index = -1;
         float width = -1;
         float height = -1;
@@ -76,4 +76,4 @@ namespace TaroDOM {
 } // namespace TaroDOM
 } // namespace TaroRuntime
 
-#endif // TARO_HARMONY_CPP_TEXT_STYLED_H
+#endif // JD_HM_PHONE_TEXT_STYLED_H

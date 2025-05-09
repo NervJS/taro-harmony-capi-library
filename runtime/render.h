@@ -5,6 +5,7 @@
 #ifndef TESTNDK_RENDER_H
 #define TESTNDK_RENDER_H
 
+#include <cstdint>
 #include <set>
 #include <stack>
 #include <thread>

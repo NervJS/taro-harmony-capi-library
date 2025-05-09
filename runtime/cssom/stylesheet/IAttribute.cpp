@@ -66,6 +66,8 @@ namespace TaroCSSOM {
             ASSIGN_PROPERTY(minHeight);
             ASSIGN_PROPERTY(maxWidth);
             ASSIGN_PROPERTY(maxHeight);
+            ASSIGN_PROPERTY(rowGap);
+            ASSIGN_PROPERTY(columnGap);
             ASSIGN_PROPERTY(display);
             ASSIGN_PROPERTY(flexDirection);
             ASSIGN_PROPERTY(flexWrap);
@@ -158,6 +160,8 @@ namespace TaroCSSOM {
                 s1->height == s2->height &&
                 s1->minHeight == s2->minHeight &&
                 s1->maxHeight == s2->maxHeight &&
+                s1->rowGap == s2->rowGap &&
+                s1->columnGap == s2->columnGap &&
                 s1->flexDirection == s2->flexDirection &&
                 s1->flexWrap == s2->flexWrap &&
                 s1->alignContent == s2->alignContent &&
@@ -389,6 +393,22 @@ namespace TaroCSSOM {
              }},
             {"padding-left", [](Stylesheet* ss, std::string_view value) {
                  ss->paddingLeft.setValueFromStringView(value);
+             }},
+
+            {"gap", [](Stylesheet* ss, std::string_view value) {
+                 parseGap(ss, value);
+             }},
+            {"rowGap", [](Stylesheet* ss, std::string_view value) {
+                 ss->rowGap.setValueFromStringView(value);
+             }},
+            {"row-gap", [](Stylesheet* ss, std::string_view value) {
+                 ss->rowGap.setValueFromStringView(value);
+             }},
+            {"columnGap", [](Stylesheet* ss, std::string_view value) {
+                 ss->columnGap.setValueFromStringView(value);
+             }},
+            {"column-gap", [](Stylesheet* ss, std::string_view value) {
+                 ss->columnGap.setValueFromStringView(value);
              }},
 
             {"margin", [](Stylesheet* ss, std::string_view value) {

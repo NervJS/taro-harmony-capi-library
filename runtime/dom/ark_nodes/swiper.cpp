@@ -13,6 +13,7 @@
 #include "runtime/cssom/stylesheet/IAttribute.h"
 #include "runtime/cssom/stylesheet/harmony_style_setter/harmony_style_setter.h"
 #include "runtime/dirty_vsync_task.h"
+#include "runtime/dom/ark_nodes/swiper_item.h"
 #include "runtime/dom/element/swiper.h"
 #include "yoga/YGNodeStyle.h"
 
@@ -50,6 +51,7 @@ namespace TaroDOM {
             }
         }
         TaroRenderNode::SetStyle(style_ref);
+        maxItemHeight_ = 0;
     }
 
     void TaroSwiperNode::SetOverflowNow(bool isHidden) {
@@ -63,14 +65,43 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::LayoutSelf() {
+        float maxItemHeight = 0;
         TaroSetCanMeasureChild(ygNodeRef, true);
-
         for (auto child : children_refs_) {
             child->Measure();
             child->LayoutAll();
+            if (!child->children_refs_.size())
+                continue;
+            if (auto swiperItemNode = child->children_refs_[0]) {
+                maxItemHeight = std::max(swiperItemNode->layoutDiffer_.computed_style_.height, maxItemHeight);
+            }
         }
-
         TaroSetCanMeasureChild(ygNodeRef, false);
+
+        // 初始化一个偏移量
+        if (auto swiperEle = std::static_pointer_cast<TaroSwiper>(element_ref_.lock())) {
+            if (!swiperEle->IsAutoHeight()) {
+                return;
+            }
+            if (maxItemHeight != maxItemHeight_) {
+                maxItemHeight_ = maxItemHeight;
+                SetHeight(maxItemHeight);
+                if (auto parent = parent_ref_.lock()) {
+                    const ArkUI_AttributeItem* _item = NativeNodeApi::getInstance()->getAttribute(GetArkUINodeHandle(), NODE_SWIPER_INDEX);
+                    auto currentIndex = _item->value[0].i32;
+                    if (children_refs_.size() <= currentIndex)
+                        return;
+                    if (auto swiperItem = children_refs_[currentIndex]) {
+                        // swiperItem 下面是swiperItemNode
+                        float currentItemHeight = swiperItem->children_refs_[0]->layoutDiffer_.computed_style_.height;
+                        parent->SetHeight(currentItemHeight);
+                        if (auto parent2 = parent->parent_ref_.lock()) {
+                            parent2->SetHeight(Dimension{0, DimensionUnit::AUTO});
+                        }
+                    }
+                }
+            }
+        }
     }
 
     ChildAvailableSize TaroSwiperNode::GetChildAvailableSize() {
@@ -198,6 +229,9 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetNextMargin(float nextMargin) {
+        if (nextMargin == nextMargin_)
+            return;
+        nextMargin_ = nextMargin;
         auto weakSelf = std::weak_ptr<TaroSwiperNode>(std::static_pointer_cast<TaroSwiperNode>(shared_from_this()));
         DirtyTaskPipeline::GetInstance()->RegistryAdapterAttach([weakSelf, nextMargin]() {
             if (auto self_ = weakSelf.lock()) {
@@ -212,6 +246,9 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetPrevMargin(float prevMargin) {
+        if (prevMargin == prevMargin_)
+            return;
+        prevMargin_ = prevMargin;
         auto weakSelf = std::weak_ptr<TaroSwiperNode>(std::static_pointer_cast<TaroSwiperNode>(shared_from_this()));
         DirtyTaskPipeline::GetInstance()->RegistryAdapterAttach([weakSelf, prevMargin]() {
             if (auto self_ = weakSelf.lock()) {
@@ -226,6 +263,9 @@ namespace TaroDOM {
     }
 
     void TaroSwiperNode::SetDisplayCount(uint32_t displayCount) {
+        if (displayCount == displayCount_)
+            return;
+        displayCount_ = displayCount;
         auto weakSelf = std::weak_ptr<TaroSwiperNode>(std::static_pointer_cast<TaroSwiperNode>(shared_from_this()));
         DirtyTaskPipeline::GetInstance()->RegistryAdapterAttach([weakSelf, displayCount]() {
             if (auto self_ = weakSelf.lock()) {

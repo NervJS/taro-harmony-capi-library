@@ -19,9 +19,13 @@ TaroSwiperItemNode::~TaroSwiperItemNode() {}
 
 void TaroSwiperItemNode::SetStyle(StylesheetRef style_ref) {
     if (style_ref) {
+        style_ref->alignSelf.set(ArkUI_ItemAlignment::ARKUI_ITEM_ALIGNMENT_STRETCH);
         style_ref->width.set(Dimension{1, DimensionUnit::PERCENT});
         style_ref->height.set(Dimension{1, DimensionUnit::PERCENT});
         TaroStackNode::SetStyle(style_ref);
+    } else {
+        SetWidth(Dimension{1, DimensionUnit::PERCENT});
+        SetHeight(Dimension{1, DimensionUnit::PERCENT});
     }
 }
 void TaroSwiperItemNode::Build() {

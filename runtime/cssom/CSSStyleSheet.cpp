@@ -272,243 +272,332 @@ namespace TaroCSSOM {
             NapiGetter css_property_id(declaration[0]);
             auto css_property_getter = css_property_id.Int32();
             auto css_property_value = declaration[1];
+
+            int32_t css_property_flag = 0;
+            if (declaration.size() == 3) {
+                // 存在特殊标记：0: 普通，1: 变量，2: important，他们之间是通过与关系叠加
+                NapiGetter css_property_flag_getter(declaration[2]);
+                css_property_flag = css_property_flag_getter.Int32().value_or(0);
+            }
+
             if (css_property_getter.has_value()) {
                 CSSProperty::Type css_property = static_cast<CSSProperty::Type>(css_property_getter.value());
 
                 switch (css_property) {
                     case CSSProperty::Display:
                         stylesheet->display.setValueFromNapi(css_property_value);
+                        stylesheet->display.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FlexDirection:
                         stylesheet->flexDirection.setValueFromNapi(css_property_value);
+                        stylesheet->flexDirection.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FlexWrap:
                         stylesheet->flexWrap.setValueFromNapi(css_property_value);
+                        stylesheet->flexWrap.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::AlignContent:
                         stylesheet->alignContent.setValueFromNapi(css_property_value);
+                        stylesheet->alignContent.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::JustifyContent:
                         stylesheet->justifyContent.setValueFromNapi(css_property_value);
+                        stylesheet->justifyContent.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::AlignItems:
                         stylesheet->alignItems.setValueFromNapi(css_property_value);
+                        stylesheet->alignItems.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::AlignSelf:
                         stylesheet->alignSelf.setValueFromNapi(css_property_value);
+                        stylesheet->alignSelf.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FlexBasis:
                         stylesheet->flexBasis.setValueFromNapi(css_property_value);
+                        stylesheet->flexBasis.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FlexGrow:
                         stylesheet->flexGrow.setValueFromNapi(css_property_value);
+                        stylesheet->flexGrow.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FlexShrink:
                         stylesheet->flexShrink.setValueFromNapi(css_property_value);
+                        stylesheet->flexShrink.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Height:
                         stylesheet->height.setValueFromNapi(css_property_value);
+                        stylesheet->height.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Width:
                         stylesheet->width.setValueFromNapi(css_property_value);
+                        stylesheet->width.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::MinHeight:
                         stylesheet->minHeight.setValueFromNapi(css_property_value);
+                        stylesheet->minHeight.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::MinWidth:
                         stylesheet->minWidth.setValueFromNapi(css_property_value);
+                        stylesheet->minWidth.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::MaxHeight:
                         stylesheet->maxHeight.setValueFromNapi(css_property_value);
+                        stylesheet->maxHeight.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::MaxWidth:
                         stylesheet->maxWidth.setValueFromNapi(css_property_value);
+                        stylesheet->maxWidth.flag_.set(css_property_flag);
                         break;
 
                     case CSSProperty::MarginTop:
                         stylesheet->marginTop.setValueFromNapi(css_property_value);
+                        stylesheet->marginTop.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::MarginLeft:
                         stylesheet->marginLeft.setValueFromNapi(css_property_value);
+                        stylesheet->marginLeft.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::MarginBottom:
                         stylesheet->marginBottom.setValueFromNapi(css_property_value);
+                        stylesheet->marginBottom.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::MarginRight:
                         stylesheet->marginRight.setValueFromNapi(css_property_value);
+                        stylesheet->marginRight.flag_.set(css_property_flag);
                         break;
 
                     case CSSProperty::PaddingTop:
                         stylesheet->paddingTop.setValueFromNapi(css_property_value);
+                        stylesheet->paddingTop.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::PaddingLeft:
                         stylesheet->paddingLeft.setValueFromNapi(css_property_value);
+                        stylesheet->paddingLeft.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::PaddingBottom:
                         stylesheet->paddingBottom.setValueFromNapi(css_property_value);
+                        stylesheet->paddingBottom.flag_.set(css_property_flag);
+                        break;
+                    case CSSProperty::RowGap:
+                        stylesheet->rowGap.setValueFromNapi(css_property_value);
+                        break;
+                    case CSSProperty::ColumnGap:
+                        stylesheet->columnGap.setValueFromNapi(css_property_value);
                         break;
                     case CSSProperty::PaddingRight:
                         stylesheet->paddingRight.setValueFromNapi(css_property_value);
+                        stylesheet->paddingRight.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BackgroundColor:
                         stylesheet->backgroundColor.setValueFromNapi(css_property_value);
+                        stylesheet->backgroundColor.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BackgroundImage:
                         stylesheet->backgroundImage.setValueFromNapi(css_property_value);
+                        stylesheet->backgroundImage.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BackgroundRepeat:
                         stylesheet->backgroundRepeat.setValueFromNapi(css_property_value);
+                        stylesheet->backgroundRepeat.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderTopLeftRadius:
                         stylesheet->borderTopLeftRadius.setValueFromNapi(css_property_value);
+                        stylesheet->borderTopLeftRadius.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderTopRightRadius:
                         stylesheet->borderTopRightRadius.setValueFromNapi(css_property_value);
+                        stylesheet->borderTopRightRadius.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderBottomLeftRadius:
                         stylesheet->borderBottomLeftRadius.setValueFromNapi(
                             css_property_value);
+                        stylesheet->borderBottomLeftRadius.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderBottomRightRadius:
                         stylesheet->borderBottomRightRadius.setValueFromNapi(
                             css_property_value);
+                        stylesheet->borderBottomRightRadius.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Opacity:
                         stylesheet->opacity.setValueFromNapi(css_property_value);
+                        stylesheet->opacity.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Color:
                         stylesheet->color.setValueFromNapi(css_property_value);
+                        stylesheet->color.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::PointerEvents:
                         stylesheet->pointerEvents.setValueFromNapi(css_property_value);
+                        stylesheet->pointerEvents.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FontSize:
                         stylesheet->fontSize.setValueFromNapi(css_property_value);
+                        stylesheet->fontSize.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FontStyle:
                         stylesheet->fontStyle.setValueFromNapi(css_property_value);
+                        stylesheet->fontStyle.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FontWeight:
                         stylesheet->fontWeight.setValueFromNapi(css_property_value);
+                        stylesheet->fontWeight.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::FontFamily:
                         stylesheet->fontFamily.setValueFromNapi(css_property_value);
+                        stylesheet->fontFamily.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::LineHeight:
                         stylesheet->lineHeight.setValueFromNapi(css_property_value);
+                        stylesheet->lineHeight.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::WhiteSpace:
                         stylesheet->whiteSpace.setValueFromNapi(css_property_value);
+                        stylesheet->whiteSpace.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::TextDecorationStyle:
                         stylesheet->textDecorationStyle.setValueFromNapi(css_property_value);
+                        stylesheet->textDecorationStyle.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::TextDecorationColor:
                         stylesheet->textDecorationColor.setValueFromNapi(css_property_value);
+                        stylesheet->textDecorationColor.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::TextDecorationLine:
                         stylesheet->textDecorationLine.setValueFromNapi(css_property_value);
+                        stylesheet->textDecorationLine.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Visibility:
                         stylesheet->visibility.setValueFromNapi(css_property_value);
+                        stylesheet->visibility.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Overflow:
                         stylesheet->overflow.setValueFromNapi(css_property_value);
+                        stylesheet->overflow.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BoxShadow:
                         stylesheet->boxShadow.setValueFromNapi(css_property_value);
+                        stylesheet->boxShadow.flag_.set(css_property_flag);
                         break;
 
                     case CSSProperty::BorderTopWidth:
                         stylesheet->borderTopWidth.setValueFromNapi(css_property_value);
+                        stylesheet->borderTopWidth.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderLeftWidth:
                         stylesheet->borderLeftWidth.setValueFromNapi(css_property_value);
+                        stylesheet->borderLeftWidth.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderRightWidth:
                         stylesheet->borderRightWidth.setValueFromNapi(css_property_value);
+                        stylesheet->borderRightWidth.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderBottomWidth:
                         stylesheet->borderBottomWidth.setValueFromNapi(css_property_value);
+                        stylesheet->borderBottomWidth.flag_.set(css_property_flag);
                         break;
 
                     case CSSProperty::BorderTopColor:
                         stylesheet->borderTopColor.setValueFromNapi(css_property_value);
+                        stylesheet->borderTopColor.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderLeftColor:
                         stylesheet->borderLeftColor.setValueFromNapi(css_property_value);
+                        stylesheet->borderLeftColor.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderRightColor:
                         stylesheet->borderRightColor.setValueFromNapi(css_property_value);
+                        stylesheet->borderRightColor.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderBottomColor:
                         stylesheet->borderBottomColor.setValueFromNapi(css_property_value);
+                        stylesheet->borderBottomColor.flag_.set(css_property_flag);
                         break;
 
                     case CSSProperty::BorderTopStyle:
                         stylesheet->borderTopStyle.setValueFromNapi(css_property_value);
+                        stylesheet->borderTopStyle.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderLeftStyle:
                         stylesheet->borderLeftStyle.setValueFromNapi(css_property_value);
+                        stylesheet->borderLeftStyle.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderRightStyle:
                         stylesheet->borderRightStyle.setValueFromNapi(css_property_value);
+                        stylesheet->borderRightStyle.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BorderBottomStyle:
                         stylesheet->borderBottomStyle.setValueFromNapi(css_property_value);
+                        stylesheet->borderBottomStyle.flag_.set(css_property_flag);
                         break;
 
                     case CSSProperty::Position:
                         stylesheet->position.setValueFromNapi(css_property_value);
+                        stylesheet->position.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Top:
                         stylesheet->top.setValueFromNapi(css_property_value);
+                        stylesheet->top.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Left:
                         stylesheet->left.setValueFromNapi(css_property_value);
+                        stylesheet->left.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Right:
                         stylesheet->right.setValueFromNapi(css_property_value);
+                        stylesheet->right.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Bottom:
                         stylesheet->bottom.setValueFromNapi(css_property_value);
+                        stylesheet->bottom.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::ZIndex:
                         stylesheet->zIndex.setValueFromNapi(css_property_value);
+                        stylesheet->zIndex.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BackgroundSize:
                         stylesheet->backgroundSize.setValueFromNapi(css_property_value);
+                        stylesheet->backgroundSize.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BackgroundPositionX:
                         stylesheet->backgroundPositionX.setValueFromNapi(css_property_value);
+                        stylesheet->backgroundPositionX.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::BackgroundPositionY:
                         stylesheet->backgroundPositionY.setValueFromNapi(css_property_value);
+                        stylesheet->backgroundPositionY.flag_.set(css_property_flag);
                         break;
 
                     case CSSProperty::TransformOrigin:
                         stylesheet->transformOrigin.setValueFromNapi(css_property_value);
+                        stylesheet->transformOrigin.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::Transform:
                         stylesheet->transform.setValueFromNapi(css_property_value);
+                        stylesheet->transform.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::TextAlign:
                         stylesheet->textAlign.setValueFromNapi(css_property_value);
+                        stylesheet->textAlign.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::LetterSpacing:
                         stylesheet->letterSpacing.setValueFromNapi(css_property_value);
+                        stylesheet->letterSpacing.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::WordBreak:
                         stylesheet->wordBreak.setValueFromNapi(css_property_value);
+                        stylesheet->wordBreak.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::TextOverflow:
                         stylesheet->textOverflow.setValueFromNapi(css_property_value);
+                        stylesheet->textOverflow.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::VerticalAlign:
                         stylesheet->verticalAlign.setValueFromNapi(css_property_value);
+                        stylesheet->verticalAlign.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::WebkitLineClamp:
                         stylesheet->webkitLineClamp.setValueFromNapi(css_property_value);
+                        stylesheet->webkitLineClamp.flag_.set(css_property_flag);
                         break;
                     case CSSProperty::AnimationDelay:
                         stylesheet->animationMulti.setDelayFromNapi(css_property_value);
@@ -545,6 +634,7 @@ namespace TaroCSSOM {
                         break;
                     case CSSProperty::BoxOrient:
                         stylesheet->boxOrient.setValueFromNapi(css_property_value);
+                        stylesheet->boxOrient.flag_.set(css_property_flag);
                         break;
                     default:
                         break;
@@ -572,7 +662,7 @@ namespace TaroCSSOM {
                     if (!matchFlag)
                         break;
                     switch (combinator.matchElement) {
-                        // 普通选择器
+                            // 普通选择器
                         case MatchElement::Subject: {
                             // .child
                             if (std::find(currentElement->class_list_.begin(),
@@ -584,7 +674,7 @@ namespace TaroCSSOM {
                             matchFlag = false;
                             break;
                         }
-                        // 直接后代选择器
+                            // 直接后代选择器
                         case MatchElement::Parent: {
                             currentElement = std::static_pointer_cast<TaroDOM::TaroElement>(
                                 currentElement->GetParentNode());
@@ -600,7 +690,7 @@ namespace TaroCSSOM {
                             matchFlag = false;
                             break;
                         }
-                        // 后代选择器
+                            // 后代选择器
                         case MatchElement::Ancestor: {
                             currentElement = std::static_pointer_cast<TaroDOM::TaroElement>(
                                 currentElement->GetParentNode());
@@ -622,7 +712,7 @@ namespace TaroCSSOM {
                             }
                             break;
                         }
-                        // 多类选择器
+                            // 多类选择器
                         case MatchElement::Multiple: {
                             // .childA.childB
                             if (currentElement) {

@@ -77,12 +77,14 @@
 #include "runtime/cssom/stylesheet/animation_multi.h"
 #include "runtime/cssom/stylesheet/bottom.h"
 #include "runtime/cssom/stylesheet/box_orient.h"
+#include "runtime/cssom/stylesheet/column_gap.h"
 #include "runtime/cssom/stylesheet/left.h"
 #include "runtime/cssom/stylesheet/max_height.h"
 #include "runtime/cssom/stylesheet/max_width.h"
 #include "runtime/cssom/stylesheet/min_height.h"
 #include "runtime/cssom/stylesheet/min_width.h"
 #include "runtime/cssom/stylesheet/right.h"
+#include "runtime/cssom/stylesheet/row_gap.h"
 #include "runtime/cssom/stylesheet/top.h"
 #include "runtime/cssom/stylesheet/white_space.h"
 #include "yoga/YGConfig.h"
@@ -128,6 +130,9 @@ namespace TaroCSSOM {
             PaddingTop paddingTop;
             PaddingLeft paddingLeft;
             PaddingRight paddingRight;
+
+            ColumnGap columnGap;
+            RowGap rowGap;
 
             BackgroundColor backgroundColor;
             BackgroundImage backgroundImage;

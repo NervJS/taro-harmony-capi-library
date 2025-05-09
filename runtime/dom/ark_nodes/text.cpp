@@ -7,10 +7,10 @@
 #include <codecvt>
 #include <cstdint>
 #include <arkui/styled_string.h>
+#include <multimedia/image_framework/image/pixelmap_native.h>
 #include <native_drawing/drawing_font_collection.h>
 #include <native_drawing/drawing_text_typography.h>
 
-#include "helper/ImageLoader.h"
 #include "helper/string.h"
 #include "runtime/NativeNodeApi.h"
 #include "runtime/TaroYogaApi.h"
@@ -30,7 +30,6 @@ namespace TaroRuntime {
 namespace TaroDOM {
     TaroTextNode::TaroTextNode(TaroElementRef element)
         : TaroRenderNode(element) {
-        SetIsInline(true);
         SetShouldPosition(false);
         textStyled_ = std::make_shared<TextStyled>();
     }
@@ -82,6 +81,17 @@ namespace TaroDOM {
         }
         textNode->textStyled_->TextTypographyLayout(typography, maxWidth);
         auto calcWidth = OH_Drawing_TypographyGetLongestLine(typography);
+
+        if (textNode->style_ref_->textAlign.has_value() && calcWidth > 0) {
+            if (
+                textNode->style_ref_->textAlign.value() == ARKUI_TEXT_ALIGNMENT_CENTER ||
+                textNode->style_ref_->textAlign.value() == ARKUI_TEXT_ALIGNMENT_END ||
+                textNode->style_ref_->textAlign.value() == ARKUI_TEXT_ALIGNMENT_JUSTIFY) {
+                textNode->textStyled_->TextTypographyLayout(typography, calcWidth);
+                calcWidth = OH_Drawing_TypographyGetLongestLine(typography);
+            }
+        }
+
         resultWidth = px2Vp(calcWidth);
         auto calcHeight = px2Vp(OH_Drawing_TypographyGetHeight(typography));
         // 如果排版发生下scroll下，无需约束
@@ -170,18 +180,43 @@ namespace TaroDOM {
         return m_IsNeedUpdate;
     }
 
-    void TaroTextNode::ProcessImageResults(std::vector<std::shared_ptr<ImageInfo>>& images, ProcessImagesCallback&& onAllImagesLoaded) {
+    void TaroTextNode::ProcessImageResults(std::vector<std::shared_ptr<ImageInfo>>& images, std::weak_ptr<BaseRenderNode> textNode, ProcessImagesCallback&& onAllImagesLoaded) {
+        using namespace JDImageHarmony;
         auto results = std::make_shared<std::vector<ImageCallbackInfo>>();
         auto loadCounter = std::make_shared<int>(0);
         results->reserve(images.size());
+        auto size = images.size();
         for (const auto& image : images) {
-            TaroHelper::loadImage({.url = image->src}, [image, results, loadCounter, imagesSize = images.size(), onAllImagesLoaded](const ImageCallbackInfo& result) mutable {
-                results->push_back(result);
-                ++(*loadCounter);
-                if (*loadCounter == imagesSize) {
-                    onAllImagesLoaded(results);
+            LoadRequestOptions opts = {};
+            if (auto srcStr = std::get_if<std::string>(&image->src)) {
+                JDImageLoadHelper::loadImage({.url = *srcStr}, [image, results, loadCounter, imagesSize = size, textNode, onAllImagesLoaded](const ImageCallbackInfo& result) mutable {
+                    results->push_back(result);
+                    ++(*loadCounter);
+                    if (*loadCounter == imagesSize) {
+                        onAllImagesLoaded(results, textNode);
+                    }
+                });
+            } else if (auto drawableDescriptor = std::get_if<ArkUI_DrawableDescriptor*>(&image->src)) {
+                OH_PixelmapNativeHandle pixelmap = OH_ArkUI_DrawableDescriptor_GetStaticPixelMap(*drawableDescriptor);
+                OH_Pixelmap_ImageInfo* imageInfo;
+                OH_PixelmapImageInfo_Create(&imageInfo);
+                Image_ErrorCode error = OH_PixelmapNative_GetImageInfo(pixelmap, imageInfo);
+                if (error == Image_ErrorCode::IMAGE_SUCCESS) {
+                    uint32_t sourceWidth;
+                    uint32_t sourceHeight;
+                    OH_PixelmapImageInfo_GetWidth(imageInfo, &sourceWidth);
+                    OH_PixelmapImageInfo_GetHeight(imageInfo, &sourceHeight);
+                    results->push_back(JDImageHarmony::ResultImageInfo{
+                        .url = "",
+                        .result_DrawableDescriptor = *drawableDescriptor,
+                        .width = sourceWidth,
+                        .height = sourceHeight});
                 }
-            });
+                ++(*loadCounter);
+                if (*loadCounter == size) {
+                    onAllImagesLoaded(results, textNode);
+                }
+            }
         }
     }
 
@@ -246,9 +281,10 @@ namespace TaroDOM {
                     textStyled_->InitTypography();
                     SetTextMeasureFunc();
                 } else {
-                    std::weak_ptr<TaroTextNode> weakSelf = std::dynamic_pointer_cast<TaroTextNode>(shared_from_this());
-                    ProcessImageResults(m_ImageInfos, [weakSelf](const std::shared_ptr<std::vector<ImageCallbackInfo>>& results) {
-                        auto this_ = weakSelf.lock();
+                    std::weak_ptr<BaseRenderNode> weakSelf = weak_from_this();
+                    ProcessImageResults(m_ImageInfos, weakSelf, [](const std::shared_ptr<std::vector<ImageCallbackInfo>>& results, std::weak_ptr<BaseRenderNode> textNode) {
+                        auto this_ = std::dynamic_pointer_cast<TaroTextNode>(textNode.lock());
+
                         if (this_) {
                             auto element = this_->element_ref_.lock();
                             if (!element)
@@ -259,13 +295,20 @@ namespace TaroDOM {
                             GetTextChildren(element, vec);
                             this_->textStyled_->InitStyledString(this_->style_ref_, this_->textNodeStyle_, dimensionContext);
                             for (const auto& result : *results) {
-                                if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
-                                    this_->relatedImageDrawableDescriptors.push_back(info->result_DrawableDescriptor);
+                                if (auto info = std::get_if<JDImageHarmony::ResultImageInfo>(&result)) {
                                     for (auto& imageInfo : this_->m_ImageInfos) {
-                                        if (imageInfo->src == info->url) {
-                                            imageInfo->oriWidth = info->width;
-                                            imageInfo->oriHeight = info->height;
-                                            break;
+                                        if (auto srcStr = std::get_if<std::string>(&imageInfo->src)) {
+                                            if (*srcStr == info->url) {
+                                                imageInfo->oriWidth = info->width;
+                                                imageInfo->oriHeight = info->height;
+                                                break;
+                                            }
+                                        } else if (auto descriptor = std::get_if<ArkUI_DrawableDescriptor*>(&imageInfo->src)) {
+                                            if (*descriptor == info->result_DrawableDescriptor) {
+                                                imageInfo->oriWidth = info->width;
+                                                imageInfo->oriHeight = info->height;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -333,11 +376,14 @@ namespace TaroDOM {
                     imageInfo->nid = item->nid_;
                     auto castItem = std::dynamic_pointer_cast<TaroImage>(item);
                     if (castItem->attributes_->src.has_value()) {
-                        if (auto src = std::get_if<std::string>(&castItem->attributes_->src.value())) {
-                            imageInfo->src = *src;
-                            if (imageInfo->src.starts_with("//")) {
-                                imageInfo->src.insert(0, "https:");
+                        auto val = castItem->attributes_->src.value();
+                        if (auto src = std::get_if<std::string>(&val)) {
+                            if (src->starts_with("//")) {
+                                src->insert(0, "https:");
                             }
+                            imageInfo->src = *src;
+                        } else if (auto descriptor = std::get_if<ArkUI_DrawableDescriptor*>(&val)) {
+                            imageInfo->src = *descriptor;
                         } else {
                             imageInfo->src = "";
                         }
@@ -408,9 +454,9 @@ namespace TaroDOM {
                 nativeNodeApi->setAttribute(node, NODE_POSITION, &positionItem);
 
                 auto src = imageInfo->src;
-                if (!src.empty()) {
+                if (auto srcStr = std::get_if<std::string>(&src)) {
                     std::weak_ptr<TaroTextNode> weakSelf = std::dynamic_pointer_cast<TaroTextNode>(shared_from_this());
-                    TaroHelper::loadImage({.url = src}, [src, weakSelf, i](const ImageCallbackInfo& result) mutable {
+                    JDImageHarmony::JDImageLoadHelper::loadImage({.url = *srcStr}, [src = *srcStr, weakSelf, i](const ImageCallbackInfo& result) mutable {
                         auto renderText = weakSelf.lock();
                         if (renderText) {
                             const auto& imageNodes = renderText->m_ImageNodes;
@@ -418,19 +464,24 @@ namespace TaroDOM {
                             if (i < imageNodes.size() && i < imageInfos.size()) {
                                 const auto& imageNode = imageNodes[i];
                                 const auto& imageInfo = imageInfos[i];
-                                if (imageInfo->src != src)
-                                    return;
-                                ArkUI_AttributeItem srcItem;
-                                if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
-                                    renderText->relatedImageDrawableDescriptors.push_back(info->result_DrawableDescriptor);
-                                    srcItem = {.object = info->result_DrawableDescriptor->get()};
-                                } else {
-                                    srcItem = {.string = src.c_str()};
+                                if (auto imageInfoSrc = std::get_if<std::string>(&imageInfo->src)) {
+                                    if (*imageInfoSrc != src)
+                                        return;
+                                    ArkUI_AttributeItem srcItem;
+                                    if (auto info = std::get_if<JDImageHarmony::ResultImageInfo>(&result)) {
+                                        srcItem = {.object = info->result_DrawableDescriptor};
+                                    } else {
+                                        srcItem = {.string = src.c_str()};
+                                    }
+                                    NativeNodeApi::getInstance()->setAttribute(imageNode, NODE_IMAGE_SRC, &srcItem);
                                 }
-                                NativeNodeApi::getInstance()->setAttribute(imageNode, NODE_IMAGE_SRC, &srcItem);
                             }
                         }
                     });
+                } else if (auto drawableDescriptor = std::get_if<ArkUI_DrawableDescriptor*>(&src)) {
+                    ArkUI_AttributeItem srcItem = {.object = *drawableDescriptor};
+                    NativeNodeApi::getInstance()->setAttribute(node, NODE_IMAGE_SRC, &srcItem);
+                    ;
                 }
             }
             OH_Drawing_TypographyDestroyTextBox(textBox);
@@ -457,6 +508,18 @@ namespace TaroDOM {
             textStyled_->TextTypographyLayout(textStyled_->GetTypography(), vp2Px(useToLayoutWidth));
             if (textStyled_->GetHasBeenLayout() && m_InnerTextNode) {
                 auto textCalcWidth = OH_Drawing_TypographyGetLongestLine(textStyled_->GetTypography());
+
+                // textAlign需要二次排版
+                if (style_ref_->textAlign.has_value() && textCalcWidth > 0) {
+                    if (
+                        style_ref_->textAlign.value() == ARKUI_TEXT_ALIGNMENT_CENTER ||
+                        style_ref_->textAlign.value() == ARKUI_TEXT_ALIGNMENT_END ||
+                        style_ref_->textAlign.value() == ARKUI_TEXT_ALIGNMENT_JUSTIFY) {
+                        textStyled_->TextTypographyLayout(textStyled_->GetTypography(), textCalcWidth);
+                        textCalcWidth = OH_Drawing_TypographyGetLongestLine(textStyled_->GetTypography());
+                    }
+                }
+
                 textCalcWidth = px2Vp(textCalcWidth);
                 auto textCalcHeight = px2Vp(OH_Drawing_TypographyGetHeight(textStyled_->GetTypography()));
                 auto yogaInstance = TaroYogaApi::getInstance();
@@ -604,10 +667,12 @@ namespace TaroDOM {
             for (auto& image : m_ImageInfos) {
                 if (image->nid == id) {
                     if (auto srcValue = std::get_if<std::string>(&src)) {
-                        image->src = *srcValue;
-                        if (image->src.starts_with("//")) {
-                            image->src.insert(0, "https:");
+                        if (srcValue->starts_with("//")) {
+                            srcValue->insert(0, "https:");
                         }
+                        image->src = *srcValue;
+                    } else if (auto descriptor = std::get_if<ArkUI_DrawableDescriptor*>(&src)) {
+                        image->src = *descriptor;
                     }
                     SetIsNeedUpdate(true);
                     return;

@@ -55,6 +55,22 @@ void parsePadding(Stylesheet* ss, std::string_view value) {
         ss->paddingLeft.setValueFromStringView(bound.left);
 }
 
+void parseGap(Stylesheet* ss, std::string_view value) {
+    auto values = TaroHelper::string::splitBySpace(value);
+    switch (values.size()) {
+        case 1: {
+            ss->rowGap.setValueFromStringView(values[0]);
+            ss->columnGap.setValueFromStringView(values[0]);
+            break;
+        }
+        case 2: {
+            ss->rowGap.setValueFromStringView(values[0]);
+            ss->columnGap.setValueFromStringView(values[1]);
+            break;
+        }
+    }
+}
+
 /**
  * 解析 margin 混合值
  */

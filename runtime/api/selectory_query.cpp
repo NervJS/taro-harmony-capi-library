@@ -110,12 +110,14 @@ SelectorQuery::getElementById(std::shared_ptr<TaroDOM::TaroElement>& element, co
         auto next_element = stack.top();
         stack.pop();
 
-        if (next_element->id_ == id) {
+        if (next_element->id_ == id || std::to_string(next_element->nid_) == id) {
             return next_element;
         }
 
-        for (const auto& child : processChildNodes(next_element)) {
-            if (auto child_el = std::static_pointer_cast<TaroDOM::TaroElement>(child)) {
+        auto child_nodes = processChildNodes(next_element);
+        // 反向遍历
+        for (auto it = child_nodes.rbegin(); it != child_nodes.rend(); ++it) {
+            if (auto child_el = std::static_pointer_cast<TaroDOM::TaroElement>(*it)) {
                 stack.push(child_el);
             }
         }
@@ -144,8 +146,10 @@ SelectorQuery::getElementsByClassName(std::shared_ptr<TaroDOM::TaroElement>& ele
             it = result.insert_after(it, next_element);
         }
 
-        for (const auto& child : processChildNodes(next_element)) {
-            if (auto child_el = std::static_pointer_cast<TaroDOM::TaroElement>(child)) {
+        auto child_nodes = processChildNodes(next_element);
+        // 反向遍历
+        for (auto it = child_nodes.rbegin(); it != child_nodes.rend(); ++it) {
+            if (auto child_el = std::static_pointer_cast<TaroDOM::TaroElement>(*it)) {
                 stack.push(child_el);
             }
         }
@@ -173,8 +177,10 @@ SelectorQuery::getElementsByTagName(std::shared_ptr<TaroDOM::TaroElement>& eleme
             it = result.insert_after(it, next_element);
         }
 
-        for (const auto& child : processChildNodes(next_element)) {
-            if (auto child_el = std::static_pointer_cast<TaroDOM::TaroElement>(child)) {
+        auto child_nodes = processChildNodes(next_element);
+        // 反向遍历
+        for (auto it = child_nodes.rbegin(); it != child_nodes.rend(); ++it) {
+            if (auto child_el = std::static_pointer_cast<TaroDOM::TaroElement>(*it)) {
                 stack.push(child_el);
             }
         }
@@ -276,9 +282,11 @@ SelectorQuery::findTaroNodeWithSelectorTokens(std::shared_ptr<TaroDOM::TaroEleme
                 }
             }
 
-            for (const auto& child : processChildNodes(nextElement)) {
-                if (auto element = std::static_pointer_cast<TaroDOM::TaroElement>(child)) {
-                    stack.push(element);
+            auto child_nodes = processChildNodes(nextElement);
+            // 反向遍历
+            for (auto it = child_nodes.rbegin(); it != child_nodes.rend(); ++it) {
+                if (auto child_el = std::static_pointer_cast<TaroDOM::TaroElement>(*it)) {
+                    stack.push(child_el);
                 }
             }
             continue;
@@ -338,7 +346,8 @@ SelectorQuery::checkTaroNodeWithSelectorTokens(std::shared_ptr<TaroDOM::TaroElem
         }
 
         if (token.front() == '#') {
-            if (element->id_ != token.substr(1)) {
+            std::string id = token.substr(1);
+            if (element->id_ != id && std::to_string(element->nid_) != id) {
                 return {};
             }
         } else if (token.front() == '.') {

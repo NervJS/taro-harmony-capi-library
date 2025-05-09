@@ -102,6 +102,7 @@ enum class ATTRIBUTE_NAME {
     NEXT_MARGIN = 30,
     PREV_MARGIN = 31,
     DISPLAY_COUNT = 32,
+    ADJUST_HEIGHT = 33,
 
     // attribute for movable component 41~60
     DIRECTION = 41,
@@ -180,7 +181,10 @@ enum class ATTRIBUTE_NAME {
     MARGIN,
 
     DISABLE_TOUCH,
-    DISABLE_PROGRAMMATIC_ANIMATION
+    DISABLE_PROGRAMMATIC_ANIMATION,
+
+    // uid
+    UID
 };
 
 extern std::map<std::string, ATTRIBUTE_NAME> ATTRIBUTE_NAME_MAP;
@@ -253,9 +257,24 @@ enum class STATE_FLAG : std::uint8_t {
     IMMEDIATE_ATTACH_TO_TREE = 4 << 0,
 };
 
+enum class LAYOUT_STATE_FLAG : std::uint8_t {
+    // 是否自定义测量
+    IS_CUSTOM_LAYOUT = 1 << 0,
+    // 是否已经完成首次布局
+    IS_FIRST_LAYOUT_FINISH = 2 << 0,
+    // 是否不需要设置宽高，由ark布局引擎撑开
+    IS_IGNORE_SIZE = 3 << 0,
+};
+
 namespace KEY_FRAME_VSYNC {
     static std::string DIRTY = "dirty";
 }
+
+enum class TaroDirection : std::uint8_t {
+    Column,
+    Row,
+    All
+};
 
 enum class TaroEdge : uint8_t {
     TaroEdgeTop = 0,

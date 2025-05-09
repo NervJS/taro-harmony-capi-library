@@ -49,6 +49,7 @@ std::map<std::string, TAG_NAME> TAG_NAME_MAP = {
 
 std::map<std::string, ATTRIBUTE_NAME> ATTRIBUTE_NAME_MAP = {
     {"id", ATTRIBUTE_NAME::ID},
+    {"uid", ATTRIBUTE_NAME::UID},
     {"class", ATTRIBUTE_NAME::CLASS},
     {"className", ATTRIBUTE_NAME::CLASS},
     {"style", ATTRIBUTE_NAME::STYLE},
@@ -89,6 +90,7 @@ std::map<std::string, ATTRIBUTE_NAME> ATTRIBUTE_NAME_MAP = {
     {"indicatorColor", ATTRIBUTE_NAME::INDICATOR_COLOR},
     {"indicatorActiveColor", ATTRIBUTE_NAME::INDICATOR_ACTIVE_COLOR},
     {"nextMargin", ATTRIBUTE_NAME::NEXT_MARGIN},
+    {"adjustHeight", ATTRIBUTE_NAME::ADJUST_HEIGHT},
     {"previousMargin", ATTRIBUTE_NAME::PREV_MARGIN},
     {"displayMultipleItems", ATTRIBUTE_NAME::DISPLAY_COUNT},
     {"direction", ATTRIBUTE_NAME::DIRECTION},

@@ -6,6 +6,8 @@
 
 #include <arkui/drawable_descriptor.h>
 #include <arkui/native_node.h>
+#include <multimedia/image_framework/image/image_common.h>
+#include <multimedia/image_framework/image/pixelmap_native.h>
 
 #include "helper/TaroLog.h"
 #include "helper/TaroTimer.h"
@@ -23,8 +25,15 @@ namespace TaroRuntime {
 namespace TaroDOM {
     TaroImage::TaroImage(napi_value node)
         : TaroElement(node) {
-        SetIsInline(true);
         attributes_ = std::make_unique<TaroImageAttributes>();
+    }
+
+    TaroImage::~TaroImage() {
+        if (attributes_->src.has_value()) {
+            if (auto drawableDescriptor = std::get_if<ArkUI_DrawableDescriptor*>(&attributes_->src.value())) {
+                OH_ArkUI_DrawableDescriptor_Dispose(*drawableDescriptor);
+            }
+        }
     }
 
     void TaroImage::GetNodeAttributes() {
@@ -62,6 +71,15 @@ namespace TaroDOM {
             }
 
         } else if (type == napi_object) {
+            // 从napi取imagePixelmap
+            OH_PixelmapNative* pixelmapNative;
+            Image_ErrorCode error = OH_PixelmapNative_ConvertPixelmapNativeFromNapi(NativeNodeApi::getInstance()->env, value, &pixelmapNative);
+            if (error == Image_ErrorCode::IMAGE_SUCCESS && pixelmapNative) {
+                ArkUI_DrawableDescriptor* descriptor = OH_ArkUI_DrawableDescriptor_CreateFromPixelMap(pixelmapNative);
+                attributes_->src.set(descriptor);
+                return;
+            }
+            // 从napi取descriptor
             ArkUI_DrawableDescriptor* descriptor;
             int32_t res = OH_ArkUI_GetDrawableDescriptorFromResourceNapiValue(NativeNodeApi::env, value, &descriptor);
             if (res == ARKUI_ERROR_CODE_NO_ERROR) {
@@ -99,6 +117,7 @@ namespace TaroDOM {
         auto parentNode = GetParentNode();
         auto parentElement = std::dynamic_pointer_cast<TaroText>(parentNode);
         if (parentElement) {
+            is_image_span_ = true; // 文字内的图片
             if (!parentNode->HasRenderNode())
                 return;
             for (auto child : parentNode->child_nodes_) {
@@ -153,15 +172,13 @@ namespace TaroDOM {
                         std::weak_ptr<TaroImageNode> weak_render_image = render_image;
 
                         if (src_string->find("gif") == std::string::npos) {
-                            TaroHelper::loadImage({.url = *src_string}, [weak_render_image](const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo> result) mutable {
-                                auto res = std::get_if<TaroHelper::ResultImageInfo>(&result);
+                            JDImageHarmony::JDImageLoadHelper::loadImage({.url = *src_string}, [weak_render_image](const std::variant<JDImageHarmony::ResultImageInfo, JDImageHarmony::ErrorImageInfo> result) mutable {
+                                auto res = std::get_if<JDImageHarmony::ResultImageInfo>(&result);
                                 auto render_image = weak_render_image.lock();
                                 if (res && render_image) {
                                     render_image->image_raw_width = res->width;
                                     render_image->image_raw_height = res->height;
                                     render_image->repairSizeIfNeed();
-                                    render_image->setImageSrc(res->result_DrawableDescriptor->get());
-                                    render_image->relatedImageDrawableDescriptors.push_back(res->result_DrawableDescriptor);
                                 }
                             });
                         }
@@ -177,14 +194,14 @@ namespace TaroDOM {
                 }
             }
             if (mode == "heightFix") {
-                if (!render_image->is_first_layout_finish_ && std::isfinite(render_image->image_raw_width) && style_->height.has_value()) {
+                if (!render_image->HasLayoutFlag(LAYOUT_STATE_FLAG::IS_FIRST_LAYOUT_FINISH) && std::isfinite(render_image->image_raw_width) && style_->height.has_value()) {
                     auto height = style_->height.value().ParseToVp(render_image->GetDimensionContext());
                     if (height.has_value()) {
                         render_image->SetWidth(Dimension{render_image->image_raw_width * height.value() / render_image->image_raw_height});
                     }
                 }
             } else if (mode == "widthFix") {
-                if (!render_image->is_first_layout_finish_ && std::isfinite(render_image->image_raw_height) && style_->width.has_value()) {
+                if (!render_image->HasLayoutFlag(LAYOUT_STATE_FLAG::IS_FIRST_LAYOUT_FINISH) && std::isfinite(render_image->image_raw_height) && style_->width.has_value()) {
                     auto width = style_->width.value().ParseToVp(render_image->GetDimensionContext());
                     if (width.has_value()) {
                         render_image->SetHeight(Dimension{render_image->image_raw_height * width.value() / render_image->image_raw_width});
@@ -261,7 +278,9 @@ namespace TaroDOM {
         TaroAttribute::SetAttribute(renderNode, name, value);
 
         // 没有初始化没有 attribute
-        if (!is_init_ || GetHeadRenderNode() == nullptr)
+        if (!is_init_)
+            return;
+        if (!is_image_span_ && GetHeadRenderNode() == nullptr)
             return;
 
         switch (name) {
@@ -448,6 +467,10 @@ namespace TaroDOM {
             new_node = std::make_shared<TaroImageNode>(element);
             new_node->SetArkUINodeHandle(ark_handle);
             reuse_element->event_emitter_->clearNodeEvent(ark_handle);
+            // reuse会重置 JDImage事件监听,因鸿蒙事件机制限制，需要放在Node事件clear之后，重新注册之前
+            if (auto newTaroImageNode = std::static_pointer_cast<TaroImageNode>(new_node)) {
+                newTaroImageNode->reuseJDImage(reuse_element->GetHeadRenderNode());
+            }
             SetRenderNode(new_node);
             new_node->UpdateDifferOldStyleFromElement(reuse_element);
             reuse_element->GetHeadRenderNode()->SetArkUINodeHandle(nullptr);
@@ -470,6 +493,10 @@ namespace TaroDOM {
         NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         nativeNodeApi->resetAttribute(ark_handle, NODE_IMAGE_SRC);
         reuse_element->event_emitter_->clearNodeEvent(ark_handle);
+        // reuse会重置 JDImage事件监听,因鸿蒙事件机制限制，需要放在Node事件clear之后，重新注册之前
+        if (auto newTaroImageNode = std::static_pointer_cast<TaroImageNode>(new_node)) {
+            newTaroImageNode->reuseJDImage(reuse_element->GetHeadRenderNode());
+        }
         updateListenEvent();
         reuse_element->GetHeadRenderNode()->SetArkUINodeHandle(nullptr);
     }

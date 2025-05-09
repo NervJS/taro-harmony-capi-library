@@ -141,7 +141,11 @@ void EventGenerator_HM::dispatchEvent(ArkUI_NodeEvent* event) {
         if (event_obj == nullptr) {
             continue;
         }
-        event_obj->parseHmEvent(event);
+        auto ret = event_obj->parseHmEvent(event);
+        // 事件解析如果有问题，就不触发该事件
+        if (ret == -1) {
+            continue;
+        }
         bool with_native_bubble = elem_event.with_native_bubble_;
         if (with_native_bubble) {
             event_obj->revertEventBubble();

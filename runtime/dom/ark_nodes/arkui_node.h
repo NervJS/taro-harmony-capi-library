@@ -3,7 +3,6 @@
  */
 
 #pragma once
-
 #include <arkui/native_node.h>
 
 #include "helper/TaroLog.h"
@@ -17,7 +16,6 @@
 #include <string>
 #include <vector>
 #include <arkui/native_type.h>
-#include <native_vsync/native_vsync.h>
 
 #include "./arkui_base_node.h"
 #include "helper/Optional.h"
@@ -99,7 +97,6 @@ namespace TaroDOM {
         virtual void Measure();
 
         void LayoutAll(bool layoutWithoutDiff = false);
-        void CheckCalcProperty(double parentWidth, double parentHeight);
 
         virtual void OnMeasure(ArkUI_NodeCustomEvent* event);
         virtual void OnLayout(ArkUI_NodeCustomEvent* event);
@@ -144,9 +141,6 @@ namespace TaroDOM {
         void AddNotifyFixedRoot();
 
         std::shared_ptr<TaroRenderNode> GetRootRenderNode();
-        // 行内判断
-        void SetIsInline(bool isInline);
-        bool GetIsInline();
 
         // 绑定js动画
         int createJsAnimation(TaroAnimate::TaroJsAnimationOptionRef& option);
@@ -159,12 +153,21 @@ namespace TaroDOM {
         void ClearDifferOldStyleFromElement();
         void UpdateDifferOldStyleFromElement(std::weak_ptr<TaroDOM::TaroElement> element);
 
-        bool calc_lock_ = false;
         bool is_apply_reused = false;
-        bool is_first_layout_finish_ = false;
         friend class LayoutDiffer;
         friend class PaintDiffer;
-        std::vector<std::shared_ptr<ImagePixels>> relatedImageDrawableDescriptors;
+
+        bool HasLayoutFlag(LAYOUT_STATE_FLAG flag) const {
+            return state_flags_.test(static_cast<size_t>(flag));
+        }
+        void SetLayoutFlag(LAYOUT_STATE_FLAG flag) {
+            if (HasLayoutFlag(flag))
+                return;
+            state_flags_.set(static_cast<size_t>(flag));
+        }
+        void ClearLayoutFlag(LAYOUT_STATE_FLAG flag) {
+            state_flags_.reset(static_cast<size_t>(flag));
+        }
 
         protected:
         // 自定义布局
@@ -175,11 +178,12 @@ namespace TaroDOM {
         TaroCSSOM::TaroStylesheet::BackgroundSizeParam CalcBackgroundSize(Optional<TaroCSSOM::TaroStylesheet::BackgroundImageItem> backgroundImage);
         void setBackgroundImageAndPositionAndSize();
         ArkUI_NodeHandle ark_node_ = nullptr;
-        bool is_custom_layout_ = false;
-        bool isInline_;
         bool should_position_ = true;
 
-        void HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result, const std::string url);
+        // 节点状态标记集合
+        std::bitset<8> state_flags_;
+
+        void HandleJDImageLoad(const std::variant<JDImageHarmony::ResultImageInfo, JDImageHarmony::ErrorImageInfo>& result, const std::string url);
 
         static int32_t uid_flag_;
         static std::unordered_map<int32_t, std::weak_ptr<TaroRenderNode>> custom_layout_render_nodes_;

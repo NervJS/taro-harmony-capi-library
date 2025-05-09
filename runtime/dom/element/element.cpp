@@ -100,7 +100,6 @@ namespace TaroDOM {
         if (isFormElement()) {
             disabled_ = GetDisabledAttribute(GetAttributeNodeValue("disabled"));
         }
-        is_inline_ = false;
     }
 
     void TaroElement::SetAttributesToRenderNode() {
@@ -119,6 +118,8 @@ namespace TaroDOM {
         switch (name) {
             case ATTRIBUTE_NAME::CLASS:
                 return class_list_.value();
+            case ATTRIBUTE_NAME::UID:
+                return nid_;
             default:
                 return TaroAttribute::GetAttribute(name, value);
         }
@@ -253,14 +254,6 @@ namespace TaroDOM {
                 STATE_FLAG::DESCENDANT_NEED_STYLE_RESOLUTION);
             return false;
         });
-    }
-
-    void TaroElement::SetIsInline(bool isInline) {
-        is_inline_ = isInline;
-    }
-
-    bool TaroElement::GetIsInline() {
-        return is_inline_;
     }
 
     void TaroElement::BuildProcess() {

@@ -116,7 +116,10 @@ namespace TaroDOM {
             return;
         const auto parent = render_node->parent_ref_.lock();
         bool is_parent_should_position = parent && parent->GetShouldPosition();
-        bool is_first_layout = !render_node->is_first_layout_finish_;
+        if (parent && parent->HasLayoutFlag(LAYOUT_STATE_FLAG::IS_IGNORE_SIZE)) {
+            is_parent_should_position = false;
+        }
+        bool is_first_layout = !render_node->HasLayoutFlag(LAYOUT_STATE_FLAG::IS_FIRST_LAYOUT_FINISH);
         bool is_display_changed = old_computed_style.display != computed_style.display;
         bool is_width_changed = old_computed_style.width != computed_style.width;
         bool is_height_changed = old_computed_style.height != computed_style.height;
@@ -144,10 +147,14 @@ namespace TaroDOM {
             render_node->AddNotifyFixedRoot();
         }
         if (is_first_layout || is_width_changed) {
-            TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setWidth(render_node->ark_node_, computed_style.width);
+            if (!render_node->HasLayoutFlag(LAYOUT_STATE_FLAG::IS_IGNORE_SIZE)) {
+                TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setWidth(render_node->ark_node_, computed_style.width);
+            }
         }
         if (is_first_layout || is_height_changed) {
-            TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setHeight(render_node->ark_node_, computed_style.height);
+            if (!render_node->HasLayoutFlag(LAYOUT_STATE_FLAG::IS_IGNORE_SIZE)) {
+                TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setHeight(render_node->ark_node_, computed_style.height);
+            }
         }
         if (is_first_layout || is_border_changed) {
             TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBorderWidth(

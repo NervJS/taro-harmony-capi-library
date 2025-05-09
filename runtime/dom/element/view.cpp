@@ -261,6 +261,11 @@ namespace TaroDOM {
             }
             render_scroll_view->setScrollDirection(arkUI_ScrollDirection);
 
+            auto viewStyle = std::make_shared<TaroCSSOM::TaroStylesheet::Stylesheet>();
+            viewStyle->display = style_->display;
+            viewStyle->alignItems = style_->alignItems;
+            viewStyle->flexWrap = style_->flexWrap;
+            render_view->SetStyle(viewStyle);
             render_view->SetFlexShrink(0);
             render_view->SetFlexGrow(1);
             // 设置默认样式
