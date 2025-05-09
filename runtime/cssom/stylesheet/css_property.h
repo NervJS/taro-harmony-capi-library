@@ -5,6 +5,8 @@
 #ifndef TESTNDK_PROPERTY_TYPE_H
 #define TESTNDK_PROPERTY_TYPE_H
 
+#include <cstdint>
+
 namespace CSSProperty {
 enum Type {
 
@@ -115,6 +117,13 @@ enum Type {
 };
 
 }
+
+// 属性Flag
+enum class CSS_PROPERTY_FLAG : uint8_t {
+    None = 0,           // 普通类型
+    VAR = 1 << 0,       // 变量类型
+    IMPORTANT = 2 << 0, // important!
+};
 
 namespace PropertyType {
 

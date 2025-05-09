@@ -48,27 +48,12 @@ namespace TaroDOM {
     }
 
     void TaroImageNode::Build() {
-        bool isNativeImage = false;
-        if (auto element = element_ref_.lock()) {
-            if (auto imageElement = std::dynamic_pointer_cast<TaroImage>(element); imageElement && imageElement->attributes_->src.has_value()) {
-                if (auto src_string = std::get_if<std::string>(&imageElement->attributes_->src.value())) {
-                    if (isSvgUrl(*src_string)) {
-                        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
-                        SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_IMAGE));
-                        isNativeImage = true;
-                    }
-                }
-            }
-        }
-        if (!isNativeImage) {
-            jdImage = JDImageHarmony::ImageWrapper::create();
-            SetArkUINodeHandle(jdImage.value()->getArkUINode());
-        }
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
+        SetArkUINodeHandle(nativeNodeApi->createNode(ARKUI_NODE_IMAGE));
 
         TaroClassLifeStatistic::markNew("NodeHandle");
         setDraggable(false);
 
-        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         ArkUI_NumberValue imageMode[1];
         ArkUI_AttributeItem objectFitItem = {imageMode, 1};
         imageMode[0].i32 = ARKUI_OBJECT_FIT_FILL;
@@ -77,9 +62,9 @@ namespace TaroDOM {
 
     void TaroImageNode::setImageSrc(std::string src, const double height, const double width, bool lazyLoad) {
         current_src_ = src;
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
         if (src.size() && src.starts_with("/data")) {
             // 本地链接
-            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
             auto tmpResInst = TaroTmpResource::GetInstance();
             auto it = TaroTmpResource::GetInstance()->tmp_pixels_manager_.find(src.c_str());
             if (it != tmpResInst->tmp_pixels_manager_.end()) {
@@ -89,15 +74,9 @@ namespace TaroDOM {
                 return;
             }
         }
-        // 兼容SpanImage
-        if (jdImage.has_value()) {
-            jdImage.value()->setSrc(src, height, width, lazyLoad);
-        } else {
-            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
-            ArkUI_AttributeItem item = {.string = src.c_str()};
-            TARO_LOG_DEBUG("TaroImage", "Image 地址：%{public}s", src.c_str());
-            nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_SRC, &item);
-        }
+        ArkUI_AttributeItem item = {.string = src.c_str()};
+        TARO_LOG_DEBUG("TaroImage", "Image 地址：%{public}s", src.c_str());
+        nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_SRC, &item);
     }
 
     void TaroImageNode::setImageSrc(ArkUI_DrawableDescriptor* drawableDescriptor) {
@@ -121,50 +100,26 @@ namespace TaroDOM {
     }
 
     void TaroImageNode::setAlt(const std::string& uri) {
-        if (jdImage.has_value()) {
-            jdImage.value()->setAlt(uri);
-        } else {
-            ArkUI_AttributeItem item = {.string = uri.c_str()};
-            NativeNodeApi::getInstance()->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_ALT, &item);
-        }
+        ArkUI_AttributeItem item = {.string = uri.c_str()};
+        NativeNodeApi::getInstance()->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_ALT, &item);
     }
 
     void TaroImageNode::setErrorHolder(const std::string& uri) {
-        if (jdImage.has_value()) {
-            jdImage.value()->setErrorHolder(uri);
-        }
+        TaroImageNode::setAlt(uri);
     }
 
     void TaroImageNode::setMode(const std::string& mode) {
-        if (jdImage.has_value()) {
-            mode_ = mode;
-            jdImage.value()->setMode(mode);
-            repairSizeIfNeed();
-        } else {
-            ArkUI_ObjectFit arkUI_ObjectFit = ARKUI_OBJECT_FIT_COVER;
-            auto it = IMAGE_MODE_MAP.find(mode);
-            if (it != IMAGE_MODE_MAP.end()) {
-                arkUI_ObjectFit = it->second;
-            }
-            NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
-            ArkUI_NumberValue imageMode[1];
-            ArkUI_AttributeItem objectFitItem = {imageMode, 1};
-            imageMode[0].i32 = arkUI_ObjectFit;
-            nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_OBJECT_FIT, &objectFitItem);
+        mode_ = mode;
+        ArkUI_ObjectFit arkUI_ObjectFit = ARKUI_OBJECT_FIT_COVER;
+        auto it = IMAGE_MODE_MAP.find(mode);
+        if (it != IMAGE_MODE_MAP.end()) {
+            arkUI_ObjectFit = it->second;
         }
-    }
-
-    void TaroImageNode::reuseJDImage(std::shared_ptr<TaroRenderNode> otherNode) {
-        if (std::shared_ptr<TaroImageNode> otherImage = std::static_pointer_cast<TaroImageNode>(otherNode)) {
-            // 复用jdImage，并重置状态
-            if (otherImage->jdImage && otherImage->jdImage.has_value()) {
-                jdImage = otherImage->jdImage.value();
-                // 清除jdImage内部状态、属性、监听并重新注册事件
-                jdImage.value()->reset();
-                // 清除之前节点的jdImage
-                otherImage->jdImage.reset();
-            }
-        }
+        NativeNodeApi* nativeNodeApi = NativeNodeApi::getInstance();
+        ArkUI_NumberValue imageMode[1];
+        ArkUI_AttributeItem objectFitItem = {imageMode, 1};
+        imageMode[0].i32 = arkUI_ObjectFit;
+        nativeNodeApi->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_OBJECT_FIT, &objectFitItem);
     }
 
     void TaroImageNode::Layout() {

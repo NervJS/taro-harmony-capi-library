@@ -2,7 +2,7 @@
  * Copyright (c) 2018 O2Team. All Rights Reserved.
  */
 
-#include "runtime/dom/element/text.h"
+#include "text.h"
 
 #include <codecvt>
 #include <cstdint>
@@ -11,6 +11,7 @@
 #include <native_drawing/drawing_font_collection.h>
 #include <native_drawing/drawing_text_typography.h>
 
+#include "helper/ImageLoader.h"
 #include "helper/string.h"
 #include "runtime/NativeNodeApi.h"
 #include "runtime/TaroYogaApi.h"
@@ -23,8 +24,8 @@
 #include "runtime/dom/element/element.h"
 #include "runtime/dom/element/image.h"
 #include "runtime/dom/element/scroll_view.h"
+#include "runtime/dom/element/text.h"
 #include "runtime/render.h"
-#include "text.h"
 
 namespace TaroRuntime {
 namespace TaroDOM {
@@ -181,7 +182,6 @@ namespace TaroDOM {
     }
 
     void TaroTextNode::ProcessImageResults(std::vector<std::shared_ptr<ImageInfo>>& images, std::weak_ptr<BaseRenderNode> textNode, ProcessImagesCallback&& onAllImagesLoaded) {
-        using namespace JDImageHarmony;
         auto results = std::make_shared<std::vector<ImageCallbackInfo>>();
         auto loadCounter = std::make_shared<int>(0);
         results->reserve(images.size());
@@ -189,7 +189,7 @@ namespace TaroDOM {
         for (const auto& image : images) {
             LoadRequestOptions opts = {};
             if (auto srcStr = std::get_if<std::string>(&image->src)) {
-                JDImageLoadHelper::loadImage({.url = *srcStr}, [image, results, loadCounter, imagesSize = size, textNode, onAllImagesLoaded](const ImageCallbackInfo& result) mutable {
+                TaroHelper::loadImage({.url = *srcStr}, [image, results, loadCounter, imagesSize = images.size(), textNode, onAllImagesLoaded](const ImageCallbackInfo& result) mutable {
                     results->push_back(result);
                     ++(*loadCounter);
                     if (*loadCounter == imagesSize) {
@@ -206,9 +206,9 @@ namespace TaroDOM {
                     uint32_t sourceHeight;
                     OH_PixelmapImageInfo_GetWidth(imageInfo, &sourceWidth);
                     OH_PixelmapImageInfo_GetHeight(imageInfo, &sourceHeight);
-                    results->push_back(JDImageHarmony::ResultImageInfo{
+                    results->push_back(TaroHelper::ResultImageInfo{
                         .url = "",
-                        .result_DrawableDescriptor = *drawableDescriptor,
+                        .result_DrawableDescriptor = std::make_shared<TaroHelper::ImagePixels>(*drawableDescriptor),
                         .width = sourceWidth,
                         .height = sourceHeight});
                 }
@@ -295,7 +295,8 @@ namespace TaroDOM {
                             GetTextChildren(element, vec);
                             this_->textStyled_->InitStyledString(this_->style_ref_, this_->textNodeStyle_, dimensionContext);
                             for (const auto& result : *results) {
-                                if (auto info = std::get_if<JDImageHarmony::ResultImageInfo>(&result)) {
+                                if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
+                                    this_->relatedImageDrawableDescriptors.push_back(info->result_DrawableDescriptor);
                                     for (auto& imageInfo : this_->m_ImageInfos) {
                                         if (auto srcStr = std::get_if<std::string>(&imageInfo->src)) {
                                             if (*srcStr == info->url) {
@@ -304,7 +305,7 @@ namespace TaroDOM {
                                                 break;
                                             }
                                         } else if (auto descriptor = std::get_if<ArkUI_DrawableDescriptor*>(&imageInfo->src)) {
-                                            if (*descriptor == info->result_DrawableDescriptor) {
+                                            if (*descriptor == info->result_DrawableDescriptor.get()->get()) {
                                                 imageInfo->oriWidth = info->width;
                                                 imageInfo->oriHeight = info->height;
                                                 break;
@@ -456,7 +457,7 @@ namespace TaroDOM {
                 auto src = imageInfo->src;
                 if (auto srcStr = std::get_if<std::string>(&src)) {
                     std::weak_ptr<TaroTextNode> weakSelf = std::dynamic_pointer_cast<TaroTextNode>(shared_from_this());
-                    JDImageHarmony::JDImageLoadHelper::loadImage({.url = *srcStr}, [src = *srcStr, weakSelf, i](const ImageCallbackInfo& result) mutable {
+                    TaroHelper::loadImage({.url = *srcStr}, [src = *srcStr, weakSelf, i](const ImageCallbackInfo& result) mutable {
                         auto renderText = weakSelf.lock();
                         if (renderText) {
                             const auto& imageNodes = renderText->m_ImageNodes;
@@ -468,8 +469,9 @@ namespace TaroDOM {
                                     if (*imageInfoSrc != src)
                                         return;
                                     ArkUI_AttributeItem srcItem;
-                                    if (auto info = std::get_if<JDImageHarmony::ResultImageInfo>(&result)) {
-                                        srcItem = {.object = info->result_DrawableDescriptor};
+                                    if (auto info = std::get_if<TaroHelper::ResultImageInfo>(&result)) {
+                                        renderText->relatedImageDrawableDescriptors.push_back(info->result_DrawableDescriptor);
+                                        srcItem = {.object = info->result_DrawableDescriptor->get()};
                                     } else {
                                         srcItem = {.string = src.c_str()};
                                     }
@@ -481,7 +483,6 @@ namespace TaroDOM {
                 } else if (auto drawableDescriptor = std::get_if<ArkUI_DrawableDescriptor*>(&src)) {
                     ArkUI_AttributeItem srcItem = {.object = *drawableDescriptor};
                     NativeNodeApi::getInstance()->setAttribute(node, NODE_IMAGE_SRC, &srcItem);
-                    ;
                 }
             }
             OH_Drawing_TypographyDestroyTextBox(textBox);

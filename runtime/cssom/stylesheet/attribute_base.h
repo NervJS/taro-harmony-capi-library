@@ -24,16 +24,29 @@
 
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 
+#define ATTRIBUTE_ASSIGN                                                                          \
+    if (item.has_value()) {                                                                       \
+        bool is_import = flag_.test(static_cast<size_t>(CSS_PROPERTY_FLAG::IMPORTANT));           \
+                                                                                                  \
+        bool item_is_import = item.flag_.test(static_cast<size_t>(CSS_PROPERTY_FLAG::IMPORTANT)); \
+        if (is_import && !item_is_import) {                                                       \
+            return;                                                                               \
+        }                                                                                         \
+        this->set(item);                                                                          \
+        if (item_is_import) {                                                                     \
+            flag_.set(static_cast<size_t>(CSS_PROPERTY_FLAG::IMPORTANT));                         \
+        }                                                                                         \
+    }
+
 template <typename T, typename Enable = void>
 class AttributeBase : public TaroHelper::Optional<T> {
     public:
     virtual void setValueFromNapi(const napi_value& value) = 0;
     virtual void setValueFromStringView(std::string_view value) = 0;
     virtual void assign(const AttributeBase<T>& item) {
-        if (item.has_value()) {
-            this->set(item);
-        }
+        ATTRIBUTE_ASSIGN
     };
+    std::bitset<8> flag_;
 };
 
 // 针对 color 特化
@@ -58,10 +71,7 @@ class AttributeBase<TColor> : public TaroHelper::Optional<uint32_t> {
     }
 
     void assign(const AttributeBase<TColor>& item) {
-        if (item.has_value()) {
-            this->set(item);
-        }
-    }
+        ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
 // 针对 int 类型的特化
@@ -95,10 +105,7 @@ class AttributeBase<
     }
 
     void assign(const AttributeBase<T>& item) {
-        if (item.has_value()) {
-            this->set(item);
-        }
-    }
+        ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
 // 针对 float 类型的特化
@@ -135,10 +142,7 @@ class AttributeBase<float> : public TaroHelper::Optional<float> {
     }
 
     void assign(const AttributeBase<float>& item) {
-        if (item.has_value()) {
-            this->set(item);
-        }
-    }
+        ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
 // 针对 Dimension 类型的特化
@@ -174,10 +178,7 @@ class AttributeBase<Dimension> : public TaroHelper::Optional<Dimension> {
     }
 
     void assign(const AttributeBase<Dimension>& item) {
-        if (item.has_value()) {
-            this->set(item);
-        }
-    }
+        ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
 // 针对 enum 类型的特化
@@ -220,15 +221,13 @@ class AttributeBase<T, typename std::enable_if<std::is_enum<T>::value>::type>
     };
 
     void assign(const AttributeBase<T>& item) {
-        if (item.has_value()) {
-            this->set(item);
-        }
-    }
+        ATTRIBUTE_ASSIGN}
 
     AttributeBase& operator=(T value) {
         this->setValue(value);
         return *this;
     }
+    std::bitset<8> flag_;
 };
 
 // 针对 std::string 类型的特化
@@ -252,10 +251,7 @@ class AttributeBase<std::string> : public TaroHelper::Optional<std::string> {
     }
 
     void assign(const AttributeBase<std::string>& item) {
-        if (item.has_value()) {
-            this->set(item);
-        }
-    }
+        ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
 } // namespace TaroRuntime::TaroCSSOM::TaroStylesheet

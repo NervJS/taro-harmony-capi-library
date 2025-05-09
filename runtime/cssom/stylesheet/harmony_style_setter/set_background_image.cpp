@@ -3,6 +3,8 @@
  */
 
 #include "harmony_style_setter.h"
+#include "helper/ImageLoader.h"
+
 namespace TaroRuntime::TaroCSSOM::TaroStylesheet {
 void HarmonyStyleSetter::setBackgroundImage(
     const ArkUI_NodeHandle& node,
@@ -35,9 +37,8 @@ void HarmonyStyleSetter::setBackgroundImage(
             } else {
                 item = {.value = arkUI_NumberValue, .size = 1, .string = (*url).c_str()};
             }
-        } else if (auto imgInfo = std::get_if<JDImageHarmony::ResultImageInfo>(&value.src)) {
-            // 通过 jd-image 请求完的图片资源格式
-            item = {.value = arkUI_NumberValue, .size = 1, .object = imgInfo->result_DrawableDescriptor};
+        } else if (auto imgInfo = std::get_if<TaroHelper::ResultImageInfo>(&value.src)) {
+            item = {.value = arkUI_NumberValue, .size = 1, .object = imgInfo->result_DrawableDescriptor.get()};
         }
         TaroRuntime::NativeNodeApi::getInstance()->setAttribute(node, NODE_BACKGROUND_IMAGE, &item);
         NativeNodeApi::getInstance()->resetAttribute(node, NODE_LINEAR_GRADIENT);

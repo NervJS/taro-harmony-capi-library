@@ -7,7 +7,6 @@
 #include <stack>
 
 #include "./differ/differ_macro.h"
-#include "./jd_image.h"
 #include "runtime/TaroYogaApi.h"
 #include "runtime/cssom/CSSStyleSheet.h"
 #include "runtime/cssom/dimension/context.h"

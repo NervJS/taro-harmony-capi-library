@@ -3,24 +3,25 @@
  */
 
 #pragma once
+
 #include <arkui/native_node.h>
 
-#include "helper/TaroLog.h"
-#include "helper/life_statistic.h"
-#include "runtime/cssom/stylesheet/common.h"
-#include "runtime/cssom/stylesheet/css_property.h"
-#include "runtime/cssom/stylesheet/params/transform_param//transform_param.h"
-// #include "runtime/dom/animation/node_animations.h"
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
 #include <arkui/native_type.h>
 
-#include "./arkui_base_node.h"
 #include "helper/Optional.h"
+#include "helper/TaroLog.h"
+#include "helper/life_statistic.h"
+#include "runtime/cssom/stylesheet/common.h"
+#include "runtime/cssom/stylesheet/css_property.h"
+#include "runtime/cssom/stylesheet/params/transform_param/transform_param.h"
 #include "runtime/cssom/stylesheet/transition.h"
 #include "runtime/dom/animation/js_animation_param.h"
+// #include "runtime/dom/animation/node_animations.h"
+#include "runtime/dom/ark_nodes/arkui_base_node.h"
 #include "runtime/dom/ark_nodes/differ/layout_differ.h"
 #include "runtime/dom/ark_nodes/differ/paint_differ.h"
 #include "runtime/keyframe_vsync.h"
@@ -156,6 +157,7 @@ namespace TaroDOM {
         bool is_apply_reused = false;
         friend class LayoutDiffer;
         friend class PaintDiffer;
+        std::vector<std::shared_ptr<TaroHelper::ImagePixels>> relatedImageDrawableDescriptors;
 
         bool HasLayoutFlag(LAYOUT_STATE_FLAG flag) const {
             return state_flags_.test(static_cast<size_t>(flag));
@@ -183,7 +185,7 @@ namespace TaroDOM {
         // 节点状态标记集合
         std::bitset<8> state_flags_;
 
-        void HandleJDImageLoad(const std::variant<JDImageHarmony::ResultImageInfo, JDImageHarmony::ErrorImageInfo>& result, const std::string url);
+        void HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result, const std::string url);
 
         static int32_t uid_flag_;
         static std::unordered_map<int32_t, std::weak_ptr<TaroRenderNode>> custom_layout_render_nodes_;

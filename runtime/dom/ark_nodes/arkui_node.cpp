@@ -8,6 +8,7 @@
 #include <stack>
 #include <math.h>
 
+#include "helper/ImageLoader.h"
 #include "helper/TaroTimer.h"
 #include "runtime/TaroYogaApi.h"
 #include "runtime/cssom/CSSStyleSheet.h"
@@ -402,7 +403,7 @@ namespace TaroDOM {
         // 获取 background图片的原始宽高
 
         if (backgroundImage.has_value() && backgroundImage.value().type == TaroCSSOM::TaroStylesheet::PIC) {
-            if (auto imageInfo = std::get_if<JDImageHarmony::ResultImageInfo>(&(backgroundImage.value().src))) {
+            if (auto imageInfo = std::get_if<TaroHelper::ResultImageInfo>(&(backgroundImage.value().src))) {
                 imgWidth = imageInfo->width;
                 imgHeight = imageInfo->height;
             }
@@ -654,15 +655,15 @@ namespace TaroDOM {
                 }
                 std::weak_ptr<TaroRenderNode> weakRenderNode = std::static_pointer_cast<TaroRenderNode>(shared_from_this());
                 auto oldUrl = *url;
-                JDImageHarmony::JDImageLoadHelper::loadImage({.url = *url}, [weakRenderNode, oldUrl](
-                                                                                const std::variant<JDImageHarmony::ResultImageInfo, JDImageHarmony::ErrorImageInfo>& result) {
+                TaroHelper::loadImage({.url = *url}, [weakRenderNode, oldUrl](
+                                                         const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result) {
                     if (auto self = weakRenderNode.lock()) {
                         // 拿到执行的时候的当前background url跟捕获到URL 是否一样，不一样就不设了
                         if (self->paintDiffer_.paint_style_->background_image_.value.has_value()) {
                             auto bgImg = self->paintDiffer_.paint_style_->background_image_.value.value();
                             if (auto currentUrl = std::get_if<std::string>(&bgImg.src); currentUrl && bgImg.type == TaroCSSOM::TaroStylesheet::PIC) {
                                 if (oldUrl.find(*currentUrl) != std::string::npos) {
-                                    self->HandleJDImageLoad(result, oldUrl);
+                                    self->HandleBgImageLoad(result, oldUrl);
                                 }
                             }
                         }
@@ -674,16 +675,16 @@ namespace TaroDOM {
         TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBackgroundImage(ark_node_, paintDiffer_.paint_style_->background_image_.value, paintDiffer_.paint_style_->background_repeat_.value);
     }
 
-    void TaroRenderNode::HandleJDImageLoad(const std::variant<JDImageHarmony::ResultImageInfo, JDImageHarmony::ErrorImageInfo>& result, const std::string url) {
+    void TaroRenderNode::HandleBgImageLoad(const std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>& result, const std::string url) {
         TaroCSSOM::TaroStylesheet::BackgroundImageItem b;
         b.type = TaroCSSOM::TaroStylesheet::PIC;
-        if (auto res = std::get_if<JDImageHarmony::ErrorImageInfo>(&result); res) {
+        if (auto res = std::get_if<TaroHelper::ErrorImageInfo>(&result); res) {
             if (res->isUnsupportedType) {
                 b.src = res->url;
             } else {
                 b = TaroCSSOM::TaroStylesheet::BackgroundImageItem::emptyImg;
             }
-        } else if (auto res = std::get_if<JDImageHarmony::ResultImageInfo>(&result); res) {
+        } else if (auto res = std::get_if<TaroHelper::ResultImageInfo>(&result); res) {
             b.src = *res;
             auto backgroundSizeItem = CalcBackgroundSize(b);
             if (paintDiffer_.paint_style_->background_position_.value[0].has_value() || paintDiffer_.paint_style_->background_position_.value[1].has_value()) {
@@ -695,6 +696,7 @@ namespace TaroDOM {
             if (paintDiffer_.paint_style_->background_size_.value.has_value()) {
                 TaroCSSOM::TaroStylesheet::HarmonyStyleSetter::setBackgroundSize(ark_node_, backgroundSizeItem, layoutDiffer_.computed_style_.width, layoutDiffer_.computed_style_.height);
             }
+            relatedImageDrawableDescriptors.push_back(res->result_DrawableDescriptor);
         } else {
             // 兜底状态，一般不会触发
             b.src = url;
