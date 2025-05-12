@@ -567,6 +567,9 @@ namespace TaroDOM {
     void TaroTextNode::Layout() {
         SystraceSection s("Taro Layout:: Text Layout");
         TaroRenderNode::Layout();
+        if (std::abs(m_MeasuredTextWidth - layoutDiffer_.computed_style_.width) > 0.01 && m_MeasuredTextWidth > layoutDiffer_.computed_style_.width) {
+            textStyled_->SetHashBeenLayout(false);
+        }
         if (!m_HasContent)
             return;
         if (HasImages() && !HasImagesLoaded())
@@ -576,6 +579,9 @@ namespace TaroDOM {
         SetSize();
         if (HasImages() && textStyled_->GetHasBeenLayout()) {
             PaintImages();
+        }
+        if (!is_draw_dirty_) {
+            textStyled_->SetHashBeenLayout(false);
         }
     }
 
