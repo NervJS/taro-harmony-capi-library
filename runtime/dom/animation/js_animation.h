@@ -20,6 +20,9 @@ namespace TaroAnimate {
         int bindJsAnimation(std::shared_ptr<TaroJsAnimationOption> option);
 
         void tick(uint64_t current_time) override;
+    
+        // 判断当前animate是否需要继续tick
+        virtual bool isActive();
 
         // 暂停动画
         void pause() override;

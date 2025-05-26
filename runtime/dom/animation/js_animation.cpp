@@ -94,13 +94,17 @@ namespace TaroAnimate {
         cur_animator_->resume();
     }
 
+    bool TaroJSAnimation::isActive() {
+        return !js_animators_.empty() || cur_animator_ != nullptr;
+    }
+
     bool TaroJSAnimation::isValid(uint32_t animator_id) {
         for (const auto& elem : js_animators_) {
             if (elem->id() == animator_id) {
                 return true;
             }
         }
-        return false;
+        return cur_animator_ != nullptr && cur_animator_->id() == animator_id;
     }
 } // namespace TaroAnimate
 } // namespace TaroRuntime
