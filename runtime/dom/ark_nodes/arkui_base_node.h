@@ -95,6 +95,7 @@ namespace TaroDOM {
         void SetMargin(const Dimension& val, const TaroEdge& edge);
         void SetPosition(const Dimension& val, const TaroEdge& edge);
         void SetGap(const Dimension& val, const TaroDirection& direction);
+        void SetAspectRatio(const float& val);
 
         // Draw Properties
         DECLARE_DRAW_STYLE_WITH_IDX_FUNCTIONS(BorderStyle, ArkUI_BorderStyle)

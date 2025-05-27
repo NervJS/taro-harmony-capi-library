@@ -332,6 +332,12 @@ namespace TaroDOM {
             SetOverflow(style->overflow.value()),
             SetOverflow(PropertyType::Overflow::Visible));
 
+        DIFF_STYLE_AND_SET(
+            CSSProperty::AspectRatio,
+            aspectRatio,
+            SetAspectRatio(style->aspectRatio.value()),
+            SetAspectRatio(YGUndefined));
+
         YGNodeStyleSetDirection(ygNodeRef, YGDirectionLTR);
     }
 
@@ -1055,6 +1061,11 @@ namespace TaroDOM {
             }
             CheckIfYGDirty();
         }
+    }
+
+    void BaseRenderNode::SetAspectRatio(const float& val) {
+        YGNodeStyleSetAspectRatio(ygNodeRef, val);
+        CheckIfYGDirty();
     }
 
     void BaseRenderNode::SetPosition(const Dimension& val, const TaroEdge& edge) {

@@ -22,7 +22,7 @@ namespace TaroAnimate {
         void tick(uint64_t current_time) override;
     
         // 判断当前animate是否需要继续tick
-        virtual bool isActive();
+        virtual bool isActive() override;
 
         // 暂停动画
         void pause() override;

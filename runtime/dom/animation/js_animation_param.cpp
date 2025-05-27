@@ -90,7 +90,7 @@ namespace TaroAnimate {
             std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam> transform = std::make_shared<TaroCSSOM::TaroStylesheet::TransformParam>();
 
             napi_value node = napi_getter.GetNapiValue();
-        
+
             auto item_names_getter = NapiGetter::GetAllPropertyNames(node);
             for (auto& item_name_getter : item_names_getter) {
                 std::string item_name = item_name_getter.StringOr("");
@@ -102,7 +102,7 @@ namespace TaroAnimate {
                 if (napi_item_val == nullptr) {
                     continue;
                 }
-      
+
                 if (item_name == "Matrix") {
                     item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
                         TaroCSSOM::TaroStylesheet::ETransformType::MATRIX, node);
@@ -125,7 +125,7 @@ namespace TaroAnimate {
             }
             if (!transform->data.empty()) {
                 keyframes.emplace_back(CSSProperty::Type::Transform, transform);
-            } 
+            }
         }
     }
 
