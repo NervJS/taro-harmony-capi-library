@@ -9,6 +9,7 @@
 #include "./align_items.h"
 #include "./align_self.h"
 #include "./animation.h"
+#include "./aspect_ratio.h"
 #include "./background_color.h"
 #include "./background_image.h"
 #include "./background_position_x.h"
@@ -203,6 +204,8 @@ namespace TaroCSSOM {
             Transition transition;
 
             BoxOrient boxOrient;
+    
+            AspectRatio aspectRatio;
 
             Stylesheet();
 
