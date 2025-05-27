@@ -212,7 +212,7 @@ Optional<bool> NapiGetter::Bool() {
 bool NapiGetter::BoolOr(const bool& default_value) {
     if (value_) {
         Optional<bool> optional = Bool();
-        return optional.has_value() ? optional.value() : default_value;
+        return optional.value_or(default_value);
     }
     return default_value;
 }
@@ -240,7 +240,7 @@ Optional<bool> NapiGetter::BoolNull() {
 bool NapiGetter::BoolNullOr(const bool& default_value) {
     if (value_) {
         Optional<bool> optional = BoolNull();
-        return optional.has_value() ? optional.value() : default_value;
+        return optional.value_or(default_value);
     }
     return default_value;
 }
@@ -288,7 +288,7 @@ TaroHelper::Optional<std::string_view> NapiGetter::StringView() {
 std::string NapiGetter::StringOr(std::string& default_value) {
     if (value_) {
         Optional<std::string> optional = String();
-        return optional.has_value() ? optional.value() : default_value;
+        return optional.value_or(default_value);
     }
     return default_value;
 }
@@ -297,7 +297,7 @@ std::string NapiGetter::StringOr(const char* default_value) {
     std::string string_default_value = default_value;
     if (value_) {
         Optional<std::string> optional = String();
-        return optional.has_value() ? optional.value() : string_default_value;
+        return optional.value_or(string_default_value);
     }
     return string_default_value;
 }
@@ -318,7 +318,7 @@ Optional<int32_t> NapiGetter::Int32() {
 int32_t NapiGetter::Int32Or(const int32_t& default_value) {
     if (value_) {
         Optional<int32_t> optional = Int32();
-        return optional.has_value() ? optional.value() : default_value;
+        return optional.value_or(default_value);
     }
     return default_value;
 }
@@ -339,7 +339,7 @@ Optional<uint32_t> NapiGetter::UInt32() {
 uint32_t NapiGetter::UInt32(const uint32_t& default_value) {
     if (value_) {
         Optional<uint32_t> optional = UInt32();
-        return optional.has_value() ? optional.value() : default_value;
+        return optional.value_or(default_value);
     }
     return default_value;
 }
@@ -364,7 +364,7 @@ Optional<double> NapiGetter::Double() {
 double NapiGetter::Double(const double& default_value) {
     if (value_) {
         Optional<double> optional = Double();
-        return optional.has_value() ? optional.value() : default_value;
+        return optional.value_or(default_value);
     }
     return default_value;
 }
@@ -372,7 +372,7 @@ double NapiGetter::Double(const double& default_value) {
 double NapiGetter::DoubleOr(const double& default_value) {
     if (value_) {
         Optional<double> optional = Double();
-        return optional.has_value() ? optional.value() : default_value;
+        return optional.value_or(default_value);
     }
     return default_value;
 }
