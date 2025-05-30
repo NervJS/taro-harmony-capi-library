@@ -53,7 +53,7 @@ endif ()
 # FMT
 FetchContent_Declare(
     FMT
-    GIT_REPOSITORY  git@github.com:fmtlib/fmt.git
+    GIT_REPOSITORY  https://github.com/fmtlib/fmt.git
     GIT_TAG         11.1.4
 )
 FetchContent_MakeAvailable(FMT)
@@ -72,7 +72,7 @@ target_link_libraries(fmt_target PUBLIC fmt::fmt)
 # DOUBLE CONVERSION
 FetchContent_Declare(
     DOUBLE_CONVERSION
-    GIT_REPOSITORY  git@github.com:google/double-conversion.git
+    GIT_REPOSITORY  https://github.com/google/double-conversion.git
     GIT_TAG         v3.1.5
     SOURCE_SUBDIR   double-conversion
 )
@@ -97,7 +97,7 @@ target_sources(double_conversion_target PRIVATE
 # GLOG
 FetchContent_Declare(
     GLOG
-    GIT_REPOSITORY  git@github.com:google/glog.git
+    GIT_REPOSITORY  https://github.com/google/glog.git
     GIT_TAG         v0.4.0
 )
 FetchContent_MakeAvailable(GLOG)
@@ -128,7 +128,7 @@ target_compile_options(glog_target PRIVATE
 # BOOST
 FetchContent_Declare(
     BOOST
-    GIT_REPOSITORY  git@github.com:boostorg/boost.git
+    GIT_REPOSITORY  https://github.com/boostorg/boost.git
     GIT_TAG         boost-1.82.0
     GIT_SUBMODULES_RECURSE TRUE
 )
@@ -153,7 +153,7 @@ add_subdirectory("${boost_SOURCE_DIR}/libs/context" ${boost_BINARY_DIR}/libs/con
 # FOLLY
 FetchContent_Declare(
     FOLLY
-    GIT_REPOSITORY  git@github.com:facebook/folly.git
+    GIT_REPOSITORY  https://github.com/facebook/folly.git
     GIT_TAG         v2022.01.24.00
 )
 FetchContent_Populate(FOLLY)
@@ -221,7 +221,7 @@ file(GLOB_RECURSE SYSTEM_FILES CONFIGURE_DEPENDS system/*.cpp)
 # YOGA Start
 FetchContent_Declare(
     YOGA
-    GIT_REPOSITORY  git@github.com:NervJS/yoga.git
+    GIT_REPOSITORY  https://github.com/NervJS/yoga.git
     GIT_TAG         feat/taro_harmony_cpp
 )
 FetchContent_Populate(YOGA)
@@ -231,7 +231,7 @@ add_subdirectory(${yoga_SOURCE_DIR}/yoga ${yoga_BINARY_DIR}/yoga)
 # QuickJS Start
 FetchContent_Declare(
     QUICKJS
-    GIT_REPOSITORY  git@github.com:bellard/quickjs.git
+    GIT_REPOSITORY  https://github.com/bellard/quickjs.git
     GIT_TAG         revert-265-has-exception
 )
 FetchContent_Populate(QUICKJS)
@@ -281,7 +281,7 @@ endif()
 # JSI Start
 FetchContent_Declare(
     JSI
-    GIT_REPOSITORY  git@github.com:microsoft/v8-jsi.git
+    GIT_REPOSITORY  https://github.com/microsoft/v8-jsi.git
     GIT_TAG         0.71-stable
     SOURCE_SUBDIR   src
 )
@@ -311,7 +311,7 @@ include_directories("${jsi_src_dir}")
 # 将 Google Test 子模块添加到项目中
 FetchContent_Declare(
     GOOGLE_TEST
-    GIT_REPOSITORY  git@github.com:google/googletest.git
+    GIT_REPOSITORY  https://github.com/google/googletest.git
     GIT_TAG         v1.16.0
 )
 FetchContent_MakeAvailable(GOOGLE_TEST)
