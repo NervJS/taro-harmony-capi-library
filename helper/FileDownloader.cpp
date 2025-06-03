@@ -20,7 +20,6 @@ FileDownloader::FileDownloader() {}
 FileDownloader::~FileDownloader() {}
 
 bool FileDownloader::Download(const std::string& url, const FileDownloaderParam& param, const std::function<void(const Rcp_Response*, uint32_t)>& callback) {
-    std::lock_guard<std::mutex> lock(mutex);
     uint32_t errorCode;
     Rcp_Session* session = HMS_Rcp_CreateSession(nullptr, &errorCode);
     if (session == nullptr || errorCode != 0) {
