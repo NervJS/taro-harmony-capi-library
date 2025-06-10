@@ -5,6 +5,8 @@
 #ifndef TARO_HARMONY_CPP_FILEDOWNLOADER_H
 #define TARO_HARMONY_CPP_FILEDOWNLOADER_H
 
+#include <string>
+
 #include "RemoteCommunicationKit/rcp.h"
 
 namespace TaroHelper {
@@ -17,7 +19,7 @@ class FileDownloader {
     static FileDownloader* instance;
     FileDownloader();
     ~FileDownloader();
-    
+
     public:
     FileDownloader(const FileDownloader&) = delete;
     FileDownloader& operator=(const FileDownloader&) = delete;
