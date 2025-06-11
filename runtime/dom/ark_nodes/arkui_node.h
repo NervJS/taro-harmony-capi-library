@@ -4,12 +4,11 @@
 
 #pragma once
 
-#include <arkui/native_node.h>
-
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
+#include <arkui/native_node.h>
 #include <arkui/native_type.h>
 
 #include "helper/Optional.h"

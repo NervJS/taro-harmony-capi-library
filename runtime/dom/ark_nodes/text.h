@@ -42,7 +42,7 @@ namespace TaroDOM {
 
     class TaroTextNode : public TaroRenderNode {
         using ImageCallbackInfo = std::variant<TaroHelper::ResultImageInfo, TaroHelper::ErrorImageInfo>;
-        using ProcessImagesCallback = std::function<void(const std::shared_ptr<std::vector<ImageCallbackInfo>> &, std::weak_ptr<BaseRenderNode>)>;
+        using ProcessImagesCallback = std::function<void(const std::shared_ptr<std::vector<ImageCallbackInfo>>&, std::weak_ptr<BaseRenderNode>)>;
         using srcType = std::variant<std::string, ArkUI_DrawableDescriptor*>;
 
         public:

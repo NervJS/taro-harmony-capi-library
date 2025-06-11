@@ -70,7 +70,7 @@ class AttributeBase<TColor> : public TaroHelper::Optional<uint32_t> {
         }
     }
 
-    void assign(const AttributeBase<TColor>& item) {
+    void assign(const AttributeBase<TColor>& item){
         ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
@@ -104,7 +104,7 @@ class AttributeBase<
         }
     }
 
-    void assign(const AttributeBase<T>& item) {
+    void assign(const AttributeBase<T>& item){
         ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
@@ -141,7 +141,7 @@ class AttributeBase<float> : public TaroHelper::Optional<float> {
         }
     }
 
-    void assign(const AttributeBase<float>& item) {
+    void assign(const AttributeBase<float>& item){
         ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
@@ -177,7 +177,7 @@ class AttributeBase<Dimension> : public TaroHelper::Optional<Dimension> {
         }
     }
 
-    void assign(const AttributeBase<Dimension>& item) {
+    void assign(const AttributeBase<Dimension>& item){
         ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 
@@ -220,7 +220,7 @@ class AttributeBase<T, typename std::enable_if<std::is_enum<T>::value>::type>
         }
     };
 
-    void assign(const AttributeBase<T>& item) {
+    void assign(const AttributeBase<T>& item){
         ATTRIBUTE_ASSIGN}
 
     AttributeBase& operator=(T value) {
@@ -250,7 +250,7 @@ class AttributeBase<std::string> : public TaroHelper::Optional<std::string> {
         }
     }
 
-    void assign(const AttributeBase<std::string>& item) {
+    void assign(const AttributeBase<std::string>& item){
         ATTRIBUTE_ASSIGN} std::bitset<8> flag_;
 };
 

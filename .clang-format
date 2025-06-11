@@ -8,8 +8,8 @@ IndentWidth: 4
 ColumnLimit: 0
 TabWidth: 4
 UseTab: Never
-MaxEmptyLinesToKeep: 1
-KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
+KeepEmptyLinesAtTheStartOfBlocks: true
 
 # 大括号和空格
 BreakBeforeBraces: Attach
