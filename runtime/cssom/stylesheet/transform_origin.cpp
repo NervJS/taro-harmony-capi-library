@@ -24,8 +24,9 @@ void TransformOrigin::setValueFromStringView(std::string_view str) {
             data_.z = vp.value();
         } else if (z.Unit() == DimensionUnit::PERCENT) {
             data_.pz = z;
+        } else {
+            return;
         }
-        return;
     }
 
     // 保证至少有两个值

@@ -88,53 +88,45 @@ namespace TaroAnimate {
 
         if (name == "transform") {
             std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformParam> transform = std::make_shared<TaroCSSOM::TaroStylesheet::TransformParam>();
-            napi_getter.ForEachInArray([&](const napi_value& napi_val, const uint32_t&) {
-                auto transform_item = parseTransformItem(napi_val);
-                if (transform_item != nullptr) {
-                    transform->data.emplace_back(transform_item);
+
+            napi_value node = napi_getter.GetNapiValue();
+
+            auto item_names_getter = NapiGetter::GetAllPropertyNames(node);
+            for (auto& item_name_getter : item_names_getter) {
+                std::string item_name = item_name_getter.StringOr("");
+                if (item_name.empty()) {
+                    continue;
                 }
-            });
+                std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformItemBase> item;
+                auto napi_item_val = NapiGetter::GetPropertyFromNode(node, item_name.c_str());
+                if (napi_item_val == nullptr) {
+                    continue;
+                }
+
+                if (item_name == "Matrix") {
+                    item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
+                        TaroCSSOM::TaroStylesheet::ETransformType::MATRIX, node);
+                } else if (item_name == "Rotate") {
+                    item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
+                        TaroCSSOM::TaroStylesheet::ETransformType::ROTATE, napi_item_val);
+                } else if (item_name == "Scale") {
+                    item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
+                        TaroCSSOM::TaroStylesheet::ETransformType::SCALE, napi_item_val);
+                } else if (item_name == "Skew") {
+                    item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
+                        TaroCSSOM::TaroStylesheet::ETransformType::SKEW, napi_item_val);
+                } else if (item_name == "Translate") {
+                    item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
+                        TaroCSSOM::TaroStylesheet::ETransformType::TRANSLATE, napi_item_val);
+                }
+                if (item != nullptr) {
+                    transform->data.emplace_back(item);
+                }
+            }
             if (!transform->data.empty()) {
                 keyframes.emplace_back(CSSProperty::Type::Transform, transform);
             }
         }
-    }
-
-    std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformItemBase> TaroJsStepOption::parseTransformItem(
-        const napi_value& napi_val) {
-        auto item_names_getter = NapiGetter::GetAllPropertyNames(napi_val);
-        for (auto& item_name_getter : item_names_getter) {
-            std::string item_name = item_name_getter.StringOr("");
-            if (item_name.empty()) {
-                continue;
-            }
-            std::shared_ptr<TaroCSSOM::TaroStylesheet::TransformItemBase> item;
-            auto napi_item_val = NapiGetter::GetPropertyFromNode(napi_val, item_name.c_str());
-            if (napi_item_val == nullptr) {
-                continue;
-            }
-
-            if (item_name == "matrix") {
-                item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
-                    TaroCSSOM::TaroStylesheet::ETransformType::MATRIX, napi_val);
-            } else if (item_name == "rotate") {
-                item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
-                    TaroCSSOM::TaroStylesheet::ETransformType::ROTATE, napi_item_val);
-            } else if (item_name == "scale") {
-                item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
-                    TaroCSSOM::TaroStylesheet::ETransformType::SCALE, napi_item_val);
-            } else if (item_name == "skew") {
-                item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
-                    TaroCSSOM::TaroStylesheet::ETransformType::SKEW, napi_item_val);
-            } else if (item_name == "translate") {
-                item = TaroCSSOM::TaroStylesheet::Transform::parseTransformItem(
-                    TaroCSSOM::TaroStylesheet::ETransformType::TRANSLATE, napi_item_val);
-            }
-            if (item != nullptr) {
-                return item;
-            }
-        }
-        return nullptr;
     }
 
     int TaroJsAnimationOption::setFromNode(const napi_value& napi_val) {

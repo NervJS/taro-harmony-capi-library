@@ -636,6 +636,10 @@ namespace TaroCSSOM {
                         stylesheet->boxOrient.setValueFromNapi(css_property_value);
                         stylesheet->boxOrient.flag_.set(css_property_flag);
                         break;
+                    case CSSProperty::AspectRatio:
+                        stylesheet->aspectRatio.setValueFromNapi(css_property_value);
+                        stylesheet->aspectRatio.flag_.set(css_property_flag);
+                        break;
                     default:
                         break;
                 }

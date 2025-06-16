@@ -141,6 +141,7 @@ namespace TaroCSSOM {
             ASSIGN_PROPERTY(boxShadow);
             ASSIGN_PROPERTY(boxOrient);
             ASSIGN_PROPERTY(pointerEvents);
+            ASSIGN_PROPERTY(aspectRatio);
 
             return res;
         }
@@ -231,7 +232,9 @@ namespace TaroCSSOM {
                 s1->zIndex == s2->zIndex &&
                 s1->animationMulti == s2->animationMulti &&
                 s1->transition == s2->transition &&
-                s1->boxOrient == s2->boxOrient && s1->pointerEvents == s2->pointerEvents);
+                s1->boxOrient == s2->boxOrient && 
+                s1->pointerEvents == s2->pointerEvents &&
+                s1->aspectRatio == s2->aspectRatio);
         }
 
         /**
@@ -819,6 +822,12 @@ namespace TaroCSSOM {
              }},
             {"-webkit-box-orient", [](Stylesheet* ss, std::string_view value) {
                  ss->boxOrient.setValueFromStringView(value);
+             }},
+            {"aspectRatio", [](Stylesheet* ss, std::string_view value) {
+                 ss->aspectRatio.setValueFromStringView(value);
+             }},
+            {"aspect-ratio", [](Stylesheet* ss, std::string_view value) {
+                 ss->aspectRatio.setValueFromStringView(value);
              }},
         };
 
