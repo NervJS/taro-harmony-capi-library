@@ -257,7 +257,7 @@ namespace TaroDOM {
     void TaroImage::SetPlaceholderAttribute() {
         std::shared_ptr<TaroImageNode> render_image = std::static_pointer_cast<TaroImageNode>(GetHeadRenderNode());
         if (attributes_->placeholder.has_value()) {
-            render_image->setAlt(attributes_->placeholder.value());
+            render_image->setAltPlaceholder(attributes_->placeholder.value());
         }
     }
 
@@ -400,7 +400,9 @@ namespace TaroDOM {
         } else if (event_name == "complete") {
             event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_COMPLETE_ON_IMAGE, event_name);
         } else if (event_name == "load") {
-            event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_COMPLETE_ON_IMAGE, event_name);
+            event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_LOAD_ON_IMAGE, event_name);
+        } else if (event_name == "error") {
+            event_emitter_->registerEvent(TaroEvent::TARO_EVENT_TYPE_ERROR_ON_IMAGE, event_name);
         } else {
             return false;
         }
@@ -418,7 +420,7 @@ namespace TaroDOM {
             case TaroRuntime::ATTRIBUTE_NAME::PLACEHOLDER:
                 if (preValue != curValue) {
                     attributes_->placeholder.set(curValue);
-                    std::static_pointer_cast<TaroImageNode>(GetHeadRenderNode())->setAlt(curValue);
+                    std::static_pointer_cast<TaroImageNode>(GetHeadRenderNode())->setAltPlaceholder(curValue);
                 }
                 break;
             default:

@@ -116,8 +116,6 @@ namespace TaroDOM {
         void SetStateFlag(STATE_FLAG flag) {
             if (HasStateFlag(flag))
                 return;
-            TARO_LOG_DEBUG("CSSOM", "标脏： %{public}hhu  %{public}s", flag,
-                           class_list_.value().c_str());
             state_flags_.set(static_cast<size_t>(flag));
         }
         void ClearStateFlag(STATE_FLAG flag) {

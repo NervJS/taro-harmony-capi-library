@@ -104,8 +104,14 @@ namespace TaroDOM {
         NativeNodeApi::getInstance()->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_ALT, &item);
     }
 
+    void TaroImageNode::setAltPlaceholder(const std::string& uri) {
+        ArkUI_AttributeItem item = {.string = uri.c_str()};
+        NativeNodeApi::getInstance()->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_ALT_PLACEHOLDER, &item);
+    }
+
     void TaroImageNode::setErrorHolder(const std::string& uri) {
-        TaroImageNode::setAlt(uri);
+        ArkUI_AttributeItem item = {.string = uri.c_str()};
+        NativeNodeApi::getInstance()->setAttribute(GetArkUINodeHandle(), NODE_IMAGE_ALT_ERROR, &item);
     }
 
     void TaroImageNode::setMode(const std::string& mode) {

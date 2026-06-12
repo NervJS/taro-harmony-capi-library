@@ -587,15 +587,6 @@ namespace TaroDOM {
         layoutDiffer_.SetComputedStyle(ygNodeRef, !is_apply_reused);
         is_apply_reused = false;
 
-        if (auto element = element_ref_.lock()) {
-            TARO_LOG_DEBUG("dirty", "ReLayout className: %{public}s, width: %{public}f, height: %{public}f, left: %{public}f, top: %{public}f",
-                           element->class_name_.c_str(),
-                           layoutDiffer_.computed_style_.width,
-                           layoutDiffer_.computed_style_.height,
-                           layoutDiffer_.computed_style_.left,
-                           layoutDiffer_.computed_style_.top);
-        }
-
         LayoutDiffer::DiffAndSetStyle(layoutDiffer_.computed_style_, layoutDiffer_.old_computed_style_, this);
 
         // 布局改变后，需要对部分影响到的绘制样式重新标脏>绘制

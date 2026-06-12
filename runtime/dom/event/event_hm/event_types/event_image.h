@@ -30,6 +30,31 @@ namespace TaroDOM {
             float content_width_ = 0.0f;
             float content_height_ = 0.0f;
         };
+
+        class TaroEventLoadOnImage : public TaroEventCompleteOnImage {
+            public:
+            TaroEventLoadOnImage(const std::string& js_event_type, ArkUI_NodeEvent* event);
+
+            virtual ~TaroEventLoadOnImage() {}
+
+            bool realTrigger() override;
+
+            int serializeFun(napi_value& ret_obj) override;
+        };
+
+        class TaroEventErrorOnImage : public TaroEventBase {
+            public:
+            TaroEventErrorOnImage(const std::string& js_event_type, ArkUI_NodeEvent* event);
+
+            virtual ~TaroEventErrorOnImage() {}
+
+            int parseHmEvent(ArkUI_NodeEvent* event) override;
+
+            int serializeFun(napi_value& ret_obj) override;
+
+            public:
+            int32_t error_code_ = 0;
+        };
     } // namespace TaroEvent
 } // namespace TaroDOM
 } // namespace TaroRuntime

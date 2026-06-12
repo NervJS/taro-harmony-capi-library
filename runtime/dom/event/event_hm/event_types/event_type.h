@@ -49,6 +49,8 @@ namespace TaroDOM {
 
             // image 节点相关事件
             TARO_EVENT_TYPE_COMPLETE_ON_IMAGE,
+            TARO_EVENT_TYPE_LOAD_ON_IMAGE,
+            TARO_EVENT_TYPE_ERROR_ON_IMAGE,
 
             // Swiper节点相关事件
             TARO_EVENT_TYPE_SWIPER_ON_CHANGE,

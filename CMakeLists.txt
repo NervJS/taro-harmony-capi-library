@@ -130,7 +130,44 @@ FetchContent_Declare(
     BOOST
     GIT_REPOSITORY  https://github.com/boostorg/boost.git
     GIT_TAG         boost-1.82.0
-    GIT_SUBMODULES_RECURSE TRUE
+    GIT_SUBMODULES
+        libs/algorithm
+        libs/array
+        libs/assert
+        libs/bind
+        libs/config
+        libs/concept_check
+        libs/container_hash
+        libs/context
+        libs/core
+        libs/detail
+        libs/exception
+        libs/function
+        libs/function_types
+        libs/functional
+        libs/fusion
+        libs/integer
+        libs/intrusive
+        libs/iterator
+        libs/lexical_cast
+        libs/move
+        libs/mp11
+        libs/mpl
+        libs/optional
+        libs/parameter
+        libs/pool
+        libs/predef
+        libs/preprocessor
+        libs/range
+        libs/smart_ptr
+        libs/stacktrace
+        libs/static_assert
+        libs/throw_exception
+        libs/tuple
+        libs/type_traits
+        libs/typeof
+        libs/utility
+        libs/winapi
 )
 FetchContent_Populate(BOOST)
 file(GLOB boost_include_dirs "${boost_SOURCE_DIR}/libs/*/include")
@@ -372,6 +409,9 @@ find_library(
 
 # 获取项目版本号
 set(PACKAGE_JSON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../../../oh-package.json5")
+if(NOT EXISTS ${PACKAGE_JSON_FILE})
+    set(PACKAGE_JSON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/oh-package.json5")
+endif()
 file(READ ${PACKAGE_JSON_FILE} PACKAGE_JSON_CONTENT)
 string(REGEX MATCH "\"version\": \"([0-9]+(\\.[0-9]+)+[^\"\\s]*)\"" _ ${PACKAGE_JSON_CONTENT})
 set(PACKAGE_VERSION ${CMAKE_MATCH_1})
