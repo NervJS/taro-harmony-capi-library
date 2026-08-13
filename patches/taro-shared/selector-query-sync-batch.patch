@@ -1,0 +1,55 @@
+diff --git a/packages/taro-platform-harmony-cpp/src/runtime/apis/wxml/selectorQuery.ts b/packages/taro-platform-harmony-cpp/src/runtime/apis/wxml/selectorQuery.ts
+index 82258d7ca..97be67e5e 100644
+--- a/packages/taro-platform-harmony-cpp/src/runtime/apis/wxml/selectorQuery.ts
++++ b/packages/taro-platform-harmony-cpp/src/runtime/apis/wxml/selectorQuery.ts
+@@ -126,30 +126,30 @@ function queryBat(queue, cb) {
+   const page = taro.getCurrentInstance().page
+   const element = getPageScrollerOrNode(page?.node, page)
+ 
+-  if (!element) return null
++  if (!element) {
++    cb(queue.map(item => item.single ? null : []))
++    return null
++  }
+ 
+-  const actions = queue.map((item) => {
++  queue.forEach((item) => {
+     const { component, selector, single, fields } = item
+-    return new Promise<void>(resolve => {
+-      Current.nativeModule.querySelectDOM(component || page.node, selector, !single, (res) => {
+-        if (res && res.length > 0) {
+-          if (single) {
+-            const dom = res[0]
+-            result.push(filter(fields, dom))
+-          } else {
+-            result.push(res.map(dom => {
+-              return filter(fields, dom)
+-            }))
+-          }
+-        }
+-        resolve()
+-      })
+-    })
++    const res = Current.nativeModule.querySelectDOMSync(component || page.node, selector, !single)
++    if (res && res.length > 0) {
++      if (single) {
++        const dom = res[0]
++        result.push(filter(fields, dom))
++      } else {
++        result.push(res.map(dom => {
++          return filter(fields, dom)
++        }))
++      }
++    } else {
++      // SelectorQuery.exec must preserve one result slot for every queued action.
++      result.push(single ? null : [])
++    }
+   })
+ 
+-  Promise.all(actions).then(() => {
+-    cb(result)
+-  })
++  cb(result)
+ }
+ 
+ export class SelectorQuery implements Taro.SelectorQuery {

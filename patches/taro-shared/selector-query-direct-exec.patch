@@ -1,0 +1,18 @@
+diff --git a/packages/shared/src/native-apis.ts b/packages/shared/src/native-apis.ts
+--- a/packages/shared/src/native-apis.ts
++++ b/packages/shared/src/native-apis.ts
+@@ -409,7 +409,12 @@ function delayRef (taro, global, name: string, method: string) {
+     const res = global[name](...args)
+     const raw = res[method].bind(res)
+     res[method] = function (...methodArgs) {
+-      taro.nextTick(() => raw(...methodArgs))
++      // Harmony C++ SelectorQuery is bound to the current XComponent/page context.
++      // Deferring exec to nextTick can lose that context and leave exec callbacks pending.
++      if (name === 'createSelectorQuery') {
++        return raw(...methodArgs)
++      }
++      return taro.nextTick(() => raw(...methodArgs))
+     }
+     return res
+   }
+ }

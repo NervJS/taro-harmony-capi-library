@@ -249,22 +249,10 @@ napi_value Manager::OnXComponentStateChange(napi_env env, napi_callback_info inf
     TaroRuntime::TaroAnimate::TaroFrameTriggerMaster::instance()->changeXComponentState(nid, isActive);
 
     if (stage == TaroRuntime::X_COMPONENT_STAGE::UNLOAD) {
-        TaroRuntime::Render* render = TaroRuntime::Render::GetInstance();
-        std::shared_ptr<TaroRuntime::TaroDOM::TaroElement> parent;
-        if (render->FindPageById(render->document_->app_, nid)) {
-            parent = render->document_->app_;
-        } else if (render->FindPageById(render->document_->entry_async_, nid)) {
-            parent = render->document_->entry_async_;
-        }
-
-        if (parent == nullptr) {
-            TARO_LOG_ERROR("Manager", "nid[%{public}d] is not found in app.", nid);
-            return nullptr;
-        }
-        std::shared_ptr<TaroRuntime::TaroDOM::TaroElement> node = render->document_->GetElementById(nid);
-        if (parent != nullptr && node != nullptr) {
-            parent->removeChild(node);
-        }
+        // WB patch: Harmony native/H5 routes can temporarily cover the Taro XComponent
+        // and trigger aboutToDisappear without destroying the React page. Removing the
+        // page node here breaks later SelectorQuery/rect/scroll native lookups after return.
+        TARO_LOG_INFO("Manager", "skip removeChild on xcomponent unload, nid:%{public}d", nid);
     }
     TARO_LOG_DEBUG("Manager", "nid: %{public}d; stage: %{public}s", nid, stage == TaroRuntime::X_COMPONENT_STAGE::SHOW ? "show" : "hide");
     TARO_PRINT_MEMORY();
