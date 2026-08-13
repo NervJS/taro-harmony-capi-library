@@ -48,6 +48,49 @@ namespace TaroDOM {
             return 0;
         }
 
+        TaroEventLoadOnImage::TaroEventLoadOnImage(const std::string& js_event_type, ArkUI_NodeEvent* event)
+            : TaroEventCompleteOnImage(js_event_type, event) {
+        }
+
+        bool TaroEventLoadOnImage::realTrigger() {
+            return loading_status_ == 1;
+        }
+
+        int TaroEventLoadOnImage::serializeFun(napi_value& ret_obj) {
+            NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
+
+            napi_value js_detail = detail();
+            NapiSetter::SetProperty(js_detail, "width", width_);
+            NapiSetter::SetProperty(js_detail, "height", height_);
+            NapiSetter::SetProperty(ret_obj, "detail", js_detail);
+            return 0;
+        }
+
+        TaroEventErrorOnImage::TaroEventErrorOnImage(const std::string& js_event_type, ArkUI_NodeEvent* event)
+            : TaroEventBase(js_event_type, event) {
+        }
+
+        int TaroEventErrorOnImage::parseHmEvent(ArkUI_NodeEvent* event) {
+            auto component_event = OH_ArkUI_NodeEvent_GetNodeComponentEvent(event);
+            if (component_event == nullptr) {
+                TARO_LOG_DEBUG("TaroEvent", "get image error component_event failed");
+                return -1;
+            }
+
+            error_code_ = component_event->data[0].i32;
+            return 0;
+        }
+
+        int TaroEventErrorOnImage::serializeFun(napi_value& ret_obj) {
+            NapiSetter::SetProperty(ret_obj, "type", js_event_type_);
+
+            napi_value js_detail = detail();
+            NapiSetter::SetProperty(js_detail, "errCode", error_code_);
+            NapiSetter::SetProperty(js_detail, "errMsg", "image load failed");
+            NapiSetter::SetProperty(ret_obj, "detail", js_detail);
+            return 0;
+        }
+
     } // namespace TaroEvent
 } // namespace TaroDOM
 } // namespace TaroRuntime

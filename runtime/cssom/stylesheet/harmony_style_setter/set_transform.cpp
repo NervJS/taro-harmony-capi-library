@@ -41,16 +41,13 @@ void HarmonyStyleSetter::setTransform(const ArkUI_NodeHandle& node, const std::v
     });
 
     ArkUI_AttributeItem item = {arkUI_NumberValue, 16};
-    std::stringstream ss;
-    for (int idx = 0; idx < item.size; idx++) {
 #if IS_DEBUG
+    for (int idx = 0; idx < item.size; idx++) {
         if (std::isnan(item.value[idx].f32)) {
             folly::throw_exception(std::runtime_error("invalid float"));
         }
-#endif
-        ss << item.value[idx].f32 << " ";
     }
-    TARO_LOG_DEBUG("Transform", "transform:%{public}s", ss.str().c_str());
+#endif
     TaroRuntime::NativeNodeApi::getInstance()->setAttribute(node, NODE_TRANSFORM,
                                                             &item);
 }

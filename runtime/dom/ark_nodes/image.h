@@ -48,6 +48,7 @@ namespace TaroDOM {
         void setImageSrc(ArkUI_DrawableDescriptor* drawableDescriptor);
         void setImageFillColor(uint32_t color);
         void setAlt(const std::string& uri);
+        void setAltPlaceholder(const std::string& uri);
         void setErrorHolder(const std::string& uri);
         void setMode(const std::string& mode);
 
